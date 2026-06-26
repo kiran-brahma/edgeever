@@ -172,10 +172,12 @@ EDGE_EVER_TIANMA_D1_DATABASE_ID=<tianma D1 database_id>
 EDGE_EVER_TIANMA_R2_BUCKET_NAME=edgeever-tianma-resources
 
 EDGE_EVER_DEMO_WORKER_NAME=edgeever-demo
-EDGE_EVER_DEMO_CUSTOM_DOMAIN=demo.edgeever.org
+EDGE_EVER_DEMO_ROUTE_PATTERN=demo.edgeever.org/*
 EDGE_EVER_DEMO_D1_DATABASE_ID=<demo D1 database_id>
 EDGE_EVER_DEMO_R2_BUCKET_NAME=edgeever-demo-resources
 ```
+
+`EDGE_EVER_CUSTOM_DOMAIN` 会通过 Workers Custom Domain 绑定域名；`EDGE_EVER_ROUTE_PATTERN` 会生成 Worker Route，适合配合 DNS CNAME 使用。当前推荐 `tianma` 用 Custom Domain，`demo` 用 Route Pattern，两个实例彼此独立。
 
 部署单个实例：
 
@@ -194,7 +196,8 @@ bun run deploy:all
 
 ```text
 EDGE_EVER_WORKER_NAME=<实例 Worker 名>
-EDGE_EVER_CUSTOM_DOMAIN=<实例域名>
+EDGE_EVER_CUSTOM_DOMAIN=<实例域名，或改用 EDGE_EVER_ROUTE_PATTERN>
+EDGE_EVER_ROUTE_PATTERN=<实例 route，例如 demo.edgeever.org/*>
 EDGE_EVER_D1_DATABASE_ID=<实例 D1 database_id>
 EDGE_EVER_R2_BUCKET_NAME=<实例 R2 bucket>
 EDGE_EVER_R2_PREVIEW_BUCKET_NAME=<实例 R2 preview bucket>
