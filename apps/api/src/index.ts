@@ -543,8 +543,8 @@ app.delete("/api/v1/api-tokens/:id", async (c) => {
   const actor = getAuditActor(c);
 
   await c.env.DB.batch([
-    c.env.DB.prepare(`UPDATE api_tokens SET is_revoked = 1 WHERE id = ?`).bind(id),
-    auditStatement(c.env.DB, actor.actorType, actor.actorId, "api_token.revoke", "api_token", id, {}),
+    c.env.DB.prepare(`DELETE FROM api_tokens WHERE id = ?`).bind(id),
+    auditStatement(c.env.DB, actor.actorType, actor.actorId, "api_token.delete", "api_token", id, {}),
   ]);
 
   return c.json({ ok: true });

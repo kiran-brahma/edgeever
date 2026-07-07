@@ -307,7 +307,7 @@ const TokenList = ({ tokens, isLoading, isDeleting, onDelete }: TokenListProps) 
               className="h-9 w-full shrink-0 sm:w-9"
               title={t("mcp.deleteToken")}
               aria-label={t("mcp.deleteToken")}
-              disabled={token.isRevoked || isDeleting}
+              disabled={isDeleting}
               onClick={() => onDelete(token)}
             >
               <Trash2 className="h-4 w-4" />
