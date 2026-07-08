@@ -3440,6 +3440,9 @@ const ResourceCard = ({
               {formatBytes(resource.byteSize)} · {resource.mimeType?.split("/")[1] || resource.kind}
             </Text>
             <Text numberOfLines={1} style={styles.panelLabel}>
+              {formatDate(resource.createdAt, localePreference)}
+            </Text>
+            <Text numberOfLines={1} style={styles.panelLabel}>
               来源：{source}
             </Text>
           </>
