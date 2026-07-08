@@ -214,6 +214,7 @@ export const WorkspaceScreen = () => {
   const [searchText, setSearchText] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
   const [notesActionsOpen, setNotesActionsOpen] = useState(false);
+  const [memoActionsMemo, setMemoActionsMemo] = useState<MemoSummary | null>(null);
   const [templatesOpen, setTemplatesOpen] = useState(false);
   const [editingMemo, setEditingMemo] = useState<MemoDetail | null>(null);
   const [richEditingMemo, setRichEditingMemo] = useState<MemoDetail | null>(null);
@@ -515,6 +516,23 @@ export const WorkspaceScreen = () => {
     },
   });
 
+  const restoreMemoByIdMutation = useMutation({
+    mutationFn: async (memoId: string) => {
+      if (!client) {
+        throw new Error("Client is not ready");
+      }
+
+      const response = await client.restoreMemo(memoId);
+      return response.memo;
+    },
+    onSuccess: async (memo) => {
+      await invalidateWorkspace();
+      setMemoView("notebook");
+      setSelectedMemoId(memo.id);
+      setMemoActionsMemo(null);
+    },
+  });
+
   const emptyTrashMutation = useMutation({
     mutationFn: async () => {
       if (!client) {
@@ -625,6 +643,27 @@ export const WorkspaceScreen = () => {
         onPress: () => deleteMemosMutation.mutate({ memoIds: selectedMemoIdList, permanent }),
       },
     ]);
+  };
+
+  const requestDeleteMemoSummary = (memo: MemoSummary) => {
+    const permanent = memoView === "trash";
+
+    Alert.alert(permanent ? "永久删除笔记？" : "删除笔记？", permanent ? "此操作不可撤销。" : "笔记会移动到回收站。", [
+      { text: "取消", style: "cancel" },
+      {
+        text: permanent ? "永久删除" : "删除",
+        style: "destructive",
+        onPress: () => {
+          setMemoActionsMemo(null);
+          deleteMemosMutation.mutate({ memoIds: [memo.id], permanent });
+        },
+      },
+    ]);
+  };
+
+  const selectSingleMemo = (memoId: string) => {
+    setSelectionMode(true);
+    setSelectedMemoIds(new Set([memoId]));
   };
 
   const handleMergeSelection = () => {
@@ -749,11 +788,12 @@ export const WorkspaceScreen = () => {
           onOpenActions={() => setNotesActionsOpen(true)}
           onOpenTemplates={() => setTemplatesOpen(true)}
           onMemoPress={handleMemoPress}
-          onMemoLongPress={toggleSelectedMemo}
+          onMemoLongPress={(memo) => setMemoActionsMemo(memo)}
           onRefresh={refresh}
           onSelectNotebook={setActiveNotebookId}
           onSetMemoView={setMemoView}
           onSortModeChange={setMemoSortMode}
+          selectionMode={selectionMode}
           selectedMemoIds={selectedMemoIds}
           error={memosQuery.error}
           isError={memosQuery.isError}
@@ -922,6 +962,32 @@ export const WorkspaceScreen = () => {
         visible={notesActionsOpen}
       />
 
+      <MemoActionsModal
+        isBusy={deleteMemosMutation.isPending || pinMemosMutation.isPending || restoreMemoByIdMutation.isPending}
+        memo={memoActionsMemo}
+        memoView={memoView}
+        onClose={() => setMemoActionsMemo(null)}
+        onDelete={requestDeleteMemoSummary}
+        onMove={(memo) => {
+          setMemoActionsMemo(null);
+          selectSingleMemo(memo.id);
+          setSelectionMoveOpen(true);
+        }}
+        onOpen={(memo) => {
+          setMemoActionsMemo(null);
+          setSelectedMemoId(memo.id);
+        }}
+        onRestore={(memo) => restoreMemoByIdMutation.mutate(memo.id)}
+        onSelect={(memo) => {
+          setMemoActionsMemo(null);
+          selectSingleMemo(memo.id);
+        }}
+        onTogglePin={(memo) => {
+          setMemoActionsMemo(null);
+          pinMemosMutation.mutate({ memoIds: [memo.id], isPinned: !memo.isPinned });
+        }}
+      />
+
       {activeView === "notes" && selectionMode ? (
         <SelectionActionBar
           canMerge={memoView !== "trash" && selectedMemoIds.size >= 2}
@@ -1017,6 +1083,7 @@ const NotesView = ({
   onSetMemoView,
   onSortModeChange,
   selectedMemoIds,
+  selectionMode,
   isEmptyingTrash,
 }: {
   activeNotebook: Notebook | null;
@@ -1039,13 +1106,14 @@ const NotesView = ({
   onFilterModeChange: (filterMode: MemoFilterMode) => void;
   onMemoListDensityChange: (density: MobileMemoListDensity) => void;
   onOpenActions: () => void;
-  onMemoLongPress: (memoId: string) => void;
+  onMemoLongPress: (memo: MemoSummary) => void;
   onMemoPress: (memoId: string) => void;
   onOpenTemplates: () => void;
   onRefresh: () => void;
   onSelectNotebook: (notebookId: string) => void;
   onSetMemoView: (memoView: MemoView) => void;
   onSortModeChange: (sortMode: MemoSortMode) => void;
+  selectionMode: boolean;
   selectedMemoIds: Set<string>;
   isEmptyingTrash: boolean;
 }) => (
@@ -1133,6 +1201,7 @@ const NotesView = ({
       onMemoLongPress={onMemoLongPress}
       onMemoPress={onMemoPress}
       onRefresh={onRefresh}
+      selectionMode={selectionMode}
       selectedMemoIds={selectedMemoIds}
     />
   </View>
@@ -1176,10 +1245,63 @@ const NotesActionsModal = ({
   </Modal>
 );
 
-const ActionSheetItem = ({ icon, label, onPress }: { icon: ReactNode; label: string; onPress: () => void }) => (
-  <Pressable accessibilityRole="button" onPress={onPress} style={styles.actionSheetItem}>
+const MemoActionsModal = ({
+  isBusy,
+  memo,
+  memoView,
+  onClose,
+  onDelete,
+  onMove,
+  onOpen,
+  onRestore,
+  onSelect,
+  onTogglePin,
+}: {
+  isBusy: boolean;
+  memo: MemoSummary | null;
+  memoView: MemoView;
+  onClose: () => void;
+  onDelete: (memo: MemoSummary) => void;
+  onMove: (memo: MemoSummary) => void;
+  onOpen: (memo: MemoSummary) => void;
+  onRestore: (memo: MemoSummary) => void;
+  onSelect: (memo: MemoSummary) => void;
+  onTogglePin: (memo: MemoSummary) => void;
+}) => (
+  <Modal animationType="fade" onRequestClose={onClose} transparent visible={Boolean(memo)}>
+    <Pressable onPress={onClose} style={styles.actionSheetBackdrop}>
+      <Pressable style={styles.actionSheet}>
+        <View style={styles.actionSheetHandle} />
+        <Text numberOfLines={1} style={styles.actionSheetTitle}>
+          {memo?.title?.trim() || DEFAULT_MEMO_TITLE}
+        </Text>
+        {memo ? (
+          <>
+            <ActionSheetItem disabled={isBusy} icon={<FileText color="#0f172a" size={18} />} label="打开笔记" onPress={() => onOpen(memo)} />
+            <ActionSheetItem disabled={isBusy} icon={<CheckSquare color="#0f172a" size={18} />} label="选择笔记" onPress={() => onSelect(memo)} />
+            {memoView === "trash" ? (
+              <>
+                <ActionSheetItem disabled={isBusy} icon={<RotateCcw color="#0f172a" size={18} />} label="恢复笔记" onPress={() => onRestore(memo)} />
+                <ActionSheetItem danger disabled={isBusy} icon={<Trash2 color="#b91c1c" size={18} />} label="永久删除" onPress={() => onDelete(memo)} />
+              </>
+            ) : (
+              <>
+                <ActionSheetItem disabled={isBusy} icon={<Folder color="#0f172a" size={18} />} label="移动到笔记本" onPress={() => onMove(memo)} />
+                <ActionSheetItem disabled={isBusy} icon={<Pin color="#0f172a" size={18} />} label={memo.isPinned ? "取消置顶" : "置顶"} onPress={() => onTogglePin(memo)} />
+                <ActionSheetItem danger disabled={isBusy} icon={<Trash2 color="#b91c1c" size={18} />} label="删除笔记" onPress={() => onDelete(memo)} />
+              </>
+            )}
+          </>
+        ) : null}
+      </Pressable>
+    </Pressable>
+  </Modal>
+);
+
+const ActionSheetItem = ({ danger = false, disabled = false, icon, label, onPress }: { danger?: boolean; disabled?: boolean; icon: ReactNode; label: string; onPress: () => void }) => (
+  <Pressable accessibilityRole="button" disabled={disabled} onPress={onPress} style={[styles.actionSheetItem, disabled && styles.buttonDisabled]}>
     {icon}
-    <Text style={styles.actionSheetItemText}>{label}</Text>
+    <Text style={[styles.actionSheetItemText, danger && styles.actionSheetItemTextDanger]}>{label}</Text>
   </Pressable>
 );
 
@@ -3538,6 +3660,7 @@ const MemoList = ({
   onMemoLongPress,
   onMemoPress,
   onRefresh,
+  selectionMode = false,
   selectedMemoIds = new Set(),
 }: {
   emptyDescription: string;
@@ -3548,9 +3671,10 @@ const MemoList = ({
   isRefreshing: boolean;
   listDensity: MobileMemoListDensity;
   memos: MemoSummary[];
-  onMemoLongPress?: (memoId: string) => void;
+  onMemoLongPress?: (memo: MemoSummary) => void;
   onMemoPress: (memoId: string) => void;
   onRefresh: () => void;
+  selectionMode?: boolean;
   selectedMemoIds?: Set<string>;
 }) => {
   if (isLoading) {
@@ -3580,10 +3704,10 @@ const MemoList = ({
         <MemoCard
           memo={item}
           listDensity={listDensity}
-          onLongPress={onMemoLongPress ? () => onMemoLongPress(item.id) : undefined}
+          onLongPress={onMemoLongPress ? () => onMemoLongPress(item) : undefined}
           onPress={() => onMemoPress(item.id)}
           selected={selectedMemoIds.has(item.id)}
-          selectionMode={selectedMemoIds.size > 0}
+          selectionMode={selectionMode}
         />
       )}
       ListEmptyComponent={
@@ -5014,6 +5138,9 @@ const styles = StyleSheet.create({
     color: "#0f172a",
     fontSize: 14,
     fontWeight: "800",
+  },
+  actionSheetItemTextDanger: {
+    color: "#b91c1c",
   },
   detailContent: {
     padding: 18,
