@@ -49,6 +49,7 @@ type Bindings = {
   EDGE_EVER_SESSION_TTL_DAYS?: string;
   EDGE_EVER_R2_BUCKET_NAME?: string;
   EDGE_EVER_DEMO_MODE?: string;
+  EDGE_EVER_LOCAL_DEMO_SEED?: string;
 };
 
 type AuthContext = {
@@ -1246,6 +1247,60 @@ app.post("/api/v1/memos/:id/revisions/:revisionId/restore", async (c) => {
   return c.json({ memo: await getMemoDetail(c.env.DB, memoId) });
 });
 
+app.get("/api/v1/exports/markdown", async (c) => {
+  const denied = requireScopes(c, "read:memos", "read:resources");
+
+  if (denied) {
+    return denied;
+  }
+
+  const limit = clampNumber(Number(c.req.query("limit") ?? 50), 1, 100);
+  const offset = clampNumber(Number(c.req.query("offset") ?? 0), 0, 1_000_000);
+  const [memoRows, totalRow] = await Promise.all([
+    c.env.DB.prepare(
+      `SELECT m.id, m.notebook_id, m.title, m.excerpt, m.tags_json, m.is_pinned,
+              m.is_archived, m.is_deleted, m.created_at, m.updated_at, m.deleted_at, mc.revision,
+              mc.content_json, mc.content_markdown, mc.content_text, mc.content_hash,
+              m.source_memo_ids, m.merge_source_count, m.merged_into_memo_id
+       FROM memos m
+       INNER JOIN memo_contents mc ON mc.memo_id = m.id
+       WHERE m.is_deleted = 0
+       ORDER BY m.created_at ASC, m.id ASC
+       LIMIT ? OFFSET ?`
+    )
+      .bind(limit, offset)
+      .all<MemoDetailRow>(),
+    c.env.DB.prepare(`SELECT COUNT(*) AS count FROM memos WHERE is_deleted = 0`).first<{ count: number }>(),
+  ]);
+
+  const memoIds = memoRows.results.map((row) => row.id);
+  let resources: Resource[] = [];
+
+  if (memoIds.length > 0) {
+    const placeholders = memoIds.map(() => "?").join(", ");
+    const resourceRows = await c.env.DB.prepare(
+      `SELECT id, memo_id, original_memo_id, bucket_name, object_key, kind, mime_type,
+              filename, byte_size, sha256, width, height, created_at, updated_at
+       FROM resources
+       WHERE is_deleted = 0 AND memo_id IN (${placeholders})
+       ORDER BY memo_id ASC, created_at ASC, id ASC`
+    )
+      .bind(...memoIds)
+      .all<ResourceRow>();
+    resources = resourceRows.results.map(mapResource);
+  }
+
+  const totalCount = totalRow?.count ?? memoRows.results.length;
+  const nextOffset = offset + memoRows.results.length < totalCount ? offset + memoRows.results.length : null;
+
+  return c.json({
+    memos: memoRows.results.map(mapMemoDetail),
+    resources,
+    totalCount,
+    nextOffset,
+  });
+});
+
 app.get("/api/v1/resources", async (c) => {
   const denied = requireScopes(c, "read:resources");
 
@@ -1951,7 +2006,11 @@ app.post("/mcp", async (c) => {
 });
 
 const worker = {
-  fetch(request: Request, env: Bindings, ctx: ExecutionContext) {
+  async fetch(request: Request, env: Bindings, ctx: ExecutionContext) {
+    if (isLocalDemoSeedEnabled(env)) {
+      await ensureLocalDemoSeed(env);
+    }
+
     return app.fetch(request, env, ctx);
   },
   async scheduled(controller: ScheduledController, env: Bindings, ctx: ExecutionContext) {
@@ -4216,6 +4275,33 @@ const emptyTrashMemosRecord = async (
 };
 
 const isDemoMode = (env: Bindings) => env.EDGE_EVER_DEMO_MODE?.trim().toLowerCase() === "true";
+const isLocalDemoSeedEnabled = (env: Bindings) =>
+  env.EDGE_EVER_LOCAL_DEMO_SEED?.trim().toLowerCase() === "true";
+
+let localDemoSeedPromise: Promise<void> | null = null;
+
+const ensureLocalDemoSeed = (env: Bindings) => {
+  localDemoSeedPromise ??= (async () => {
+    const existingMarker = await env.DB.prepare(
+      `SELECT id FROM audit_events WHERE action = 'demo.local_seed' LIMIT 1`
+    ).first<{ id: string }>();
+
+    if (existingMarker) {
+      return;
+    }
+
+    await ensureDemoSeed(env);
+    await audit(env.DB, "system", null, "demo.local_seed", "demo", "edgeever-local", {
+      seedMemoCount: DEMO_SEED_MEMOS.length,
+      mode: "non-destructive",
+    });
+  })().catch((error) => {
+    localDemoSeedPromise = null;
+    throw error;
+  });
+
+  return localDemoSeedPromise;
+};
 
 const ensureDemoSeed = async (env: Bindings, options: { refreshResources?: boolean } = {}) => {
   const db = env.DB;

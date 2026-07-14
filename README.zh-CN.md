@@ -111,6 +111,12 @@ bun install
 bun run db:migrate:local
 ```
 
+如需启动完全本地的开发环境，请运行下面的命令。它会先应用本地迁移，并在首次启动时使用仓库内固定的 Demo 种子初始化本地 D1/R2；后续重启会保留本地修改。
+
+```sh
+bun run dev:local
+```
+
 启动本地开发：
 
 ```sh

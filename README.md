@@ -109,6 +109,12 @@ Apply local D1 migrations:
 bun run db:migrate:local
 ```
 
+For a fully local development environment, run the command below. It applies pending local migrations and initializes the local D1/R2 stores once with the repository's fixed demo seed. Existing local changes are preserved on later restarts.
+
+```sh
+bun run dev:local
+```
+
 Start local development:
 
 ```sh

@@ -128,6 +128,7 @@ const runtimeVars = {
   EDGE_EVER_SESSION_TTL_DAYS: envValue("SESSION_TTL_DAYS"),
   EDGE_EVER_R2_BUCKET_NAME: envValue("R2_BUCKET_NAME"),
   EDGE_EVER_DEMO_MODE: envValue("DEMO_MODE"),
+  EDGE_EVER_LOCAL_DEMO_SEED: envValue("LOCAL_DEMO_SEED"),
 };
 const runtimeVarLines = Object.entries(runtimeVars)
   .filter(([, value]) => Boolean(value))
@@ -145,6 +146,11 @@ ${runtimeVarLines.join("\n")}
 const demoMode = envValue("DEMO_MODE")?.toLowerCase();
 if (demoMode && !["true", "false"].includes(demoMode)) {
   throw new Error("EDGE_EVER_DEMO_MODE must be true or false.");
+}
+
+const localDemoSeed = envValue("LOCAL_DEMO_SEED")?.toLowerCase();
+if (localDemoSeed && !["true", "false"].includes(localDemoSeed)) {
+  throw new Error("EDGE_EVER_LOCAL_DEMO_SEED must be true or false.");
 }
 
 if (demoMode === "true") {

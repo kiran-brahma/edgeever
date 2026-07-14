@@ -163,6 +163,17 @@ export const enUS = {
     unknown: "Unknown",
     copy: "Copy info",
   },
+  dataExport: {
+    title: "Export notes",
+    description: "Export all active notes in this workspace as a Markdown ZIP archive.",
+    markdownDetails: "Each note is saved as a separate Markdown file with tags, notebook, and timestamps in Front Matter. Images and attachments are stored in a matching .assets folder and referenced with relative paths. Notes in Trash are excluded.",
+    exportButton: "Export Markdown ZIP",
+    exportingButton: "Exporting",
+    exporting: "Preparing notes and attachments…",
+    progress: "{{completed}} / {{total}} notes",
+    complete: "Export complete. Your ZIP download has started.",
+    error: "Export failed. Check your connection and try again.",
+  },
   shortcuts: {
     title: "Keyboard shortcuts",
     manage: "Manage",

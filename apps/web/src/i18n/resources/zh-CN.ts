@@ -163,6 +163,17 @@ export const zhCN = {
     unknown: "未知",
     copy: "复制信息",
   },
+  dataExport: {
+    title: "导出笔记",
+    description: "将当前工作区中的全部有效笔记导出为 Markdown ZIP。",
+    markdownDetails: "每篇笔记会保存为独立的 Markdown 文件，标签、笔记本和时间信息写入 Front Matter；图片与附件保存在对应的 .assets 文件夹中，并使用相对路径引用。回收站中的笔记不会导出。",
+    exportButton: "导出 Markdown ZIP",
+    exportingButton: "正在导出",
+    exporting: "正在整理笔记和附件…",
+    progress: "{{completed}} / {{total}} 篇",
+    complete: "导出完成，ZIP 文件已开始下载。",
+    error: "导出失败，请检查网络连接后重试。",
+  },
   shortcuts: {
     title: "绑定快捷键",
     manage: "管理",

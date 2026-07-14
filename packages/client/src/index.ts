@@ -64,6 +64,13 @@ export type ResourceResponse = {
   resource: Resource;
 };
 
+export type MarkdownExportPage = {
+  memos: MemoDetail[];
+  resources: Resource[];
+  totalCount: number;
+  nextOffset: number | null;
+};
+
 export class ApiRequestError extends Error {
   status: number;
   code?: string;
@@ -273,6 +280,32 @@ export const createEdgeEverClient = (options: EdgeEverClientOptions = {}) => {
       }),
 
     listResources: () => request<ListResourcesResponse>("/api/v1/resources"),
+
+    getMarkdownExportPage: (offset = 0, limit = 50) =>
+      request<MarkdownExportPage>(`/api/v1/exports/markdown?offset=${offset}&limit=${limit}`),
+
+    getResourceBlob: async (resourceUrl: string) => {
+      const headers = new Headers();
+
+      if (options.token) {
+        headers.set("Authorization", `Bearer ${options.token}`);
+      }
+
+      const response = await fetchImpl(`${baseUrl}${resourceUrl}`, {
+        credentials: "include",
+        headers,
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          options.onUnauthorized?.();
+        }
+
+        throw new ApiRequestError(response.statusText || "Resource download failed", response.status);
+      }
+
+      return response.blob();
+    },
 
     uploadMemoResource: (memoId: string, file: FormData) =>
       request<ResourceResponse>(`/api/v1/memos/${memoId}/resources`, {

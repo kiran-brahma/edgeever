@@ -830,6 +830,66 @@
         }
       }
     },
+    "/api/v1/exports/markdown": {
+      "get": {
+        "summary": "Read a page of Markdown export data",
+        "description": "Returns active memo details and their resource metadata for browser-side Markdown ZIP generation. Requires read:memos and read:resources scopes.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of active memos and related resources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "memos": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MemoDetail"
+                      }
+                    },
+                    "resources": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Resource"
+                      }
+                    },
+                    "totalCount": {
+                      "type": "integer"
+                    },
+                    "nextOffset": {
+                      "type": ["integer", "null"]
+                    }
+                  },
+                  "required": ["memos", "resources", "totalCount", "nextOffset"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/resources": {
       "get": {
         "summary": "List resources and storage summary",

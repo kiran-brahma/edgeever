@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import type { ShortcutSettings } from "@/lib/app-helpers";
 import { WORKSPACE_PAGE_TITLE_CLASSNAME } from "@/lib/workspace-ui";
 import { AdvancedPlayCard } from "./settings/AdvancedPlayCard";
+import { DataExportCard } from "./settings/DataExportCard";
 import { EvernoteImportGuideCard } from "./settings/EvernoteImportGuideCard";
 import { McpConfigCard } from "./settings/McpConfigCard";
 import { PreferenceCard } from "./settings/PreferenceCard";
@@ -71,6 +72,7 @@ export const SettingsPane = ({
           />
           <PasswordCard authRequired={authRequired} />
           <AdvancedPlayCard />
+          <DataExportCard />
           <EvernoteImportGuideCard onShowGuide={onShowGuide} />
           <McpConfigCard />
           <SystemInfoCard />
