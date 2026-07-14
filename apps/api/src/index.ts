@@ -244,7 +244,7 @@ const DEMO_SEED_MEMOS = [
     tags: ["edgeever", "welcome"],
     isPinned: true,
     markdown:
-      "## 欢迎来到 EdgeEver\n\n这是公开演示环境，可以随便创建、编辑、搜索和合并笔记。\n\n演示环境会每天自动重置，请不要保存私密内容。",
+      "## 欢迎来到 EdgeEver\n\n这是公开演示环境，可以放心创建、编辑、搜索和合并笔记。\n\n> 演示数据会在**每周一凌晨 1:00（北京时间）**重置并恢复这些示例笔记，请不要保存私密内容。\n\n## 3 分钟体验路线\n\n1. 新建一条临时笔记，写下一个想法并添加标签。\n2. 搜索 `workflow`、`全文搜索` 或 `分流`，体验全文搜索和标签筛选。\n3. 打开「富文本与 Markdown 编辑」，试着修改标题、引用或代码块。\n4. 在列表中多选「合并素材：访谈摘录」与「合并素材：竞品观察」，合并成一条长期笔记。\n5. 打开「图片笔记示例」，查看图片资源如何随正文一起保存。\n\n完成后可以随意删除、移动或改写这些笔记；下次重置会恢复初始状态。",
   },
   {
     id: "memo_demo_editor",
@@ -253,7 +253,7 @@ const DEMO_SEED_MEMOS = [
     tags: ["editor", "markdown"],
     isPinned: true,
     markdown:
-      "## 富文本与 Markdown 编辑\n\nEdgeEver 使用 TipTap 保存结构化正文，同时保留 Markdown 和纯文本索引。\n\n- 支持标题、列表、引用和代码块\n- API 和 MCP 可以直接读写 Markdown\n- 搜索使用纯文本索引，不依赖前端编辑器\n\n![EdgeEver 编辑器图片示例](/api/v1/resources/res_demo_editor_image/blob)",
+      "## 富文本与 Markdown 编辑\n\n这条笔记本身就是一个可直接修改的样例：试着改动下面的标题、列表、引用和代码块，然后切换到 Markdown 视图查看对应文本。\n\n### 一份简短清单\n\n- 用标题组织内容层级\n- 用列表拆分行动项\n- 用引用保留原话或关键结论\n\n> 好笔记不是把信息堆起来，而是让下一次找到它时还能立刻行动。\n\n```ts\nconst nextStep = \"把零散想法归入一个笔记本\";\n```\n\nEdgeEver 使用 TipTap 保存结构化正文，同时保留 Markdown 和纯文本索引；API 和 MCP 都可以直接读写 Markdown。\n\n![EdgeEver 编辑器图片示例](/api/v1/resources/res_demo_editor_image/blob)",
   },
   {
     id: "memo_demo_search_tags",
@@ -262,7 +262,7 @@ const DEMO_SEED_MEMOS = [
     tags: ["search", "tags", "workflow"],
     isPinned: false,
     markdown:
-      "## 标签、搜索与归档\n\n这条笔记用于演示标签和全文搜索。你可以搜索 `workflow`、`全文搜索` 或 `EdgeEver`。\n\n建议把临时资料先放入等待分类，再通过标签和笔记本整理。",
+      "## 标签、搜索与归档\n\n这条笔记用于体验标题、正文和标签的不同检索入口。现在就试着搜索：\n\n- `workflow`：命中标签\n- `全文搜索`：命中正文\n- `分流`：命中一个只出现在正文里的关键词\n\n建议先把临时资料放进「等待分类」，再用笔记本承载长期主题、用标签横向连接项目。这样新想法不会堵住入口，资料也不会因为只属于一个项目而被分流遗忘。",
   },
   {
     id: "memo_demo_merge",
@@ -271,7 +271,25 @@ const DEMO_SEED_MEMOS = [
     tags: ["merge", "long-term-note"],
     isPinned: false,
     markdown:
-      "## 多选合并笔记示例\n\n在笔记列表中多选几条笔记后，可以合并为一条长期笔记。原笔记会进入回收站，资源关联会移动到新笔记。\n\n这个能力适合把零散摘录整理成项目总结。",
+      "## 多选合并笔记示例\n\n现在有两条可直接操作的素材：「合并素材：访谈摘录」和「合并素材：竞品观察」。在笔记列表中多选它们，然后合并为一条长期笔记。\n\n合并后，原笔记会进入回收站，资源关联会移动到新笔记。这个能力适合把零散摘录、会议记录或调研片段整理成项目总结。",
+  },
+  {
+    id: "memo_demo_merge_interview",
+    notebookId: "nb_demo_features",
+    title: "合并素材：访谈摘录",
+    tags: ["merge", "research", "workflow"],
+    isPinned: false,
+    markdown:
+      "## 用户访谈摘录\n\n- 用户希望先快速记录，再集中整理。\n- 搜索比文件夹层级更适合回找零散灵感。\n- 重要内容需要沉淀成可持续维护的长期笔记。",
+  },
+  {
+    id: "memo_demo_merge_competitor",
+    notebookId: "nb_demo_features",
+    title: "合并素材：竞品观察",
+    tags: ["merge", "research", "workflow"],
+    isPinned: false,
+    markdown:
+      "## 竞品观察\n\n- 收集入口越轻，越容易形成待整理的资料堆。\n- 用标签连接主题，能减少重复归档。\n- 定期把片段合并成结论，能降低长期维护成本。",
   },
   {
     id: "memo_demo_agent",
@@ -280,7 +298,7 @@ const DEMO_SEED_MEMOS = [
     tags: ["api", "mcp", "agent"],
     isPinned: false,
     markdown:
-      "## Agent-ready\n\nEdgeEver 提供 REST API、OpenAPI schema 和 MCP endpoint。AI Agent 可以读取笔记本、创建笔记、整理标签，并把导入资料迁移到你的自托管实例。\n\nOpenAPI 路径：`/api/openapi.json`",
+      "## Agent-ready：REST API 与 MCP\n\nEdgeEver 提供 REST API、OpenAPI schema 和 MCP endpoint。AI Agent 可以读取笔记本、创建笔记、整理标签，并把导入资料迁移到你的自托管实例。\n\n### 从这里开始\n\n- OpenAPI schema：`/api/openapi.json`\n- MCP endpoint：`/mcp`\n\n一个很小的 Agent 工作流是：先读取「功能演示」笔记本，再把这两条合并素材整理成一条带结论的长期笔记。",
   },
   {
     id: "memo_demo_mobile",
@@ -289,7 +307,7 @@ const DEMO_SEED_MEMOS = [
     tags: ["pwa", "mobile"],
     isPinned: false,
     markdown:
-      "## 移动端与 PWA\n\nEdgeEver 支持桌面三栏工作流，也适配移动端。你可以把站点安装为 PWA，用手机快速记录，再回到桌面整理。",
+      "## 移动端与 PWA\n\nEdgeEver 支持桌面三栏工作流，也适配移动端。你可以把站点安装为 PWA，用手机快速记录，再回到桌面整理。\n\n可以试试：在手机上新建一条「临时想法」，添加 `inbox` 标签；回到桌面后把它移入对应笔记本并补全内容。",
   },
   {
     id: "memo_demo_images",
@@ -298,7 +316,7 @@ const DEMO_SEED_MEMOS = [
     tags: ["image", "attachment", "demo"],
     isPinned: false,
     markdown:
-      "## 图片笔记示例\n\n笔记正文可以直接插入图片。上传后的图片会进入 R2，正文里保存的是资源 URL，API、MCP 和前端编辑器都能读取。\n\n![EdgeEver 图片资源示例](/api/v1/resources/res_demo_gallery_image/blob)\n\n这类笔记适合保存截图、设计稿、读书摘图和临时资料。",
+      "## 图片笔记示例\n\n笔记正文可以直接插入图片。上传后的图片会进入 R2，正文里保存的是资源 URL，API、MCP 和前端编辑器都能读取。\n\n![EdgeEver 图片资源示例](/api/v1/resources/res_demo_gallery_image/blob)\n\n**图注：** 一张图片和它的说明、结论放在同一条笔记里，回看时就不必猜测截图来自哪里。\n\n这类笔记适合保存截图、设计稿、读书摘图和临时资料。",
   },
 ];
 const DEMO_SEED_RESOURCES = [
