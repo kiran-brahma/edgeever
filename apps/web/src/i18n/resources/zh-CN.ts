@@ -586,6 +586,7 @@ export const zhCN = {
     passwordMismatch: "两次输入的新密码不一致。",
     newPasswordTooShort: "新密码至少需要 8 个字符。",
     changeFailed: "密码修改失败，请稍后重试。",
+    demoReadOnly: "Demo 环境使用固定登录凭据，无法修改登录密码。",
   },
   mcp: {
     createdTitle: "API Token 已成功生成",

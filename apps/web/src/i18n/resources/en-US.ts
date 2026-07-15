@@ -586,6 +586,7 @@ export const enUS = {
     passwordMismatch: "The new passwords do not match.",
     newPasswordTooShort: "The new password must be at least 8 characters.",
     changeFailed: "Unable to change the password. Please try again.",
+    demoReadOnly: "The demo environment uses fixed login credentials and does not allow changing the password.",
   },
   mcp: {
     createdTitle: "API Token created",

@@ -34,6 +34,7 @@ interface SettingsPaneProps {
   onLogout: () => void;
   isLoggingOut: boolean;
   authRequired: boolean;
+  demoMode: boolean;
   isOwner: boolean;
   onShowGuide?: () => void;
 }
@@ -65,6 +66,7 @@ export const SettingsPane = ({
   onLogout,
   isLoggingOut,
   authRequired,
+  demoMode,
   isOwner,
   onShowGuide,
 }: SettingsPaneProps) => {
@@ -193,7 +195,7 @@ export const SettingsPane = ({
       case "account":
         return (
           <SettingsGroup>
-            <PasswordCard authRequired={authRequired} />
+            <PasswordCard authRequired={authRequired} demoMode={demoMode} />
             <SessionCard authRequired={authRequired} isLoggingOut={isLoggingOut} onLogout={onLogout} />
           </SettingsGroup>
         );

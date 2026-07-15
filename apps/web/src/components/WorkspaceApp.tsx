@@ -745,11 +745,13 @@ const MobileNotebookPickerItem = ({
 
 export const WorkspaceApp = ({
   authRequired,
+  demoMode,
   user,
   isLoggingOut,
   onLogout,
 }: {
   authRequired: boolean;
+  demoMode: boolean;
   user: AuthUser | null;
   isLoggingOut: boolean;
   onLogout: () => void;
@@ -2571,7 +2573,8 @@ export const WorkspaceApp = ({
                     onLogout={onLogout}
                     isLoggingOut={isLoggingOut}
                     authRequired={authRequired}
-                    isOwner={authRequired && user?.role === "owner"}
+                    demoMode={demoMode}
+                    isOwner={!demoMode && authRequired && user?.role === "owner"}
                     onShowGuide={() => setRightView("evernote-migration")}
                   />
                 ) : rightView === "assets" ? (
