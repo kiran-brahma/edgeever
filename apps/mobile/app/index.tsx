@@ -1,6 +1,6 @@
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { LoginScreen } from "../src/screens/LoginScreen";
-import { WorkspaceScreen } from "../src/screens/WorkspaceScreen";
+import { PwaWorkspaceScreen } from "../src/screens/PwaWorkspaceScreen";
 import { useSession } from "../src/lib/session";
 
 export default function IndexScreen() {
@@ -14,7 +14,7 @@ export default function IndexScreen() {
     );
   }
 
-  return session ? <WorkspaceScreen /> : <LoginScreen />;
+  return session ? <PwaWorkspaceScreen /> : <LoginScreen />;
 }
 
 const styles = StyleSheet.create({

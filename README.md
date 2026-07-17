@@ -94,9 +94,9 @@ The Chrome/Edge web clipper is complete and pending store publication.
 
 ## Native Clients
 
-Native clients are part of the EdgeEver roadmap. The mobile app is planned to be built with React Native, and the desktop app is planned to be built with Tauri.
+The Android app is built with Expo and React Native. After securely connecting to a self-hosted instance, it runs that instance's current mobile PWA inside a restricted same-origin native container. This keeps the App UI, editing features, offline drafts, sync queue, settings, and import/export workflow aligned with the PWA without maintaining a second workspace implementation. Native bridges handle secure session reuse, external links, Android navigation, and exported-file sharing.
 
-The goal is to let users connect these clients to their own self-hosted EdgeEver instance, keeping the same Cloudflare-based backend, open API, and user-owned data model while providing a smoother native experience on mobile and desktop.
+The desktop app remains on the roadmap and is planned to use Tauri.
 
 ## Tech Stack
 
