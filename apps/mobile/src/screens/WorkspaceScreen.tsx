@@ -764,20 +764,6 @@ export const WorkspaceScreen = () => {
     },
   });
 
-  const emptyTrashMutation = useMutation({
-    mutationFn: async () => {
-      if (!client) {
-        throw new Error("Client is not ready");
-      }
-
-      return client.emptyTrash();
-    },
-    onSuccess: async () => {
-      await invalidateWorkspace();
-      setSelectedMemoId(null);
-    },
-  });
-
   const moveMemosMutation = useMutation({
     mutationFn: async ({ memoIds, notebookId }: { memoIds: string[]; notebookId: string }) => {
       if (!client) {
@@ -853,17 +839,6 @@ export const WorkspaceScreen = () => {
         text: "永久删除",
         style: "destructive",
         onPress: () => deleteMemoMutation.mutate({ memo, permanent: true }),
-      },
-    ]);
-  };
-
-  const handleEmptyTrash = () => {
-    Alert.alert("清空回收站", "回收站中的全部笔记和仍关联的附件都会删除，这个操作不可恢复。", [
-      { text: "取消", style: "cancel" },
-      {
-        text: "清空回收站",
-        style: "destructive",
-        onPress: () => emptyTrashMutation.mutate(),
       },
     ]);
   };
@@ -1163,18 +1138,12 @@ export const WorkspaceScreen = () => {
         canEnterSelection={visibleMemos.length > 0}
         memoListDensity={memoListDensity}
         memoSortMode={memoSortMode}
-        memoView={memoView}
-        isEmptyingTrash={emptyTrashMutation.isPending}
         listDescription={`${searchActive ? searchQuery.data?.pages[0]?.totalCount ?? searchResults.length : memosQuery.data?.pages[0]?.totalCount ?? memos.length} 条笔记`}
         listTitle={memoView === "trash" ? "回收站" : activeNotebook?.name ?? "全部笔记"}
         onClose={() => setNotesActionsOpen(false)}
         onEnterSelection={() => {
           setNotesActionsOpen(false);
           enterSelectionMode();
-        }}
-        onEmptyTrash={() => {
-          setNotesActionsOpen(false);
-          handleEmptyTrash();
         }}
         onOpenApiTokens={() => {
           setNotesActionsOpen(false);
@@ -1190,14 +1159,6 @@ export const WorkspaceScreen = () => {
         }}
         onMemoListDensityChange={handleMemoListDensityChange}
         onSortModeChange={setMemoSortMode}
-        onToggleTrash={() => {
-          setNotesActionsOpen(false);
-          if (memoView === "trash") {
-            showAllNotes();
-          } else {
-            showTrash();
-          }
-        }}
         selectionMode={selectionMode}
         visible
       /> : null}
@@ -1445,41 +1406,33 @@ const NotesView = ({
 const NotesActionsModal = ({
   bottomOffset,
   canEnterSelection,
-  isEmptyingTrash,
   listDescription,
   listTitle,
   memoListDensity,
   memoSortMode,
-  memoView,
   onClose,
-  onEmptyTrash,
   onEnterSelection,
   onMemoListDensityChange,
   onOpenApiTokens,
   onOpenResources,
   onOpenTags,
   onSortModeChange,
-  onToggleTrash,
   selectionMode,
   visible,
 }: {
   bottomOffset: number;
   canEnterSelection: boolean;
-  isEmptyingTrash: boolean;
   listDescription: string;
   listTitle: string;
   memoListDensity: MobileMemoListDensity;
   memoSortMode: MemoSortMode;
-  memoView: MemoView;
   onClose: () => void;
-  onEmptyTrash: () => void;
   onEnterSelection: () => void;
   onMemoListDensityChange: (density: MobileMemoListDensity) => void;
   onOpenApiTokens: () => void;
   onOpenResources: () => void;
   onOpenTags: () => void;
   onSortModeChange: (sortMode: MemoSortMode) => void;
-  onToggleTrash: () => void;
   selectionMode: boolean;
   visible: boolean;
 }) => (
@@ -1524,11 +1477,6 @@ const NotesActionsModal = ({
           <View style={styles.listActionDivider} />
           <ActionSheetItem compact icon={<Tag color="#0f172a" size={18} />} label="标签" onPress={onOpenTags} />
           <ActionSheetItem compact icon={<Archive color="#0f172a" size={18} />} label="附件" onPress={onOpenResources} />
-          {memoView === "trash" ? (
-            <ActionSheetItem compact danger disabled={isEmptyingTrash} icon={<Trash2 color="#b91c1c" size={18} />} label={isEmptyingTrash ? "清空中" : "清空回收站"} onPress={onEmptyTrash} />
-          ) : (
-            <ActionSheetItem compact icon={<Trash2 color="#0f172a" size={18} />} label="回收站" onPress={onToggleTrash} />
-          )}
           <ActionSheetItem compact icon={<KeyRound color="#0f172a" size={18} />} label="MCP Token" onPress={onOpenApiTokens} />
         </ScrollView>
       </Pressable>
