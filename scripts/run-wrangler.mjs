@@ -1,5 +1,5 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import { runWranglerSync } from "./wrangler-runner.mjs";
 
 const PLACEHOLDER_D1_ID = "00000000-0000-0000-0000-000000000000";
@@ -57,6 +57,7 @@ if (requestedInstance !== undefined) {
 }
 
 const baseConfigPath = resolve(process.env.WRANGLER_CONFIG ?? "wrangler.toml");
+const baseConfigDirectory = dirname(baseConfigPath);
 const instance = process.env.EDGE_EVER_INSTANCE?.trim();
 const instanceKey = instance?.replace(/[^a-zA-Z0-9]/g, "_").toUpperCase();
 const generatedConfigPath = resolve(
@@ -72,6 +73,27 @@ const generatedSecretsPath = resolve(
 const generatedLocalDevEnvPath = resolve(".env.wrangler.generated.local");
 let config = readFileSync(baseConfigPath, "utf8");
 let changed = false;
+
+const migrationCommand =
+  wranglerArgs[0] === "d1"
+  && wranglerArgs[1] === "migrations"
+  && ["apply", "list"].includes(wranglerArgs[2]);
+const configuredMigrationsDirectory = config.match(/^migrations_dir\s*=\s*"([^"]+)"/m)?.[1]
+  ?? "migrations";
+const migrationsDirectory = resolve(baseConfigDirectory, configuredMigrationsDirectory);
+
+if (migrationCommand) {
+  const migrationFiles = existsSync(migrationsDirectory)
+    ? readdirSync(migrationsDirectory).filter((name) => name.endsWith(".sql")).sort()
+    : [];
+  if (migrationFiles.length === 0) {
+    console.error(
+      `No D1 migration files found in ${migrationsDirectory}. Update the repository checkout before retrying.`,
+    );
+    process.exit(1);
+  }
+  console.log(`[ok] local D1 migrations: ${migrationFiles.length} files`);
+}
 
 const replaceTomlValue = (source, key, value) => {
   if (!value) {
@@ -215,6 +237,13 @@ if (isRemoteCommand && config.includes(`database_id = "${PLACEHOLDER_D1_ID}"`)) 
 
 const configPath = changed ? generatedConfigPath : baseConfigPath;
 if (changed) {
+  // Wrangler resolves migrations_dir relative to its config. Use an absolute,
+  // slash-normalized path so generated configs behave consistently in Windows
+  // Git Bash, PowerShell, Linux, and macOS.
+  config = config.replace(
+    /^migrations_dir\s*=\s*"[^"]+"/m,
+    `migrations_dir = ${tomlString(migrationsDirectory.replaceAll("\\", "/"))}`,
+  );
   writeFileSync(generatedConfigPath, config);
 }
 

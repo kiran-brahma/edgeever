@@ -69,7 +69,7 @@ bun run deploy
 
 `.env.local` 只供本机 EdgeEver 脚本读取，不会作为文件自动上传到 Cloudflare，也不应手工上传或提交到 Git。若从 Cloudflare Dashboard 直接触发构建，该文件中的 D1、R2 和密码配置不会自动生效；请使用 `bun run deploy` 完成首次部署，再使用 `bun run deploy:builds:setup` 将必要配置安全地写入 Workers Builds。
 
-部署命令会先自动执行 `deploy:doctor`，缺少 D1 ID、R2 bucket 或登录密码时会直接停止。远程 D1 migration 会以非交互模式自动执行，不需要用户确认，避免取消操作被 Wrangler 误报为成功。部署完成后还会执行 `deploy:verify`，检查远程 D1 的关键数据表和 Worker 鉴权 Secret；任一缺失都会让部署以失败退出。Worker 也采用安全关闭策略：生产实例既没有密码 Secret、又没有有效用户时，会返回 `auth_not_configured`，不会降级成免登录工作区。`/api/health` 会检查 D1 和鉴权初始化状态；只有返回 `200` 且包含 `"ok": true` 才表示实例真正可用。
+部署命令会先自动执行 `deploy:doctor`，缺少 D1 ID、R2 bucket 或登录密码时会直接停止。远程 D1 migration 会以非交互模式自动执行，不需要用户确认，避免取消操作被 Wrangler 误报为成功。迁移脚本还会在调用 Wrangler 前确认本地 SQL migration 存在，并使用跨平台的绝对迁移目录，避免 Windows 上出现命令成功但没有迁移任何表的情况。部署完成后还会执行 `deploy:verify`，检查远程 D1 的关键数据表和 Worker 鉴权 Secret；任一缺失都会让部署以失败退出。Worker 也采用安全关闭策略：生产实例既没有密码 Secret、又没有有效用户时，会返回 `auth_not_configured`，不会降级成免登录工作区。`/api/health` 会检查 D1 和鉴权初始化状态；只有返回 `200` 且包含 `"ok": true` 才表示实例真正可用。
 
 已有实例无需迁移。如果确实要从哈希配置切换为 `EDGE_EVER_AUTH_PASSWORD`，需要同时从 `.env.local`、Workers Builds 和 Worker 运行时 Secrets 中移除旧的 `EDGE_EVER_AUTH_PASSWORD_HASH`，否则旧哈希仍会优先生效。
 

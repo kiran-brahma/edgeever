@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   buildSchemaVerificationSql,
   parseD1Rows,
+  parseJsonOutput,
   parseSecretNames,
   REQUIRED_TABLES,
 } from "../scripts/verify-deployment.mjs";
@@ -16,6 +17,16 @@ describe("deployment verification", () => {
 
   test("parses Wrangler D1 JSON output", () => {
     expect(parseD1Rows(JSON.stringify([{ results: [{ name: "users" }] }]))).toEqual([{ name: "users" }]);
+  });
+
+  test("reports empty Wrangler JSON output clearly", () => {
+    expect(() => parseJsonOutput("", "the remote D1 schema")).toThrow(
+      "Wrangler returned no JSON while checking the remote D1 schema.",
+    );
+  });
+
+  test("treats an empty D1 result as zero rows", () => {
+    expect(parseD1Rows("")).toEqual([]);
   });
 
   test("parses current and wrapped Wrangler secret output", () => {
