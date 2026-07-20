@@ -1,105 +1,99 @@
 # Cloudflare Manual Deployment Guide
 
-If you are comfortable with Cloudflare and the command line, or prefer customized control over first installation and resource setup, follow this guide for manual deployment. Cloudflare Workers Builds handles routine updates; local deployment is only for first installation and emergency recovery.
+Use this path for advanced first installation, custom configuration, troubleshooting, or emergency recovery. Most users should start with [Deploy to Cloudflare](deploy-cloudflare-button.md). An AI assistant must follow the [AI Agent deployment contract](agent-deploy-cloudflare.md), which invokes the same commands documented here.
 
-> 💡 **Tip**: If you are deploying using an AI assistant (such as Claude Code, Codex, Antigravity, or Cursor), the agent should follow the [AI Agent Cloudflare Deployment](https://github.com/tianma-if/edgeever/blob/main/docs/agent-deploy-cloudflare.md) runbook.
+All entry points share one deployment core:
 
-## Deployment Steps
+```text
+build:cloudflare -> db:migrate:remote -> deploy:worker -> deploy:verify
+```
 
-1. **Fork the official repository**:
-   Visit and fork the official repository: [https://github.com/tianma-if/edgeever](https://github.com/tianma-if/edgeever)
+The manual entrypoint adds local configuration checks before that pipeline. Routine updates are handled by Cloudflare Workers Builds rather than a local machine.
 
-2. **Clone your fork**:
+## Automated CLI Setup
+
+1. Create a GitHub repository from [tianma-if/edgeever](https://github.com/tianma-if/edgeever), then clone it:
+
    ```sh
-   git clone <your fork repository URL>
+   git clone <your repository URL>
    cd edgeever
    ```
 
-   Install Node.js 22 or newer and Bun on the deployment machine. Wrangler is provided by the project dependencies and does not need to be installed globally.
+2. Install Node.js 22 or newer and Bun. Wrangler is included in the project and does not need a global installation.
 
-3. **Deploy with the automated helper commands**:
+3. Install dependencies and initialize the Cloudflare resources:
+
    ```sh
-   # Copy the configuration template
    cp .env.local.example .env.local
-
-   # Install dependencies
    bun install
-
-   # Initialize deployment resources with the default admin / admin123 login
    bun run deploy:setup
-
-   # Check the deployment environment and configurations
    bun run deploy:doctor
-
-   # Deploy to Cloudflare
-   bun run deploy
+   bun run deploy:manual
    ```
 
-   To use a custom first-login password, run `EDGE_EVER_PASSWORD='<your password>' bun run deploy:setup` instead. You can also change the password later in Personal Settings.
+   The template uses `admin` / `admin123` for the initial login. To choose a password during setup, run this instead of the plain setup command:
 
-   `deploy:setup` always invokes the project-local Wrangler directly, so a global `wrangler` installation is not required and PowerShell, CMD, and Git Bash are supported. If Cloudflare is not authorized yet, the command starts `wrangler login` automatically. If the browser does not open, copy the authorization URL printed in the terminal into a browser and leave the command running until verification completes.
+   ```sh
+   EDGE_EVER_PASSWORD='<your password>' bun run deploy:setup
+   ```
 
-### Creating Cloudflare Resources Manually
+`deploy:setup` uses the project-local Wrangler, starts `wrangler login` when authorization is missing, creates or reuses D1 and R2, and writes the resulting non-secret configuration to the git-ignored `.env.local`. `deploy:manual` runs the doctor, production build, common deployment pipeline, and remote verification.
 
-If you prefer not to use the automated `deploy:setup` helper, you can create the resources manually using Cloudflare CLI (Wrangler):
+## Creating Resources Manually
+
+If you do not want `deploy:setup` to create resources, run:
 
 ```sh
-# Copy configuration template and install dependencies
 cp .env.local.example .env.local
 bun install
-
-# Create the D1 database
 bunx wrangler d1 create edgeever
-
-# Create the R2 bucket
 bunx wrangler r2 bucket create edgeever-resources
-
-# Edit .env.local and fill in at least the generated resource values
-# EDGE_EVER_D1_DATABASE_ID=<database_id returned by the D1 command>
-# EDGE_EVER_R2_BUCKET_NAME=edgeever-resources
-# EDGE_EVER_AUTH_PASSWORD=admin123
-# EDGE_EVER_SESSION_TTL_DAYS=400
-
-# Validate the completed configuration before deploying
-bun run deploy:doctor
-bun run deploy
 ```
 
-Before running `bun run deploy`, copy the D1 `database_id` and R2 bucket name into your local `.env.local` file. The template uses `admin` / `admin123` for the initial login; edit `EDGE_EVER_AUTH_PASSWORD` if you prefer another initial password. Keep the session lifetime at the template default of `400` days; the server also caps larger values at 400 days.
+Copy the returned D1 ID and the resource names into `.env.local`:
 
-`bun run deploy` builds the web app, applies remote D1 migrations, deploys the Worker, and uploads `EDGE_EVER_AUTH_PASSWORD` as a Worker Secret. After the first successful login, EdgeEver stores a salted PBKDF2-SHA256 hash in D1. Existing installations may continue to use `EDGE_EVER_AUTH_PASSWORD_HASH`; when both Secrets are set, the hash takes precedence. Verify the deployment by signing in with `EDGE_EVER_AUTH_USERNAME` and the configured password.
+```text
+EDGE_EVER_D1_DATABASE_ID=<database_id>
+EDGE_EVER_R2_BUCKET_NAME=edgeever-resources
+EDGE_EVER_AUTH_USERNAME=admin
+EDGE_EVER_AUTH_PASSWORD=<strong password>
+EDGE_EVER_SESSION_TTL_DAYS=400
+```
 
-`.env.local` is read only by the local EdgeEver scripts. It is not automatically uploaded to Cloudflare as a file, and it must never be uploaded manually or committed to Git. A build started directly from Cloudflare Dashboard does not automatically receive the D1, R2, or password settings in this file. Use `bun run deploy` for the first deployment, then use `bun run deploy:builds:setup` to copy the required settings securely into Workers Builds.
+Then run:
 
-The deployment command now runs `deploy:doctor` first and stops when the D1 ID, R2 bucket, or login password is missing. Remote D1 migrations are confirmed automatically and require no user input. Before invoking Wrangler, the migration script verifies that local SQL migrations exist, creates an LF-only copy, and always runs Wrangler on its official Node.js runtime; database triggers use the single-line form that remote D1 parses correctly. This prevents Windows commands that migrate no tables, Bun exiting Wrangler early, and remote D1 misparsing triggers as `incomplete input`. After deployment, `deploy:verify` checks the remote D1 schema and the Worker's authentication Secret; a missing requirement makes deployment exit as failed. The Worker also fails closed: when a production instance has neither a password Secret nor an enabled user, it returns `auth_not_configured` instead of opening an unauthenticated workspace. `/api/health` checks D1 and authentication initialization; the instance is ready only when it returns `200` with `"ok": true`.
+```sh
+bun run deploy:doctor
+bun run deploy:manual
+```
 
-Existing installations do not need to migrate. If you intentionally switch from the hash setting to `EDGE_EVER_AUTH_PASSWORD`, remove the old `EDGE_EVER_AUTH_PASSWORD_HASH` from `.env.local`, Workers Builds, and the Worker's runtime Secrets; otherwise the legacy hash remains authoritative.
+`.env.local` is read only by local EdgeEver scripts. Never upload it, commit it, or copy it into a Cloudflare build as a file. The standard `bun run deploy` command is reserved for Cloudflare's one-click non-interactive entrypoint; local and Agent deployments use `bun run deploy:manual`.
 
-### Recovering login or database initialization failures
+The deployment pipeline applies remote D1 migrations without an interactive confirmation, deploys the Worker, and verifies required tables and the authentication Secret. It normalizes migration SQL to LF and runs Wrangler with its supported Node.js runtime for consistent behavior across Windows, macOS, and Linux.
 
-- If the login page says the database is not ready, or the API returns `database_not_ready`, verify that the D1 binding is named exactly `DB`, then run `bun run db:migrate:remote && bun run deploy`.
-- If the login page says the security setup is incomplete, or the API returns `auth_not_configured`, configure `EDGE_EVER_AUTH_PASSWORD` in `.env.local`, then run `bun run deploy`. Never clear the account settings to bypass login.
-- If credentials were inserted into the `users` table manually, do not put plaintext in `password_hash`. EdgeEver rejects invalid hashes and points to the safe recovery command on the login page. Run:
+EdgeEver fails closed: a production instance without completed D1 migrations or authentication configuration returns `database_not_ready` or `auth_not_configured` instead of exposing an unauthenticated workspace. The instance is ready only when `/api/health` returns `200` with `"ok": true` and login succeeds.
+
+## Recovery
+
+- Database not ready: confirm the D1 binding is exactly `DB`, then run `bun run deploy:manual`.
+- Authentication not configured: set `EDGE_EVER_AUTH_PASSWORD` in `.env.local`, then run `bun run deploy:manual`.
+- Invalid or lost account password: never write plaintext to `users.password_hash`. Run:
 
   ```sh
   EDGE_EVER_PASSWORD='<new password of at least 8 characters>' \
     bun run auth:reset-password -- --remote --username admin
   ```
 
-  This command creates a compatible PBKDF2-SHA256 hash and revokes the account's old sessions without deleting note data.
+The binding names must be exactly `DB` for D1 and `RESOURCES` for R2. Existing installations using `EDGE_EVER_AUTH_PASSWORD_HASH` remain supported; when both password Secrets exist, the hash takes precedence.
 
-Cloudflare binding names must be exactly `DB` for D1 and `RESOURCES` for R2. The plain variable `EDGE_EVER_AUTH_USERNAME` does not replace the encrypted `EDGE_EVER_AUTH_PASSWORD` Secret.
+## Enable Workers Builds and Automatic Updates
 
----
-
-## Enable Automatic Updates
-
-After the first deployment, connect the Worker to the fork's `main` branch. Cloudflare Workers Builds is the standard production deployment path for every EdgeEver instance. Follow [Cloudflare Workers Builds](cloudflare-workers-builds.md) to create the configuration-only **User API Token** (not an Account API Token), save it privately as `EDGE_EVER_BUILDS_API_TOKEN` in `.env.local`, then run:
+After the first CLI deployment, follow [Cloudflare Workers Builds](cloudflare-workers-builds.md) and run:
 
 ```sh
 bun run deploy:builds:setup
 ```
 
-The command configures the Git repository connection, production trigger, build variables, and the deployment token needed for D1 migrations. Afterwards, use **Sync fork** or push to `main`; Cloudflare automatically builds the web app, applies new remote D1 migrations, and deploys the Worker. No GitHub Actions secrets or local redeployment are required.
+This connects the Worker to the repository's `main` branch and securely copies the build variables required for future migrations and deployment. Every later push to `main` uses the same common deployment pipeline.
 
-Keep `bun run deploy` available for first installation and emergency recovery.
+The repository's **Update deployed EdgeEver** workflow checks upstream formal Releases daily on the default `stable` channel. Set the GitHub repository variable `EDGE_EVER_UPDATE_CHANNEL=edge` to follow upstream `main` instead. GitHub disables scheduled workflows by default on public forks, so open **Actions** and enable this workflow after a fork-based installation. Update conflicts or failed local verification leave the deployed branch unchanged.

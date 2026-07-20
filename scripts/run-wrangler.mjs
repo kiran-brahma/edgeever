@@ -283,12 +283,17 @@ const authSecrets = {
   ...(authPasswordHash ? { EDGE_EVER_AUTH_PASSWORD_HASH: authPasswordHash } : {}),
 };
 const finalWranglerArgs = [...wranglerArgs];
+const useExistingAuthSecret = process.env.EDGE_EVER_USE_EXISTING_AUTH_SECRET?.trim().toLowerCase() === "true";
 
-if (isDeployCommand && Object.keys(authSecrets).length === 0) {
+if (isDeployCommand && Object.keys(authSecrets).length === 0 && !useExistingAuthSecret) {
   console.error(
-    "Refusing to deploy without EDGE_EVER_AUTH_PASSWORD or EDGE_EVER_AUTH_PASSWORD_HASH. Run bun run deploy:setup first.",
+    "Refusing to deploy without EDGE_EVER_AUTH_PASSWORD or EDGE_EVER_AUTH_PASSWORD_HASH. Run bun run deploy:setup first, or use the Cloudflare one-click deploy entrypoint.",
   );
   process.exit(1);
+}
+
+if (isDeployCommand && Object.keys(authSecrets).length === 0 && useExistingAuthSecret) {
+  console.log("[info] using the authentication Secret provisioned by Cloudflare");
 }
 
 if (isLocalDevCommand && !hasEnvFileArg) {

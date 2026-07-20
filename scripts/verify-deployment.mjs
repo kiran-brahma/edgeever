@@ -61,7 +61,7 @@ const runWrangler = (args, options = {}) => {
   if (!result.stdout.trim() && !options.allowEmptyOutput) {
     if (result.stderr) process.stderr.write(result.stderr);
     throw new Error(
-      "Wrangler completed without returning verification data. Re-run bun run deploy:doctor, then retry.",
+      "Wrangler completed without returning verification data. Check the D1 binding and deployment credentials, then retry.",
     );
   }
 
