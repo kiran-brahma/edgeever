@@ -6,9 +6,12 @@ This file governs and guides AI agents and collaborators working on this project
 
 For project background, positioning, deployment information, and tech stack, refer to `README.md` first.
 
-## Chinese/English documentation synchronization
+## Language and brand rules
 
-When editing Chinese documentation, update the corresponding English documentation in sync so the content stays consistent.
+- The project is **English-only**. No Chinese characters are allowed in user-facing strings, source code, migrations, documentation, or commit messages. If any remain, translate or remove them before committing.
+- The user-facing product name is **Kiran Brahma Notes**. The internal repository/package codename remains `edgeever` to avoid breaking imports and bindings; do not rename package paths or the Worker name.
+- The production web app domain is `https://notes.kiranbrahma.com`. Use this in site links, PWA start URL, and any public references.
+- Do not add GitHub repository links to the landing page, marketing site, web app login screen, or editor chrome unless explicitly requested.
 
 ## Git branch rules
 
@@ -45,6 +48,12 @@ When the user asks to install and deploy this project to Cloudflare from a GitHu
 - Use `bun run dev` by default to start the full local environment (local D1/R2 with the fixed demo seed). It must not connect to the remote instance configured in `.env.local`.
 - Only when the user explicitly specifies a remote instance and asks to connect, use `EDGE_EVER_INSTANCE=<instance-name> bun run dev:remote`; private configuration is read from `.env.local`, and instance names must not be hard-coded.
 - Only use `bun run dev:web` when the user explicitly asks to start only the frontend.
+
+## PWA and offline behavior
+
+- The web app is a PWA and must remain installable. Offline reads are served from the local cache; offline new-note creation writes a local placeholder and queues a `memo.create` sync item.
+- Local-only memos display a **"Pending sync"** indicator in the memo list and sync automatically when the connection returns.
+- Service-worker precache must include the offline shell (`offline.html`) and mobile editor entry (`mobile-edit.html`).
 
 ## Component reuse and no-reinventing-the-wheel rules
 
