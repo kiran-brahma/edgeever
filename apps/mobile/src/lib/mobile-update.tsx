@@ -34,20 +34,20 @@ export const MobileUpdateProvider = ({ children }: { children: ReactNode }) => {
   const openUpdateUrl = useCallback((url: string) => {
     void Linking.openURL(url).catch(() => {
       Alert.alert(
-        english ? "Unable to open update page" : "无法打开更新页面",
-        english ? "Open the app store or GitHub Releases and try again." : "请手动打开应用商店或 GitHub Releases 后重试。"
+        english ? "Unable to open update page" : "Unable to open update page",
+        english ? "Open the app store or GitHub Releases and try again." : "Please open the app store or GitHub Releases and try again."
       );
     });
   }, [english]);
 
   const showInstallableUpdatePrompt = useCallback((release: MobileRelease) => {
     Alert.alert(
-      english ? "New app version available" : "发现新版本",
+      english ? "New app version available" : "New app version available",
       english
         ? `Version v${release.version} is available. This update includes an installable app package and cannot be applied as an in-app update.`
-        : `发现可安装的新版本 v${release.version}。此类更新包含新的应用安装包，无法通过应用内热更新完成。`,
+        : `A new installable version v${release.version} is available. This includes a new app package and cannot be done via in-app update.`,
       [
-        { text: english ? "Later" : "稍后", style: "cancel" },
+        { text: english ? "Later" : "Later", style: "cancel" },
         { text: "Google Play", onPress: () => openUpdateUrl(GOOGLE_PLAY_URL) },
         { text: "GitHub", onPress: () => openUpdateUrl(GITHUB_LATEST_RELEASE_URL) },
       ]
@@ -60,21 +60,21 @@ export const MobileUpdateProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
       Alert.alert(
-        english ? "Unable to restart" : "重启失败",
-        english ? `Close and reopen EdgeEver to apply the update.\n\n${detail}` : `请关闭并重新打开 EdgeEver 以应用更新。\n\n${detail}`
+        english ? "Unable to restart" : "Unable to restart",
+        english ? `Close and reopen EdgeEver to apply the update.\n\n${detail}` : `Close and reopen Kiran Brahma Notes to apply the update.\n\n${detail}`
       );
     }
   }, [english]);
 
   const showRestartPrompt = useCallback(() => {
     Alert.alert(
-      english ? "Update ready" : "更新已就绪",
+      english ? "Update ready" : "Update ready",
       english
         ? "The update has been downloaded. Restart EdgeEver now to apply it?"
-        : "新版本已下载完成。现在重启 EdgeEver 以应用更新吗？",
+        : "The new version has downloaded. Restart Kiran Brahma Notes to apply the update?",
       [
-        { text: english ? "Later" : "稍后", style: "cancel" },
-        { text: english ? "Restart now" : "立即重启", onPress: () => void restart() },
+        { text: english ? "Later" : "Later", style: "cancel" },
+        { text: english ? "Restart now" : "Restart now", onPress: () => void restart() },
       ]
     );
   }, [english, restart]);
@@ -87,10 +87,10 @@ export const MobileUpdateProvider = ({ children }: { children: ReactNode }) => {
     if (!isSupported) {
       if (userInitiated) {
         Alert.alert(
-          english ? "Updates unavailable" : "暂无法检查更新",
+          english ? "Updates unavailable" : "Updates unavailable",
           english
             ? "Update checks are available in installed release builds, not Expo Go or development builds."
-            : "检查更新仅适用于已安装的正式版，Expo Go 和开发版暂不支持。"
+            : "Update checks only work in installed release builds; Expo Go and development builds are not supported."
         );
       }
       return Promise.resolve();
@@ -124,15 +124,15 @@ export const MobileUpdateProvider = ({ children }: { children: ReactNode }) => {
           if (userInitiated) {
             if (installableReleaseCheckFailed) {
               Alert.alert(
-                english ? "Unable to fully check for updates" : "无法完成更新检查",
+                english ? "Unable to fully check for updates" : "Unable to fully check for updates",
                 english
                   ? "No compatible in-app update was found, but the latest installable app version could not be verified. Check your connection and try again."
-                  : "未发现兼容的应用内热更新，但无法确认最新安装包版本。请检查网络连接后重试。"
+                  : "No compatible in-app update found, and the latest app package version could not be confirmed. Check your connection and try again."
               );
             } else {
               Alert.alert(
-                english ? "You're up to date" : "已是最新版本",
-                english ? "No newer app package or compatible in-app update is available." : "当前没有更新的安装包或兼容的应用内热更新。"
+                english ? "You're up to date" : "You're up to date",
+                english ? "No newer app package or compatible in-app update is available." : "There is no newer app package or compatible in-app update available."
               );
             }
           }
@@ -148,8 +148,8 @@ export const MobileUpdateProvider = ({ children }: { children: ReactNode }) => {
         if (userInitiated) {
           const detail = error instanceof Error ? error.message : String(error);
           Alert.alert(
-            english ? "Unable to check for updates" : "检查更新失败",
-            english ? `Check your connection and try again.\n\n${detail}` : `请检查网络连接后重试。\n\n${detail}`
+            english ? "Unable to check for updates" : "Unable to check for updates",
+            english ? `Check your connection and try again.\n\n${detail}` : `Check your connection and try again.\n\n${detail}`
           );
         }
       }

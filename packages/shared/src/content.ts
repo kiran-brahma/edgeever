@@ -25,7 +25,7 @@ export type TiptapDoc = {
   content: TiptapNode[];
 };
 
-export const DEFAULT_MEMO_TITLE = "无标题笔记";
+export const DEFAULT_MEMO_TITLE = "Untitled note";
 
 export const emptyDoc = (): TiptapDoc => ({
   type: "doc",

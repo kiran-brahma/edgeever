@@ -486,13 +486,13 @@ export const NotebookPane = ({
               onClick={install}
               className="flex h-8 w-full items-center gap-3 rounded-md px-3 text-left text-sm font-semibold leading-none text-emerald-700 hover:bg-emerald-50 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70"
               type="button"
-              title={t("pwa.sidebarInstallTitle") || "安装桌面客户端"}
-              aria-label={t("pwa.sidebarInstallTitle") || "安装桌面客户端"}
+              title={t("pwa.sidebarInstallTitle") || "Install desktop app"}
+              aria-label={t("pwa.sidebarInstallTitle") || "Install desktop app"}
             >
               <span className="flex h-4 w-4 shrink-0 items-center justify-center">
                 <Download className="h-4 w-4 text-emerald-600" />
               </span>
-              <span className="min-w-0 flex-1 truncate">{t("pwa.sidebarInstall") || "安装桌面客户端"}</span>
+              <span className="min-w-0 flex-1 truncate">{t("pwa.sidebarInstall") || "Install desktop app"}</span>
             </button>
           )}
           <button

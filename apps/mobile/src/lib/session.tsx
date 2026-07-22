@@ -87,7 +87,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     });
 
     if (!authSession.authenticated || !authSession.sessionToken) {
-      throw new Error("登录成功但服务端没有返回移动端会话。请确认服务端已更新到支持 App 登录的版本。");
+      throw new Error("Sign-in succeeded but the server did not return a mobile session. Verify the server is updated to a version that supports app sign-in.");
     }
 
     const nextSession: MobileSession = {

@@ -53,46 +53,31 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeManifestIcons: false,
-      manifest: {
-        name: "Kiran Brahma Notes",
-        short_name: "Kiran Notes",
-        description: "A private, serverless notes workspace by Kiran Brahma.",
-        start_url: "/",
-        scope: "/",
-        display: "standalone",
-        background_color: "#f8fafc",
-        theme_color: "#10b981",
-        lang: "en-US",
-        categories: ["productivity", "utilities"],
-        icons: [
-          {
-            src: "/pwa-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "/pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
-          {
-            src: "/maskable-icon-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "maskable",
-          },
-        ],
-      },
+      manifest: false,
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2}"],
+        globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,woff2,webmanifest}"],
         navigateFallback: "/index.html",
-        navigateFallbackDenylist: [/^\/api\//, /^\/mcp\//, /^\/mobile-edit\.html$/, /^\/tiptap-ime-test\.html$/],
+        navigateFallbackDenylist: [/^\/api\//, /^\/mcp\//, /^\/__scheduled/],
+        additionalManifestEntries: [
+          { url: "/offline.html", revision: "20260722-1" },
+          { url: "/mobile-edit.html", revision: "20260722-1" },
+        ],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.startsWith("/api/") || url.pathname.startsWith("/mcp/"),
             handler: "NetworkOnly",
           },
+          {
+            urlPattern: ({ url }) => url.pathname === "/offline.html" || url.pathname === "/mobile-edit.html",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "offline-shell",
+              expiration: { maxEntries: 10 },
+            },
+          },
         ],
+        skipWaiting: true,
+        clientsClaim: true,
       },
     }),
   ],

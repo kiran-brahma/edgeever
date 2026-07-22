@@ -8,7 +8,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 const imageUrl = new URL(frontmatter.image.src, Astro.site).toString();
 const isEnglish = Astro.url.pathname.startsWith("/en/");
 const fallbackBackHref = isEnglish ? "/en/blog" : "/blog";
-const fallbackBackLabel = isEnglish ? "Back to blog" : "返回博客";
+const fallbackBackLabel = "Back to blog";
 
 const articleJsonLd = {
   "@context": "https://schema.org",

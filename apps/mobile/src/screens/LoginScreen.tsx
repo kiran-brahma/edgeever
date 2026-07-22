@@ -38,7 +38,7 @@ export const LoginScreen = () => {
     try {
       await signIn({ baseUrl, username, password });
     } catch (signInError) {
-      setError(signInError instanceof Error ? signInError.message : "登录失败");
+      setError(signInError instanceof Error ? signInError.message : "Sign-in failed");
     } finally {
       setSubmitting(false);
     }
@@ -46,7 +46,7 @@ export const LoginScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Pressable accessibilityLabel="GitHub 仓库" accessibilityRole="link" onPress={() => Linking.openURL(GITHUB_REPOSITORY_URL)} style={styles.githubButton}>
+      <Pressable accessibilityLabel="GitHub repository" accessibilityRole="link" onPress={() => Linking.openURL(GITHUB_REPOSITORY_URL)} style={styles.githubButton}>
         <ExternalLink color="#475569" size={20} />
       </Pressable>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.keyboard}>
@@ -57,11 +57,11 @@ export const LoginScreen = () => {
             </View>
             <View style={styles.headerText}>
               <Text style={styles.title}>EdgeEver</Text>
-              <Text style={styles.subtitle}>连接你的自托管笔记空间</Text>
+              <Text style={styles.subtitle}>Connect to your self-hosted notes workspace</Text>
             </View>
           </View>
           <View style={styles.field}>
-            <Text style={styles.label}>实例地址</Text>
+            <Text style={styles.label}>Instance URL</Text>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -75,7 +75,7 @@ export const LoginScreen = () => {
           </View>
 
           <View style={styles.field}>
-            <Text style={styles.label}>用户名</Text>
+            <Text style={styles.label}>Username</Text>
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -88,10 +88,10 @@ export const LoginScreen = () => {
           </View>
 
           <View style={styles.field}>
-            <Text style={styles.label}>密码</Text>
+            <Text style={styles.label}>Password</Text>
             <TextInput
               onChangeText={setPassword}
-              placeholder="首次登录密码"
+              placeholder="Initial password"
               placeholderTextColor="#94a3b8"
               secureTextEntry
               style={styles.input}
@@ -111,7 +111,7 @@ export const LoginScreen = () => {
               pressed && canSubmit ? styles.buttonPressed : null,
             ]}
           >
-            {submitting ? <ActivityIndicator color="#ffffff" /> : <Text style={styles.buttonText}>登录</Text>}
+            {submitting ? <ActivityIndicator color="#ffffff" /> : <Text style={styles.buttonText}>Sign in</Text>}
           </Pressable>
         </View>
       </KeyboardAvoidingView>

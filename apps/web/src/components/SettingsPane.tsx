@@ -235,9 +235,9 @@ export const SettingsPane = ({
       </header>
 
       <div className="flex flex-1 min-h-0 min-w-0 bg-slate-50/50">
-        {/* 桌面端布局：双栏 */}
+        {/* Desktop layout: two columns */}
         <div className="hidden lg:flex flex-1 min-h-0 min-w-0 mx-auto max-w-5xl px-6 py-6 gap-6">
-          {/* 左侧垂直 Tab 栏 */}
+          {/* Left vertical tab bar */}
           <aside className="w-52 shrink-0 flex flex-col gap-1">
             {tabItems.map((item) => {
               const Icon = item.icon;
@@ -261,7 +261,7 @@ export const SettingsPane = ({
             })}
           </aside>
 
-          {/* 右侧设置内容区 */}
+          {/* Right settings content */}
           <main className="flex-1 min-w-0 overflow-y-auto pr-2">
             <div className="grid gap-4">
               {renderTabContent(activeTab)}
@@ -269,10 +269,10 @@ export const SettingsPane = ({
           </main>
         </div>
 
-        {/* 移动端布局 */}
+        {/* Mobile layout */}
         <div className="flex lg:hidden flex-1 flex-col min-h-0 min-w-0 overflow-y-auto px-4 py-4">
           {activeMobileTab === null ? (
-            /* 分类主菜单 */
+            /* Category main menu */
             <div className="grid gap-2">
               <div className="divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-200 bg-white">
                 {tabItems.map((item) => {
@@ -300,7 +300,7 @@ export const SettingsPane = ({
               </div>
             </div>
           ) : (
-            /* 详情页面 */
+            /* Detail page */
             <div className="grid gap-4">
               {renderTabContent(activeMobileTab)}
             </div>

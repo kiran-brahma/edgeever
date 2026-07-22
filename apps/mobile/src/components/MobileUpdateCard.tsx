@@ -15,24 +15,24 @@ export const MobileUpdateCard = () => {
   const busy = status === "checking" || status === "downloading";
   const styles = resolveMobileThemeStyles(baseStyles, resolvedTheme);
   const statusLabel = status === "checking"
-    ? (english ? "Checking…" : "正在检查…")
+    ? (english ? "Checking…" : "Checking…")
     : status === "downloading"
-      ? (english ? "Downloading…" : "正在下载…")
+      ? (english ? "Downloading…" : "Downloading…")
       : status === "ready"
-        ? (english ? "Downloaded; restart to apply" : "已下载，重启后应用")
-        : (english ? "Check for updates" : "检查更新");
+        ? (english ? "Downloaded; restart to apply" : "Downloaded; restart to apply")
+        : (english ? "Check for updates" : "Check for updates");
 
   return (
     <View style={styles.card}>
       <View style={styles.copy}>
-        <Text style={styles.title}>{english ? "App updates" : "应用更新"}</Text>
+        <Text style={styles.title}>{english ? "App updates" : "App updates"}</Text>
         <Text style={styles.description}>
           {english
             ? "EdgeEver automatically checks for compatible in-app updates. Manual checks also look for newer installable versions."
-            : "EdgeEver 会自动检查兼容的应用内热更新；手动检查还会查找更新的安装包版本。"}
+            : "Kiran Brahma Notes automatically checks for compatible in-app updates; manual checks also look for newer app package versions."}
         </Text>
         <Text style={styles.version}>
-          {english ? "Current version" : "当前版本"}: v{Updates.runtimeVersion ?? Constants.expoConfig?.version ?? "unknown"}
+          {english ? "Current version" : "Current version"}: v{Updates.runtimeVersion ?? Constants.expoConfig?.version ?? "unknown"}
         </Text>
       </View>
       <Pressable
@@ -47,7 +47,7 @@ export const MobileUpdateCard = () => {
       </Pressable>
       {!isSupported ? (
         <Text style={styles.hint}>
-          {english ? "Available in installed release builds." : "此功能会在已安装的正式版中启用。"}
+          {english ? "Available in installed release builds." : "This feature is enabled in installed release builds."}
         </Text>
       ) : null}
     </View>

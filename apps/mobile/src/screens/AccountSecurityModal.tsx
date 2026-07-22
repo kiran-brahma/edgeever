@@ -51,8 +51,8 @@ export const AccountSecurityPanel = ({
   const passwordMutation = useMutation({
     mutationFn: async () => {
       if (!client) throw new Error("Client is not ready");
-      if (newPassword.length < 8) throw new Error("新密码至少需要 8 个字符");
-      if (newPassword !== confirmPassword) throw new Error("两次输入的新密码不一致");
+      if (newPassword.length < 8) throw new Error("New password must be at least 8 characters");
+      if (newPassword !== confirmPassword) throw new Error("New passwords do not match");
       return client.changePassword({ currentPassword, newPassword, confirmPassword });
     },
     onSuccess: () => {
@@ -65,7 +65,7 @@ export const AccountSecurityPanel = ({
   const createUserMutation = useMutation({
     mutationFn: async () => {
       if (!client) throw new Error("Client is not ready");
-      if (memberPassword.length < 8) throw new Error("密码至少需要 8 个字符");
+      if (memberPassword.length < 8) throw new Error("Password must be at least 8 characters");
       return client.createUser({ username: username.trim(), displayName: displayName.trim() || null, password: memberPassword });
     },
     onSuccess: async () => {
@@ -94,9 +94,9 @@ export const AccountSecurityPanel = ({
   }, [active]);
 
   const errorMessage = (error: unknown) => {
-    if (error instanceof ApiRequestError && error.code === "invalid_current_password") return "当前密码不正确";
-    if (error instanceof ApiRequestError && error.code === "username_exists") return "该用户名已经存在";
-    return error instanceof Error ? error.message : "操作失败，请稍后再试";
+    if (error instanceof ApiRequestError && error.code === "invalid_current_password") return "Current password is incorrect";
+    if (error instanceof ApiRequestError && error.code === "username_exists") return "This username already exists";
+    return error instanceof Error ? error.message : "Operation failed, please try again later";
   };
   const resetUser = usersQuery.data?.users.find((user) => user.id === resetUserId) ?? null;
   const closeCreateDialog = () => {
@@ -117,18 +117,18 @@ export const AccountSecurityPanel = ({
       <View style={styles.hero}>
         <KeyRound color="#15803d" size={22} />
         <View style={styles.flex}>
-          <Text style={styles.cardTitle}>修改密码</Text>
-          <Text style={styles.help}>修改后会保留当前设备登录，并退出其他设备上的登录会话。</Text>
+          <Text style={styles.cardTitle}>Change password</Text>
+          <Text style={styles.help}>Current device stays logged in; other devices will be signed out.</Text>
         </View>
       </View>
-      <Field label="当前密码" onChangeText={setCurrentPassword} value={currentPassword} />
-      <Field label="新密码" onChangeText={setNewPassword} value={newPassword} />
-      <Field label="确认新密码" onChangeText={setConfirmPassword} value={confirmPassword} />
+      <Field label="CurrentPassword" onChangeText={setCurrentPassword} value={currentPassword} />
+      <Field label="New password" onChangeText={setNewPassword} value={newPassword} />
+      <Field label="Confirm new password" onChangeText={setConfirmPassword} value={confirmPassword} />
       {passwordMutation.error ? <Text style={styles.error}>{errorMessage(passwordMutation.error)}</Text> : null}
-      {passwordMutation.isSuccess ? <Text accessibilityLiveRegion="polite" style={styles.success}>密码已修改成功。</Text> : null}
+      {passwordMutation.isSuccess ? <Text accessibilityLiveRegion="polite" style={styles.success}>Password changed successfully.</Text> : null}
       <PrimaryButton
         disabled={passwordMutation.isPending}
-        label={passwordMutation.isPending ? "正在修改…" : "修改密码"}
+        label={passwordMutation.isPending ? "Changing..." : "Change password"}
         onPress={() => passwordMutation.mutate()}
       />
     </View>
@@ -136,12 +136,12 @@ export const AccountSecurityPanel = ({
     <View style={styles.content}>
       <View style={styles.sectionHeader}>
         <View style={styles.flex}>
-          <Text style={styles.cardTitle}>成员管理</Text>
-          <Text style={styles.help}>为家人或团队成员创建独立的个人笔记空间。实例不开放公开注册。</Text>
+          <Text style={styles.cardTitle}>Members</Text>
+          <Text style={styles.help}>Create independent personal note spaces for family or team members. Public registration is disabled.</Text>
         </View>
         <Pressable onPress={() => setCreateOpen(true)} style={styles.addButton}>
           <Plus color="#ffffff" size={16} />
-          <Text style={styles.addButtonText}>添加成员</Text>
+          <Text style={styles.addButtonText}>Add member</Text>
         </Pressable>
       </View>
 
@@ -153,8 +153,8 @@ export const AccountSecurityPanel = ({
             <View style={styles.userIcon}><UserRound color="#15803d" size={18} /></View>
             <View style={styles.flex}>
               <Text style={styles.userName}>{user.displayName || user.username}</Text>
-              <Text style={styles.help}>@{user.username} · {user.role === "owner" ? "实例管理员" : user.isDisabled ? "已停用" : "已启用"}</Text>
-              <Pressable onPress={() => { setResetUserId(user.id); setResetPasswordValue(""); }}><Text style={styles.link}>重置密码</Text></Pressable>
+              <Text style={styles.help}>@{user.username} · {user.role === "owner" ? "Instance admin" : user.isDisabled ? "Disabled" : "Enabled"}</Text>
+              <Pressable onPress={() => { setResetUserId(user.id); setResetPasswordValue(""); }}><Text style={styles.link}>ResetPassword</Text></Pressable>
             </View>
             {user.role !== "owner" ? (
               <Switch
@@ -169,17 +169,17 @@ export const AccountSecurityPanel = ({
       <Modal animationType="fade" onRequestClose={closeCreateDialog} transparent visible={createOpen}>
         <Pressable onPress={closeCreateDialog} style={styles.dialogBackdrop}>
           <Pressable style={styles.dialogCard}>
-            <Text style={styles.cardTitle}>添加新成员</Text>
-            <Text style={styles.help}>新账号会获得完全独立的笔记、附件、回收站和 MCP Token。</Text>
-            <Field label="用户名" onChangeText={setUsername} placeholder="例如：xiaoming" secure={false} value={username} />
-            <Field label="显示名称" onChangeText={setDisplayName} placeholder="选填，例如：小明" secure={false} value={displayName} />
-            <Field help="成员首次登录后可以在个人中心修改密码。" label="初始密码" onChangeText={setMemberPassword} placeholder="请输入至少 8 位密码" value={memberPassword} />
+            <Text style={styles.cardTitle}>Add new member</Text>
+            <Text style={styles.help}>New accounts get fully independent notes, attachments, trash, and MCP tokens.</Text>
+            <Field label="Username" onChangeText={setUsername} placeholder="e.g. xiaoming" secure={false} value={username} />
+            <Field label="Display name" onChangeText={setDisplayName} placeholder="Optional, e.g. Xiaoming" secure={false} value={displayName} />
+            <Field help="Members can change their password in account settings after first login." label="Initial password" onChangeText={setMemberPassword} placeholder="Enter at least 8 characters" value={memberPassword} />
             {createUserMutation.error ? <Text style={styles.error}>{errorMessage(createUserMutation.error)}</Text> : null}
             <View style={styles.dialogActions}>
-              <Pressable onPress={closeCreateDialog} style={styles.cancelButton}><Text style={styles.cancelText}>取消</Text></Pressable>
+              <Pressable onPress={closeCreateDialog} style={styles.cancelButton}><Text style={styles.cancelText}>Cancel</Text></Pressable>
               <PrimaryButton
                 disabled={createUserMutation.isPending || !username.trim() || memberPassword.length < 8}
-                label={createUserMutation.isPending ? "正在创建..." : "添加成员"}
+                label={createUserMutation.isPending ? "Creating..." : "Add member"}
                 onPress={() => createUserMutation.mutate()}
               />
             </View>
@@ -189,14 +189,14 @@ export const AccountSecurityPanel = ({
       <Modal animationType="fade" onRequestClose={closeResetDialog} transparent visible={Boolean(resetUser)}>
         <Pressable onPress={closeResetDialog} style={styles.dialogBackdrop}>
           <Pressable style={styles.dialogCard}>
-            <Text style={styles.cardTitle}>{`重置 ${resetUser?.username ?? ""} 的密码`}</Text>
-            <Text style={styles.help}>重置后，该账号在其他设备上的登录会话将失效。</Text>
-            <Field label="新密码（至少 8 位）" onChangeText={setResetPasswordValue} placeholder="请输入至少 8 位密码" value={resetPasswordValue} />
+            <Text style={styles.cardTitle}>{`Reset ${resetUser?.username ?? ""}'s password`}</Text>
+            <Text style={styles.help}>After reset, this account's sessions on other devices will expire.</Text>
+            <Field label="New password (at least 8 characters)" onChangeText={setResetPasswordValue} placeholder="Enter at least 8 characters" value={resetPasswordValue} />
             <View style={styles.dialogActions}>
-              <Pressable onPress={closeResetDialog} style={styles.cancelButton}><Text style={styles.cancelText}>取消</Text></Pressable>
+              <Pressable onPress={closeResetDialog} style={styles.cancelButton}><Text style={styles.cancelText}>Cancel</Text></Pressable>
               <PrimaryButton
                 disabled={updateUserMutation.isPending || resetPasswordValue.length < 8 || !resetUser}
-                label={updateUserMutation.isPending ? "正在重置..." : "重置密码"}
+                label={updateUserMutation.isPending ? "Resetting..." : "ResetPassword"}
                 onPress={() => resetUser && updateUserMutation.mutate(
                   { userId: resetUser.id, input: { password: resetPasswordValue } },
                   { onSuccess: closeResetDialog },

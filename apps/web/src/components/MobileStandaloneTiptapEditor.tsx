@@ -252,7 +252,7 @@ export const MobileStandaloneTiptapEditor = ({
   const buildSavePayload = useCallback((currentMemo: MemoDetail) => {
     const editSession = editSessionRef.current;
     if (!editSession || editSession.memoId !== currentMemo.id) {
-      throw new Error("编辑会话尚未就绪");
+      throw new Error("Edit session is not ready");
     }
 
     return {
@@ -423,7 +423,7 @@ export const MobileStandaloneTiptapEditor = ({
           return true;
         }
 
-        setError(saveError instanceof Error ? saveError.message : "保存失败，已保留本地草稿");
+        setError(saveError instanceof Error ? saveError.message : "Save failed; local draft kept");
         setSaveStateStable("error");
         return false;
       } finally {
@@ -555,7 +555,7 @@ export const MobileStandaloneTiptapEditor = ({
         }
       }, 1200);
     } catch (notebookError) {
-      setError(notebookError instanceof Error ? notebookError.message : "切换笔记本失败");
+      setError(notebookError instanceof Error ? notebookError.message : "Switch notebook failed");
       setSaveStateStable("error");
     } finally {
       setNotebookUpdatePending(false);
@@ -586,7 +586,7 @@ export const MobileStandaloneTiptapEditor = ({
         })
         .run();
     } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : "图片上传失败");
+      setError(uploadError instanceof Error ? uploadError.message : "Image upload failed");
       setSaveStateStable("error");
     }
   };
@@ -639,7 +639,7 @@ export const MobileStandaloneTiptapEditor = ({
   useEffect(() => {
     if (!memoId || !editor) {
       if (!memoId) {
-        setError("缺少 memoId");
+        setError("Missing memoId");
         setSaveStateStable("error");
       }
       return;
@@ -713,7 +713,7 @@ export const MobileStandaloneTiptapEditor = ({
         if (cancelled) {
           return;
         }
-        setError(loadError instanceof Error ? loadError.message : "加载失败");
+        setError(loadError instanceof Error ? loadError.message : "Failed to load");
         setSaveStateStable("error");
       }
     })();
@@ -795,7 +795,7 @@ export const MobileStandaloneTiptapEditor = ({
   const editorActionDisabled =
     !memo || !editor || saveState === "loading" || saveState === "compressing" || saveState === "uploading" || saveState === "leaving";
   const currentNotebookLabel =
-    notebookOptions.find((notebook) => notebook.id === memo?.notebookId)?.name ?? (notebookOptions.length === 0 ? "等待分类" : "笔记本");
+    notebookOptions.find((notebook) => notebook.id === memo?.notebookId)?.name ?? (notebookOptions.length === 0 ? "Inbox" : "Notebook");
 
   const fallbackMarkdown = memo ? docToMarkdown(contentJsonRef.current) : "";
   const tableActive = Boolean(editor?.isActive("table"));
@@ -863,7 +863,7 @@ export const MobileStandaloneTiptapEditor = ({
             autoComplete="on"
             autoCorrect="on"
             inputMode="text"
-            placeholder="添加标签，用逗号分隔"
+            placeholder="Add tags, separated by commas"
             onChange={(event) => handleTagsChange(event.target.value)}
           />
         </div>

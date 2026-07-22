@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f8fafc" />
+    <title>Offline - Kiran Brahma Notes</title>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        color: #334155;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        text-align: center;
+        padding: 24px;
+      }
+      .card {
+        max-width: 320px;
+      }
+      .icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 20px;
+        color: #10b981;
+      }
+      h1 { margin: 0 0 8px; font-size: 22px; color: #0f172a; }
+      p { margin: 0 0 24px; line-height: 1.5; font-size: 15px; }
+      button {
+        border: none;
+        border-radius: 10px;
+        background: #10b981;
+        color: white;
+        padding: 12px 20px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <svg class="icon" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+        <rect x="14" y="10" width="36" height="44" rx="8" />
+        <path d="M24 23h18v5H30v5h11v5H30v6h13v5H24V23Z" fill="#fff" />
+        <path d="M19 16h26" stroke="#a7f3d0" stroke-width="3" stroke-linecap="round" />
+      </svg>
+      <h1>You are offline</h1>
+      <p>Kiran Brahma Notes will keep your drafts safe and sync them once you are back online.</p>
+      <button onclick="window.location.reload()">Retry</button>
+    </div>
+  </body>
+</html>

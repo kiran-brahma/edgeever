@@ -318,7 +318,7 @@ function LocalTiptapEditorImpl(props: LocalTiptapEditorProps) {
     insertImageUploadPlaceholder(
       editor,
       createMobileImageUploadPlaceholderSource(uploadIdValue),
-      props.locale === "en-US" ? "Uploading image…" : "图片上传中…",
+      props.locale === "en-US" ? "Uploading image…" : "Uploading image…",
       previewDataUrlValue,
       pendingImageSelectionRef.current
     );
@@ -806,7 +806,7 @@ const createMobileCodeBlockExtension = (
       message.className = "edgeever-mermaid-message";
       svgContainer.className = "edgeever-mermaid-svg";
       svgContainer.setAttribute("role", "img");
-      svgContainer.setAttribute("aria-label", locale === "en-US" ? "Mermaid diagram preview" : "Mermaid 图表预览");
+      svgContainer.setAttribute("aria-label", locale === "en-US" ? "Mermaid diagram preview" : "Mermaid diagram preview");
       pre.append(code);
       wrapper.append(preview, pre);
 
@@ -832,8 +832,8 @@ const createMobileCodeBlockExtension = (
         wrapper.dataset.language = language;
         preview.hidden = !isMermaid;
         code.setAttribute("aria-label", isMermaid
-          ? (locale === "en-US" ? "Mermaid source" : "Mermaid 源码")
-          : (locale === "en-US" ? "Code source" : "代码源码"));
+          ? (locale === "en-US" ? "Mermaid source" : "Mermaid source")
+          : (locale === "en-US" ? "Code source" : "Code source"));
         if (!isMermaid) {
           preview.replaceChildren();
           return;
@@ -842,7 +842,7 @@ const createMobileCodeBlockExtension = (
         const source = currentNode.textContent.trim();
         if (!source) {
           message.className = "edgeever-mermaid-message";
-          message.textContent = locale === "en-US" ? "Enter Mermaid source below." : "请在下方输入 Mermaid 源码。";
+          message.textContent = locale === "en-US" ? "Enter Mermaid source below." : "Enter Mermaid source below.";
           preview.replaceChildren(message);
           return;
         }
@@ -850,7 +850,7 @@ const createMobileCodeBlockExtension = (
         const activeRequest = renderRequest;
         renderTimer = window.setTimeout(() => {
           message.className = "edgeever-mermaid-message";
-          message.textContent = locale === "en-US" ? "Rendering diagram…" : "正在渲染图表…";
+          message.textContent = locale === "en-US" ? "Rendering diagram…" : "Rendering diagram…";
           preview.replaceChildren(message);
           void loadMermaid()
             .then(async (mermaid) => {
@@ -882,7 +882,7 @@ const createMobileCodeBlockExtension = (
               message.className = "edgeever-mermaid-error";
               message.textContent = locale === "en-US"
                 ? "Unable to render this diagram. Check its syntax."
-                : "无法渲染此图表，请检查语法。";
+                : "Unable to render this Mermaid diagram. Check its syntax.";
               preview.replaceChildren(message);
             });
         }, 300);
@@ -1015,7 +1015,7 @@ const createProtectedImageExtension = (
         const spinner = document.createElement("span");
         spinner.className = "edgeever-image-upload-spinner";
         spinner.setAttribute("aria-hidden", "true");
-        overlay.append(spinner, locale === "en-US" ? "Uploading image…" : "图片上传中…");
+        overlay.append(spinner, locale === "en-US" ? "Uploading image…" : "Uploading image…");
         if (previewSource) {
           placeholder.append(preview);
         }

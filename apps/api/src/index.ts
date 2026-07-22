@@ -269,7 +269,7 @@ const SESSION_COOKIE = "edgeever_session";
 const DEFAULT_WORKSPACE_ID = "ws_default";
 const DEFAULT_MEMO_LIST_LIMIT = 100;
 const MAX_MEMO_LIST_LIMIT = 200;
-const UNTITLED_MEMO_TITLE = "无标题笔记";
+const UNTITLED_MEMO_TITLE = "Untitled note";
 const PASSWORD_HASH_ALGORITHM = "pbkdf2-sha256";
 const PASSWORD_HASH_ITERATIONS = 100_000;
 const PASSWORD_HASH_BYTES = 32;
@@ -279,32 +279,32 @@ const DEFAULT_SESSION_TTL_DAYS = 400;
 const MAX_SESSION_TTL_DAYS = 400;
 const DEFAULT_R2_BUCKET_NAME = "edgeever-resources";
 const DEMO_SEED_NOTEBOOKS = [
-  { id: "nb_inbox", parentId: null, name: "等待分类", slug: "inbox", icon: "notebook", color: "#0f766e", sortOrder: 10 },
-  { id: "nb_projects", parentId: null, name: "工作项目", slug: "work-projects", icon: "notebook", color: "#2563eb", sortOrder: 20 },
-  { id: "nb_learning", parentId: null, name: "学习资料", slug: "learning-resources", icon: "notebook", color: "#7c3aed", sortOrder: 30 },
-  { id: "nb_creative", parentId: null, name: "灵感创作", slug: "creative-ideas", icon: "notebook", color: "#db2777", sortOrder: 40 },
-  { id: "nb_personal", parentId: null, name: "生活个人", slug: "personal-life", icon: "notebook", color: "#ea580c", sortOrder: 50 },
-  { id: "nb_demo_features", parentId: "nb_projects", name: "功能演示", slug: "demo-features", icon: "notebook", color: "#0891b2", sortOrder: 21 },
+  { id: "nb_inbox", parentId: null, name: "Inbox", slug: "inbox", icon: "notebook", color: "#0f766e", sortOrder: 10 },
+  { id: "nb_projects", parentId: null, name: "Work Projects", slug: "work-projects", icon: "notebook", color: "#2563eb", sortOrder: 20 },
+  { id: "nb_learning", parentId: null, name: "Learning Resources", slug: "learning-resources", icon: "notebook", color: "#7c3aed", sortOrder: 30 },
+  { id: "nb_creative", parentId: null, name: "Creative Ideas", slug: "creative-ideas", icon: "notebook", color: "#db2777", sortOrder: 40 },
+  { id: "nb_personal", parentId: null, name: "Personal Life", slug: "personal-life", icon: "notebook", color: "#ea580c", sortOrder: 50 },
+  { id: "nb_demo_features", parentId: "nb_projects", name: "Feature Demos", slug: "demo-features", icon: "notebook", color: "#0891b2", sortOrder: 21 },
   { id: "nb_demo_features_en", parentId: "nb_projects", name: "Feature Demos", slug: "feature-demos", icon: "notebook", color: "#0e7490", sortOrder: 22 },
 ];
-const DEMO_SEED_MEMOS_ZH = [
+const DEMO_SEED_MEMOS = [
   {
     id: "memo_welcome",
     notebookId: "nb_inbox",
-    title: "欢迎来到 EdgeEver",
-    tags: ["edgeever", "welcome"],
+    title: "Welcome to Kiran Brahma Notes",
+    tags: ["welcome"],
     isPinned: true,
     markdown:
-      "## 欢迎来到 EdgeEver\n\n这是公开演示环境，可以放心创建、编辑、搜索和合并笔记。\n\n> 演示数据会在**每周一凌晨 1:00（北京时间）**重置并恢复，请不要保存私密内容。\n\n### 🧭 快速体验\n\n- 🎯 **产品全景指南**：打开左侧的 `🌟 EdgeEver 核心特性全景指南`，一览产品特性、可视化表格、代码高亮、Mermaid 图表与 AI (MCP) 原生接入。\n- 📝 **自由编辑**：您可以随意创建、修改或删除笔记，体验所见即所得与 Markdown 源码模式无缝切换。\n\n欢迎探索 EdgeEver 的全套功能！",
+      "## Welcome to Kiran Brahma Notes\n\nThis is a safe demo environment where you can create, edit, search, and merge notes.\n\n> Demo data resets periodically. Do not store private content here.\n\n### Quick tour\n\n- Open `🌟 Core Features Overview` on the left for a full tour.\n- Create, modify, or delete notes to test the editor.\n\nEnjoy exploring Kiran Brahma Notes!",
   },
   {
     id: "memo_demo_overview",
     notebookId: "nb_demo_features",
-    title: "🌟 EdgeEver 核心特性全景指南",
+    title: "🌟 Core Features Overview",
     tags: ["overview", "features", "demo"],
     isPinned: true,
     markdown:
-      "## 🌟 EdgeEver 核心特性全景指南\n\n> **EdgeEver** 是一款基于 Cloudflare 的开源 Serverless 个人知识库。保留经典的**印象笔记三栏布局**与优雅体验，同时提供 **100% 免费**、数据完全掌控、可视化双向编辑与 AI Agent (MCP) 原生集成。\n\n---\n\n### 🚀 1. 核心优势对比 (可视化表格编辑)\n\n*提示：在线模式下点击下方表格单元格即可直接修改文字；在编辑器模式下右键可快捷添加或删除行列。*\n\n| 核心维度 | 印象笔记 (Evernote) | Obsidian | EdgeEver |\n| --- | --- | --- | --- |\n| **托管成本** | 商业订阅 ($15+/月) | 官方同步 ($5/月) | **100% 免费 (Cloudflare 免费额度)** |\n| **部署方式** | 封闭中心化云端 | 本地文件 + 插件配置 | **Serverless 自建 (零维护)** |\n| **交互体验** | 经典三栏 (广告较多) | 双栏/多面板 (移动端较重) | **经典三栏 + 原生 App / PWA** |\n| **数据与 API** | 封闭，导出一键设限 | 本地 Markdown | **标准 D1 SQLite / REST API / MCP** |\n| **AI Agent 支持** | 限制/仅特定版本 | 需配置第三方插件 | **原生支持 MCP 端点与 OpenAPI** |\n\n---\n\n### 🎨 2. 双向双视图与富文本排版 (Rich-Text & Dual View)\n\nEdgeEver 支持在**所见即所得富文本**与 **Markdown 源码**之间无缝切换（点击右上角 `</>` 按钮）。\n\n- [x] 经典三栏笔记本与树状无限层级\n- [x] 多端无缝同步（Web PWA / iOS & Android 原生 App）\n- [x] 图片上传前本地自动压缩 (体积节省 50% ~ 90%)\n- [x] 碎片笔记多选合并 (Shift / Cmd 组合键操作)\n\n> 💡 **小贴士**：所有富文本样式在切换至 Markdown 源码时均能保持完美兼容，不会丢失任何格式元数据。\n\n---\n\n### 💻 3. 代码高亮与快捷复制 (Syntax Highlighting)\n\n支持 Python、TypeScript、Rust、SQL 等数十种编程语言高亮，并在右上角提供一键复制功能：\n\n```python\nimport requests\n\n# 使用 REST API 获取 EdgeEver 笔记本列表\ndef fetch_edgeever_notebooks(instance_url: str, token: str):\n    headers = {\"Authorization\": f\"Bearer {token}\"}\n    response = requests.get(f\"{instance_url}/api/v1/notebooks\", headers=headers)\n    \n    if response.status_code == 200:\n        data = response.json()\n        print(f\"成功加载 {len(data['data'])} 个笔记本！\")\n        return data[\"data\"]\n    return []\n```\n\n---\n\n### 📊 4. Mermaid 图表即时渲染 (Interactive Diagrams)\n\n在代码块中使用 `mermaid` 语法，即可在富文本视图与预览界面实时渲染交互式流程图：\n\n```mermaid\nflowchart TD\n    subgraph Client[\"📱 客户端生态\"]\n        A[\"Web / PWA 浏览器\"]\n        B[\"iOS / Android 原生 App\"]\n        C[\"Chrome / Edge 剪藏插件\"]\n    end\n\n    subgraph EdgeEver[\"⚡ EdgeEver Cloudflare Backend\"]\n        D[\"Cloudflare Workers API Engine\"]\n        E[(\"D1 Database SQLite\")]\n        F[(\"R2 Storage 图片与附件\")]\n    end\n\n    subgraph AIAgent[\"🤖 AI & 智能体生态\"]\n        G[\"Claude Code / Antigravity / Cursor\"]\n        H[\"Model Context Protocol (MCP)\"]\n    end\n\n    A & B & C --> D\n    D <--> E & F\n    G -->|\"/mcp 端点\"| H --> D\n```\n\n---\n\n### 🖼️ 5. 多媒体与图片集成 (Rich Media Integration)\n\n支持拖拽或粘贴插入图片与文件附件。本地浏览器会在上传前自动进行高保真 WebP 压缩：\n\n![EdgeEver 编辑器与系统架构](/api/v1/resources/res_demo_editor_image/blob)\n\n---\n\n### 🤖 6. 面向 AI Agent 的原生生态 (Agent-Ready)\n\nEdgeEver 为 AI 时代而设计，原生提供 MCP 端点：\n\n1. **REST API**：提供完整标准的 `/api/openapi.json` 定义。\n2. **MCP 端点**：部署在 `/mcp`，AI Agent（如 Antigravity, Claude Code, Cursor）可以直接连接并读写您的笔记库。\n3. **数据自动化**：实现自动归档、Markdown 导入导出、飞书多维表格 / Notion 数据库同步。\n\n---\n\n> 🎯 **快速体验建议**：\n> - 试试在左侧列表中按住 `Cmd` / `Ctrl` 选中多篇笔记，点击底栏「合并」；\n> - 试试切换右上角 Markdown 源码模式，感受纯净的写作体验！",
+      "## 🌟 Core Features Overview\n\n> **Kiran Brahma Notes** is a self-hosted notes workspace built on Cloudflare. It keeps the classic three-pane layout while giving you full data ownership, visual editing, and native AI Agent (MCP) integration.\n\n---\n\n### 🚀 1. Feature comparison\n\n| Dimension | Evernote | Obsidian | Kiran Brahma Notes |\n| --- | --- | --- | --- |\n| **Hosting cost** | Paid subscription | Paid sync | **Free Cloudflare tier** |\n| **Deployment** | Closed cloud | Local files | **Serverless self-hosted** |\n| **Experience** | Classic 3-pane | Multi-pane | **Classic 3-pane + PWA** |\n| **Data & API** | Proprietary | Local Markdown | **D1 SQLite / REST API / MCP** |\n| **AI integration** | Limited | Third-party plugins | **Native MCP & OpenAPI** |\n\n---\n\n### 🎨 2. Dual-view rich editing\n\nToggle seamlessly between WYSIWYG rich text and Markdown source with the `</>` button.\n\n- [x] Infinite notebook hierarchy\n- [x] Multi-device sync via Web PWA\n- [x] Client-side image compression\n- [x] Multi-note batch merging\n\n---\n\n### 💻 3. Syntax highlighting\n\n```python\nimport requests\n\n# Fetch notebooks via REST API\ndef fetch_notebooks(instance_url: str, token: str):\n    headers = {\"Authorization\": f\"Bearer {token}\"}\n    response = requests.get(f\"{instance_url}/api/v1/notebooks\", headers=headers)\n    if response.status_code == 200:\n        return response.json()[\"data\"]\n    return []\n```\n\n---\n\n### 📊 4. Mermaid diagrams\n\nUse `mermaid` code blocks for live diagrams.\n\n```mermaid\nflowchart TD\n    A[Web / PWA] --> B[Cloudflare Workers]\n    B <--> C[(D1 Database)]\n    B <--> D[(R2 Storage)]\n```\n\n---\n\n### 🤖 5. AI Agent ready\n\n- REST API with OpenAPI schema at `/api/openapi.json`\n- MCP endpoint at `/mcp` for Claude Code, Cursor, etc.\n- Automate tagging, import/export, and sync workflows\n\n---\n\n> 🎯 **Try it**: multi-select notes with `Cmd`/`Ctrl` and click Merge at the bottom.",
   },
 ];
 const DEMO_SEED_REVISIONS = [
@@ -312,46 +312,11 @@ const DEMO_SEED_REVISIONS = [
     id: "rev_demo_revision_1",
     memoId: "memo_demo_overview",
     revision: 1,
-    title: "🌟 EdgeEver 核心特性全景指南",
+    title: "🌟 Core Features Overview",
     markdown:
-      "## 🌟 EdgeEver 核心特性草稿\n\n- 印象笔记经典三栏与自建 Serverless\n- 可视化表格与 Markdown 源码双向切换",
-  },
-  {
-    id: "rev_demo_revision_1_en",
-    memoId: "memo_demo_overview_en",
-    revision: 1,
-    title: "🌟 EdgeEver Core Features Overview",
-    markdown:
-      "## 🌟 EdgeEver Core Features Draft\n\n- Classic Evernote 3-pane layout & Serverless self-hosted\n- Visual table editing & Markdown source toggle",
+      "## 🌟 Core Features Draft\n\n- Classic three-pane layout & serverless self-hosting\n- Visual table editing & Markdown source toggle",
   },
 ];
-const DEMO_MEMO_ENGLISH = {
-  memo_welcome: {
-    title: "Welcome to EdgeEver",
-    markdown:
-      "## Welcome to EdgeEver\n\nThis public demo is safe for exploring, editing, searching, and merging notes. Demo data resets every Monday at 1:00 AM China Standard Time.\n\n### Quick Tour\n\n- 🎯 **Core Features Overview**: Open `🌟 EdgeEver Core Features Overview` on the left for a full tour of visual tables, syntax highlighting, Mermaid diagrams, and AI Agent integration.\n- 📝 **Create & Edit**: Feel free to create, modify, or delete notes to test rich text and Markdown source editing.\n\nEnjoy exploring EdgeEver!",
-  },
-  memo_demo_overview: {
-    title: "🌟 EdgeEver Core Features Overview",
-    markdown:
-      "## 🌟 EdgeEver Core Features Overview\n\n> **EdgeEver** is an open-source, serverless personal knowledge base built on Cloudflare. It retains the classic **Evernote-style three-pane layout**, while offering **100% free hosting**, full data ownership, visual editing, and native AI Agent (MCP) integration.\n\n---\n\n### 🚀 1. Feature Comparison (Visual Table Editing)\n\n*Tip: Click any cell in the table below to edit directly; right-click in editor mode to insert/delete rows or columns.*\n\n| Metric | Evernote | Obsidian | EdgeEver |\n| --- | --- | --- | --- |\n| **Hosting Cost** | Commercial ($15+/mo) | Sync Plan ($5/mo) | **100% Free (Cloudflare Free Tier)** |\n| **Deployment** | Closed Cloud | Local Files + Plugins | **Serverless Self-Hosted (0 Maintenance)** |\n| **User Experience**| Classic 3-Pane (Heavy Ads) | Multi-Pane (Heavy Mobile) | **Classic 3-Pane + Native Apps & PWA** |\n| **Data & API** | Proprietary & Locked | Local Markdown | **Standard D1 SQLite / REST API / MCP** |\n| **AI Integration** | Limited / Paid | Requires 3rd Party Plugins| **Native MCP Endpoint & OpenAPI** |\n\n---\n\n### 🎨 2. Dual-View & Rich Formatting\n\nSeamlessly toggle between **WYSIWYG Rich Text** and **Markdown Source** via the `</>` toggle in the top right.\n\n- [x] Classic three-pane layout with infinite notebook hierarchy\n- [x] Seamless multi-device sync (Web PWA / iOS & Android Native Apps)\n- [x] Automatic client-side image compression (saves 50% ~ 90% bandwidth)\n- [x] Multi-note batch merging (Shift / Cmd click)\n\n> 💡 **Tip**: All rich text formatting remains 100% compatible when toggling to Markdown mode.\n\n---\n\n### 💻 3. Syntax Highlighting\n\nSupports dozens of programming languages (Python, TypeScript, Rust, SQL, etc.) with one-click code copying:\n\n```python\nimport requests\n\n# Fetch EdgeEver notebooks via REST API\ndef fetch_edgeever_notebooks(instance_url: str, token: str):\n    headers = {\"Authorization\": f\"Bearer {token}\"}\n    response = requests.get(f\"{instance_url}/api/v1/notebooks\", headers=headers)\n    \n    if response.status_code == 200:\n        data = response.json()\n        print(f\"Successfully fetched {len(data['data'])} notebooks!\")\n        return data[\"data\"]\n    return []\n```\n\n---\n\n### 📊 4. Interactive Mermaid Diagrams\n\nUse standard `mermaid` fenced code blocks to render real-time flowcharts and architecture diagrams:\n\n```mermaid\nflowchart TD\n    subgraph Client[\"📱 Clients\"]\n        A[\"Web / PWA\"]\n        B[\"iOS / Android Apps\"]\n        C[\"Web Clipper\"]\n    end\n\n    subgraph EdgeEver[\"⚡ EdgeEver Cloudflare Backend\"]\n        D[\"Cloudflare Workers\"]\n        E[(\"D1 Database\")]\n        F[(\"R2 Storage\")]\n    end\n\n    subgraph AIAgent[\"🤖 AI Ecosystem\"]\n        G[\"Claude Code / Antigravity / Cursor\"]\n        H[\"Model Context Protocol (MCP)\"]\n    end\n\n    A & B & C --> D\n    D <--> E & F\n    G -->|\"/mcp endpoint\"| H --> D\n```\n\n---\n\n### 🖼️ 5. Rich Media & Image Attachments\n\nDrag-and-drop or paste images into your notes. Images are compressed locally before being saved to R2 storage:\n\n![EdgeEver Architecture & Editor](/api/v1/resources/res_demo_editor_image/blob)\n\n---\n\n### 🤖 6. Native AI Agent Ecosystem\n\nDesigned natively for the AI era:\n\n1. **REST API**: Provides standard OpenAPI definitions at `/api/openapi.json`.\n2. **MCP Endpoint**: Accessible at `/mcp`, allowing AI Agents to read/write notes directly.\n3. **Automated Workflows**: Auto-tagging, export/import, sync with Notion or Feishu.\n\n---\n\n> 🎯 **Quick Try**:\n> - Multi-select notes in the left list using `Cmd` / `Ctrl` and click \"Merge\" at the bottom.\n> - Toggle the Markdown view icon in the top right to experience pure code editing!",
-  },
-} as const;
-const DEMO_SEED_MEMOS_EN = DEMO_SEED_MEMOS_ZH.map((memo) => {
-  const english = DEMO_MEMO_ENGLISH[memo.id as keyof typeof DEMO_MEMO_ENGLISH];
-  if (!english) {
-    return null;
-  }
-
-  return {
-    ...memo,
-    id: `${memo.id}_en`,
-    notebookId: "nb_demo_features_en",
-    title: english.title,
-    markdown: english.markdown,
-  };
-}).filter((memo): memo is NonNullable<typeof memo> => memo !== null);
-const DEMO_SEED_MEMOS = [...DEMO_SEED_MEMOS_ZH, ...DEMO_SEED_MEMOS_EN];
 const DEMO_SEED_RESOURCES = [
   {
     id: "res_demo_editor_image",
@@ -361,7 +326,7 @@ const DEMO_SEED_RESOURCES = [
     width: 960,
     height: 520,
     svg:
-      '<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-label="EdgeEver editor demo"><rect width="960" height="520" rx="32" fill="#f8fafc"/><rect x="42" y="44" width="876" height="432" rx="24" fill="#ffffff" stroke="#dbe7e2" stroke-width="2"/><rect x="42" y="44" width="250" height="432" rx="24" fill="#ecfdf5"/><rect x="322" y="88" width="524" height="24" rx="12" fill="#0f766e"/><rect x="322" y="138" width="408" height="14" rx="7" fill="#94a3b8"/><rect x="322" y="166" width="470" height="14" rx="7" fill="#cbd5e1"/><rect x="322" y="214" width="220" height="118" rx="18" fill="#d1fae5"/><circle cx="384" cy="272" r="34" fill="#10b981"/><path d="M356 314 402 264l35 38 24-28 51 40H356Z" fill="#047857"/><rect x="570" y="224" width="270" height="16" rx="8" fill="#64748b"/><rect x="570" y="258" width="230" height="14" rx="8" fill="#94a3b8"/><rect x="570" y="288" width="250" height="14" rx="7" fill="#cbd5e1"/><rect x="570" y="348" width="180" height="38" rx="19" fill="#10b981"/><text x="660" y="373" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">支持图片笔记</text><rect x="78" y="90" width="170" height="18" rx="9" fill="#0f766e"/><rect x="78" y="132" width="124" height="14" rx="7" fill="#5eead4"/><rect x="78" y="166" width="148" height="14" rx="7" fill="#99f6e4"/><rect x="78" y="200" width="110" height="14" rx="7" fill="#99f6e4"/></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-label="Kiran Brahma Notes editor demo"><rect width="960" height="520" rx="32" fill="#f8fafc"/><rect x="42" y="44" width="876" height="432" rx="24" fill="#ffffff" stroke="#dbe7e2" stroke-width="2"/><rect x="42" y="44" width="250" height="432" rx="24" fill="#ecfdf5"/><rect x="322" y="88" width="524" height="24" rx="12" fill="#0f766e"/><rect x="322" y="138" width="408" height="14" rx="7" fill="#94a3b8"/><rect x="322" y="166" width="470" height="14" rx="7" fill="#cbd5e1"/><rect x="322" y="214" width="220" height="118" rx="18" fill="#d1fae5"/><circle cx="384" cy="272" r="34" fill="#10b981"/><path d="M356 314 402 264l35 38 24-28 51 40H356Z" fill="#047857"/><rect x="570" y="224" width="270" height="16" rx="8" fill="#64748b"/><rect x="570" y="258" width="230" height="14" rx="8" fill="#94a3b8"/><rect x="570" y="288" width="250" height="14" rx="7" fill="#cbd5e1"/><rect x="570" y="348" width="180" height="38" rx="19" fill="#10b981"/><text x="660" y="373" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff">Image notes supported</text><rect x="78" y="90" width="170" height="18" rx="9" fill="#0f766e"/><rect x="78" y="132" width="124" height="14" rx="7" fill="#5eead4"/><rect x="78" y="166" width="148" height="14" rx="7" fill="#99f6e4"/><rect x="78" y="200" width="110" height="14" rx="7" fill="#99f6e4"/></svg>',
   },
 ];
 const DEMO_SEED_NOTEBOOK_IDS = DEMO_SEED_NOTEBOOKS.map((notebook) => notebook.id);
@@ -1093,7 +1058,7 @@ app.delete("/api/v1/notebooks/:id", async (c) => {
   }
 
   if (id === "nb_inbox" || current.slug === "inbox") {
-    return badRequest(c, "等待分类不能删除。");
+    return badRequest(c, "Inbox cannot be deleted.");
   }
 
   const [childCount, memoCount] = await Promise.all([
@@ -3727,11 +3692,11 @@ const ensureUserWorkspace = async (db: D1Database, userId: string, username: str
 };
 
 const createDefaultNotebookRows = (workspaceId: string, _now: string) => [
-  { id: `${workspaceId}_inbox`, name: "等待分类", slug: "inbox", color: "#0f766e", sortOrder: 10 },
-  { id: `${workspaceId}_projects`, name: "工作项目", slug: "work-projects", color: "#2563eb", sortOrder: 20 },
-  { id: `${workspaceId}_learning`, name: "学习资料", slug: "learning-resources", color: "#7c3aed", sortOrder: 30 },
-  { id: `${workspaceId}_creative`, name: "灵感创作", slug: "creative-ideas", color: "#db2777", sortOrder: 40 },
-  { id: `${workspaceId}_personal`, name: "生活个人", slug: "personal-life", color: "#ea580c", sortOrder: 50 },
+  { id: `${workspaceId}_inbox`, name: "Inbox", slug: "inbox", color: "#0f766e", sortOrder: 10 },
+  { id: `${workspaceId}_projects`, name: "Work Projects", slug: "work-projects", color: "#2563eb", sortOrder: 20 },
+  { id: `${workspaceId}_learning`, name: "Learning Resources", slug: "learning-resources", color: "#7c3aed", sortOrder: 30 },
+  { id: `${workspaceId}_creative`, name: "Creative Ideas", slug: "creative-ideas", color: "#db2777", sortOrder: 40 },
+  { id: `${workspaceId}_personal`, name: "Personal Life", slug: "personal-life", color: "#ea580c", sortOrder: 50 },
 ];
 
 const createSession = async (c: AppContext, user: UserRow, requestedDeviceId?: string) => {
@@ -6327,7 +6292,7 @@ const resolveMergedMemoTitle = (inputTitle: string | undefined, sourceMemos: Arr
     return title;
   }
 
-  return sourceMemos.find((memo) => isCustomMemoTitle(memo.title))?.title?.trim() ?? `合并笔记 ${new Date().toLocaleDateString("zh-CN")}`;
+  return sourceMemos.find((memo) => isCustomMemoTitle(memo.title))?.title?.trim() ?? `Merged note ${new Date().toLocaleDateString("en-US")}`;
 };
 
 const normalizeMemoListSort = (value: string | undefined): MemoListSortMode =>

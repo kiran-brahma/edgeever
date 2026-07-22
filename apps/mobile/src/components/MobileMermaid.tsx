@@ -94,23 +94,23 @@ export const MobileMermaidDiagram = ({
   useEffect(() => normalizedSource ? register?.(normalizedSource) : undefined, [normalizedSource, register]);
 
   if (!normalizedSource) {
-    return <Text style={[styles.message, theme === "dark" && styles.messageDark]}>{locale === "en-US" ? "This Mermaid diagram is empty." : "此 Mermaid 图表暂无内容。"}</Text>;
+    return <Text style={[styles.message, theme === "dark" && styles.messageDark]}>This Mermaid diagram is empty.</Text>;
   }
 
   const hasResult = context?.results.has(normalizedSource) ?? false;
   const svg = context?.results.get(normalizedSource) ?? null;
   if (!hasResult) {
-    return <Text style={[styles.message, theme === "dark" && styles.messageDark]}>{locale === "en-US" ? "Rendering diagram…" : "正在渲染图表…"}</Text>;
+    return <Text style={[styles.message, theme === "dark" && styles.messageDark]}>{locale === "en-US" ? "Rendering diagram…" : "Rendering diagram…"}</Text>;
   }
   if (!svg) {
-    return <Text accessibilityRole="alert" style={styles.error}>{locale === "en-US" ? "Unable to render this Mermaid diagram. Check its syntax." : "无法渲染此 Mermaid 图表，请检查语法。"}</Text>;
+    return <Text accessibilityRole="alert" style={styles.error}>Unable to render this Mermaid diagram. Check its syntax.</Text>;
   }
 
   const aspectRatio = getMermaidSvgAspectRatio(svg);
   const availableWidth = Math.max(1, width - 32);
   const height = Math.min(440, Math.max(120, availableWidth / aspectRatio));
   return (
-    <View accessibilityLabel={locale === "en-US" ? "Mermaid diagram" : "Mermaid 图表"} accessible style={[styles.diagram, theme === "dark" && styles.diagramDark, { height }]}>
+    <View accessibilityLabel={locale === "en-US" ? "Mermaid diagram" : "Mermaid diagram"} accessible style={[styles.diagram, theme === "dark" && styles.diagramDark, { height }]}>
       <SvgXml height="100%" width="100%" xml={svg} />
     </View>
   );

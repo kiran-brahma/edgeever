@@ -3,7 +3,7 @@ PRAGMA foreign_keys = ON;
 UPDATE notebooks
 SET
   parent_id = NULL,
-  name = '等待分类',
+  name = 'Inbox',
   slug = 'inbox',
   icon = 'notebook',
   color = '#0f766e',
@@ -13,14 +13,14 @@ SET
   updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
 WHERE id = 'nb_inbox'
    OR slug = 'inbox'
-   OR name = '等待分类';
+   OR name = 'Inbox';
 
 INSERT INTO notebooks (id, parent_id, name, slug, icon, color, sort_order)
-SELECT 'nb_inbox', NULL, '等待分类', 'inbox', 'notebook', '#0f766e', 10
+SELECT 'nb_inbox', NULL, 'Inbox', 'inbox', 'notebook', '#0f766e', 10
 WHERE NOT EXISTS (
   SELECT 1
   FROM notebooks
   WHERE id = 'nb_inbox'
      OR slug = 'inbox'
-     OR name = '等待分类'
+     OR name = 'Inbox'
 );
