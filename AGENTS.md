@@ -1,53 +1,53 @@
 # AGENTS.md
 
-本文件用于约束和指导参与本项目的 AI 代理与协作者。除非用户明确给出更高优先级的指令，否则应遵守以下规则。
+This file governs and guides AI agents and collaborators working on this project. Unless the user gives an explicit higher-priority instruction, follow the rules below.
 
-## 项目背景与技术栈
+## Project background and tech stack
 
-涉及本项目的背景、定位、部署信息与技术栈说明时，请优先参考 `README.md`。
+For project background, positioning, deployment information, and tech stack, refer to `README.md` first.
 
-## 中英文文档同步约束
+## Chinese/English documentation synchronization
 
-修改中文文档时，必须同步更新对应的英文文档，确保内容一致。
+When editing Chinese documentation, update the corresponding English documentation in sync so the content stays consistent.
 
-## Git 分支约束
+## Git branch rules
 
-严禁创建新的 Git 分支；所有修改、提交和推送都必须直接在 `main` 分支上完成。
+Creating new Git branches is prohibited. All changes, commits, and pushes must be made directly on the `main` branch.
 
-## GitHub Issue 与 Release 约束
+## GitHub Issue and Release rules
 
-正式版本遵循 Semantic Versioning，标签与 Release 标题统一使用 `vX.Y.Z`。发布前检查远端标签与实际 GitHub Release；孤立标签不作为发布基线，每个正式标签最终都应有对应 Release。
+Formal releases follow Semantic Versioning. Tags and Release titles use the `vX.Y.Z` format. Before releasing, check remote tags and actual GitHub Releases; isolated tags must not serve as release baselines, and every formal tag should ultimately have a matching Release.
 
-Release 以上一个实际发布的正式 Release 为基线，审计完整提交区间并面向用户汇总所有可感知变化。Release 说明必须使用英文。标签必须指向 `main` 上经过验证的提交，默认发布为非 Draft、非 Prerelease。功能或修复 Release 须关联带对应 Label 的 Issue；发布后回链并关闭 Issue。正文结构：
+A Release is based on the previous formal Release. Audit the full commit range and summarize all user-perceptible changes. Release notes must be in English. Tags must point to verified commits on `main`. Releases are non-draft and non-prerelease by default. Feature or fix releases must reference an Issue with the corresponding label; after release, link back to it and close it. Body structure:
 
 ```md
-## 主要更新
+## Major updates
 
-- 面向用户说明本次变化及影响。
+- Explain the change and its impact to users.
 
-关联 Issue：#<issue-number>
+Related issue: #<issue-number>
 
-## 验证
+## Verification
 
-- 列出实际完成的测试、类型检查和构建结果。
+- List the actual tests, type checks, and build results completed.
 ```
 
-验证失败时不得发布正式 Release。
+Do not publish a formal Release if verification fails.
 
-每个正式 Release 必须附带可安装的 Android APK。APK 文件名统一使用 `edgeever-android-vX.Y.Z-<ABI>.apk`，例如 `edgeever-android-v0.4.14-arm64-v8a.apk`。GitHub APK 默认仅构建 `arm64-v8a`；只有出现明确兼容需求时才额外提供其他 ABI，Play AAB 仍保留全部架构。若完整变更区间影响移动端代码、其共享依赖、原生配置或 APK 构建，则从本次发布提交重新构建生产签名 APK；否则可复用最近的兼容 APK，并在正文中注明来源 Release。发布前验证 APK 版本、签名、SHA-256 及下载可用性。
+Every formal Release must include an installable Android APK. APK file names must use `edgeever-android-vX.Y.Z-<ABI>.apk`, for example `edgeever-android-v0.4.14-arm64-v8a.apk`. GitHub APK builds only `arm64-v8a` by default; extra ABIs are provided only when there is an explicit compatibility requirement, while the Play AAB retains all architectures. If the full change range affects mobile code, its shared dependencies, native configuration, or APK build, rebuild the production-signed APK from the release commit; otherwise the most recent compatible APK may be reused, and the source Release must be noted in the release body. Before release, verify the APK version, signature, SHA-256, and download availability.
 
-## Cloudflare 自动部署约束
+## Cloudflare automatic deployment rules
 
-当用户要求根据 GitHub 项目链接将本项目安装部署到 Cloudflare 时，必须先完整阅读并严格按照 `docs/agent-deploy-cloudflare.md` 执行。该文档是此部署流程的唯一操作规范；不要在本文件重复维护部署命令、密码配置或 Workers Builds 步骤。
+When the user asks to install and deploy this project to Cloudflare from a GitHub project link, read `docs/agent-deploy-cloudflare.md` in full and follow it exactly. That document is the only operational specification for this deployment flow; do not repeat deployment commands, password configuration, or Workers Builds steps in this file.
 
-## 本地启动约束
+## Local startup rules
 
-- 默认使用 `bun run dev` 启动完整本地环境（本地 D1/R2 和固定演示种子），不得连接 `.env.local` 中的远程实例。
-- 仅在用户明确指定远程实例并要求连接时，使用 `EDGE_EVER_INSTANCE=<实例名> bun run dev:remote`；私有配置以 `.env.local` 为准，不得硬编码实例名。
-- 仅在用户明确要求只启动前端时使用 `bun run dev:web`。
+- Use `bun run dev` by default to start the full local environment (local D1/R2 with the fixed demo seed). It must not connect to the remote instance configured in `.env.local`.
+- Only when the user explicitly specifies a remote instance and asks to connect, use `EDGE_EVER_INSTANCE=<instance-name> bun run dev:remote`; private configuration is read from `.env.local`, and instance names must not be hard-coded.
+- Only use `bun run dev:web` when the user explicitly asks to start only the frontend.
 
-## 组件复用与造轮子约束
+## Component reuse and no-reinventing-the-wheel rules
 
-UI 功能应尽量复用 `shadcn/ui` 等现有 UI 组件。在实现其他功能时，也应优先采用成熟、稳定的开源组件或库，绝对禁止在没有充分必要性的前提下自行从零造轮子。
+UI functionality should reuse existing UI components such as `shadcn/ui` whenever possible. When implementing other features, prefer mature, stable open-source components or libraries. Never build a custom implementation from scratch without strong justification.
 
-为方便代码维护，当页面或功能模块出现复杂结构、重复布局或潜在复用场景时，应视情况封装为独立组件，保持页面入口聚焦于组合与数据传递。
+To keep the code maintainable, when a page or feature module develops complex structure, repeated layouts, or potential reuse scenarios, extract it into an independent component as appropriate, keeping the page entry focused on composition and data flow.
