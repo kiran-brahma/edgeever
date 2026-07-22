@@ -1,7 +1,7 @@
 import type { MemoDetail, TiptapDoc } from "@edgeever/shared";
 import { liveQuery } from "dexie";
 import { ApiRequestError, api } from "@/lib/api";
-import { localDb, type MemoUpdateSyncPayload, type SyncQueueItem } from "@/lib/local-db";
+import { localDb, type MemoCreateSyncPayload, type MemoUpdateSyncPayload, type SyncQueueItem } from "@/lib/local-db";
 
 export type SyncQueueSummary = {
   total: number;
@@ -27,6 +27,7 @@ export const emptySyncQueueSummary = (): SyncQueueSummary => ({
 });
 
 export const getMemoUpdateQueueId = (memoId: string) => `memo.update:${memoId}`;
+export const getMemoCreateQueueId = (localMemoId: string) => `memo.create:${localMemoId}`;
 
 export const queueMemoUpdate = async (payload: MemoUpdateSyncPayload) => {
   const id = getMemoUpdateQueueId(payload.memoId);
@@ -50,6 +51,28 @@ export const queueMemoUpdate = async (payload: MemoUpdateSyncPayload) => {
   });
 };
 
+export const queueMemoCreate = async (payload: MemoCreateSyncPayload) => {
+  const id = getMemoCreateQueueId(payload.localMemoId);
+  const now = new Date().toISOString();
+  await localDb.transaction("rw", localDb.syncQueue, async () => {
+    const existing = await localDb.syncQueue.get(id);
+
+    await localDb.syncQueue.put({
+      id,
+      kind: "memo.create",
+      memoId: payload.localMemoId,
+      status: "pending",
+      payload,
+      attemptCount: existing?.attemptCount ?? 0,
+      lastError: null,
+      nextAttemptAt: null,
+      claimId: null,
+      createdAt: existing?.createdAt ?? now,
+      updatedAt: now,
+    });
+  });
+};
+
 export const observeSyncQueue = (onChange: (summary: SyncQueueSummary) => void) => {
   const subscription = liveQuery(async () => summarizeSyncQueue(await localDb.syncQueue.toArray())).subscribe({
     next: onChange,
@@ -60,14 +83,15 @@ export const observeSyncQueue = (onChange: (summary: SyncQueueSummary) => void) 
 };
 
 export const isMemoUpdateAlreadyApplied = (memo: MemoDetail, item: SyncQueueItem) => {
-  if (memo.id !== item.memoId || memo.title !== item.payload.title) {
+  if (item.kind !== "memo.update" || memo.id !== item.memoId || memo.title !== item.payload.title) {
     return false;
   }
 
+  const updatePayload = item.payload as MemoUpdateSyncPayload;
   const remoteTags = [...memo.tags].sort((left, right) => left.localeCompare(right));
-  const queuedTags = [...item.payload.tags].sort((left, right) => left.localeCompare(right));
+  const queuedTags = [...updatePayload.tags].sort((left, right) => left.localeCompare(right));
   return JSON.stringify(remoteTags) === JSON.stringify(queuedTags) &&
-    JSON.stringify(memo.contentJson) === JSON.stringify(item.payload.contentJson);
+    JSON.stringify(memo.contentJson) === JSON.stringify(updatePayload.contentJson);
 };
 
 let activeSyncPromise: Promise<SyncRunResult> | null = null;
@@ -200,26 +224,42 @@ export const shouldQueueMemoSaveError = (error: unknown) => {
 };
 
 const syncQueueItem = async (item: SyncQueueItem): Promise<MemoDetail> => {
+  if (item.kind === "memo.create") {
+    const payload = item.payload as MemoCreateSyncPayload;
+    const data = await api.createMemo({
+      notebookId: payload.notebookId,
+      title: payload.title,
+      contentMarkdown: payload.contentMarkdown,
+      tags: payload.tags,
+      createdAt: payload.createdAt,
+      updatedAt: payload.updatedAt,
+    });
+    // Replace the local placeholder with the server memo once synced.
+    await localDb.localMemos.delete(payload.localMemoId);
+    return data.memo;
+  }
+
   if (item.kind !== "memo.update") {
     throw new Error(`Unsupported sync item kind: ${item.kind}`);
   }
 
+  const updatePayload = item.payload as MemoUpdateSyncPayload;
   const { editSession } = await api.createMemoEditSession(item.memoId);
   if (
-    editSession.baseRevision !== item.payload.expectedRevision ||
-    editSession.baseContentHash !== item.payload.expectedContentHash
+    editSession.baseRevision !== updatePayload.expectedRevision ||
+    editSession.baseContentHash !== updatePayload.expectedContentHash
   ) {
     throw new ApiRequestError("Note changed before the offline draft could sync.", 409, "revision_conflict");
   }
 
   const data = await api.updateMemo(item.memoId, {
-    expectedRevision: item.payload.expectedRevision,
-    expectedContentHash: item.payload.expectedContentHash,
+    expectedRevision: updatePayload.expectedRevision,
+    expectedContentHash: updatePayload.expectedContentHash,
     editSessionId: editSession.id,
-    title: item.payload.title,
-    contentJson: item.payload.contentJson as TiptapDoc,
-    contentMarkdown: item.payload.contentMarkdown,
-    tags: item.payload.tags,
+    title: updatePayload.title,
+    contentJson: updatePayload.contentJson as TiptapDoc,
+    contentMarkdown: updatePayload.contentMarkdown,
+    tags: updatePayload.tags,
   });
 
   return data.memo;

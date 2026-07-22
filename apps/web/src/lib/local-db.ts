@@ -21,12 +21,34 @@ export type MemoUpdateSyncPayload = {
   tags: string[];
 };
 
+export type MemoCreateSyncPayload = {
+  localMemoId: string;
+  notebookId: string;
+  title: string;
+  contentMarkdown: string;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type LocalMemo = {
+  id: string;
+  notebookId: string;
+  title: string;
+  contentMarkdown: string;
+  tags: string[];
+  status: "pending" | "syncing" | "error";
+  errorMessage: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type SyncQueueItem = {
   id: string;
-  kind: "memo.update";
+  kind: "memo.update" | "memo.create";
   memoId: string;
   status: "pending" | "syncing" | "conflict" | "error";
-  payload: MemoUpdateSyncPayload;
+  payload: MemoUpdateSyncPayload | MemoCreateSyncPayload;
   attemptCount: number;
   lastError: string | null;
   nextAttemptAt: string | null;
@@ -38,6 +60,7 @@ export type SyncQueueItem = {
 class EdgeEverLocalDb extends Dexie {
   drafts!: Table<LocalDraft, string>;
   syncQueue!: Table<SyncQueueItem, string>;
+  localMemos!: Table<LocalMemo, string>;
 
   constructor() {
     super("edgeever-local");
@@ -47,6 +70,11 @@ class EdgeEverLocalDb extends Dexie {
     this.version(2).stores({
       drafts: "memoId, updatedAt",
       syncQueue: "id, memoId, status, updatedAt, nextAttemptAt",
+    });
+    this.version(3).stores({
+      drafts: "memoId, updatedAt",
+      syncQueue: "id, memoId, status, updatedAt, nextAttemptAt",
+      localMemos: "id, notebookId, status, updatedAt",
     });
   }
 }

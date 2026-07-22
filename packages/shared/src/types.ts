@@ -27,6 +27,7 @@ export type MemoSummary = {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  isLocalOnly?: boolean;
 };
 
 export type MemoDetail = MemoSummary & {

@@ -26,7 +26,10 @@ import {
 } from "@/components/ui/drawer";
 import { MemoListPane, MemoSelectionActionBar } from "./MemoListPane";
 import { AppConfirmDialog, MemoDeleteConfirmDialog, NotebookNameDialog } from "./dialogs/ConfirmDialogs";
+import { liveQuery } from "dexie";
 import { api } from "@/lib/api";
+import { localDb, type LocalMemo } from "@/lib/local-db";
+import { queueMemoCreate } from "@/lib/sync-queue";
 import {
   MOBILE_EDITOR_RETURN_PARAM,
   clearMobileEditorReturnPreview,
@@ -128,6 +131,36 @@ const emptySyncQueueSummary = (): SyncQueueSummary => ({
   conflict: 0,
   error: 0,
 });
+
+const localMemoToSummary = (localMemo: LocalMemo): MemoSummary => ({
+  id: localMemo.id,
+  notebookId: localMemo.notebookId,
+  title: localMemo.title,
+  excerpt: localMemo.contentMarkdown.slice(0, 240),
+  tags: localMemo.tags,
+  updatedAt: localMemo.updatedAt,
+  createdAt: localMemo.createdAt,
+  isPinned: false,
+  isArchived: false,
+  isDeleted: false,
+  deletedAt: null,
+  revision: 0,
+  isLocalOnly: true,
+});
+
+const useLocalMemos = () => {
+  const [localMemos, setLocalMemos] = useState<LocalMemo[]>([]);
+
+  useEffect(() => {
+    const subscription = liveQuery(() => localDb.localMemos.toArray()).subscribe({
+      next: (memos) => setLocalMemos(memos),
+      error: () => setLocalMemos([]),
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  return localMemos;
+};
 
 const PaneLoadingFallback = ({ label = "Loading" }: { label?: string }) => (
   <div className="flex h-full min-h-0 items-center justify-center bg-white text-sm font-medium text-slate-400" role="status">
@@ -686,6 +719,7 @@ export const WorkspaceApp = ({
     readMobileEditorReturnPreview(getMobileEditorReturnMemoId(location.search))
   );
   const [isOnline, setIsOnline] = useState(() => (typeof navigator === "undefined" ? true : navigator.onLine));
+  const localMemos = useLocalMemos();
   const [isDesktop, setIsDesktop] = useState(isDesktopViewport);
   const [isSyncingQueuedChanges, setIsSyncingQueuedChanges] = useState(false);
   const [isManualMemoSyncing, setIsManualMemoSyncing] = useState(false);
@@ -1222,8 +1256,35 @@ export const WorkspaceApp = ({
       }
     }
 
+    if (memoView !== "trash") {
+      const searchLower = search.trim().toLowerCase();
+      for (const localMemo of localMemos) {
+        if (selectedNotebookId && localMemo.notebookId !== selectedNotebookId) {
+          continue;
+        }
+        if (memoFilterMode === "tagged" && localMemo.tags.length === 0) {
+          continue;
+        }
+        if (memoFilterMode === "untagged" && localMemo.tags.length > 0) {
+          continue;
+        }
+        if (memoFilterMode === "pinned") {
+          continue;
+        }
+        if (
+          searchLower &&
+          !localMemo.title.toLowerCase().includes(searchLower) &&
+          !localMemo.contentMarkdown.toLowerCase().includes(searchLower) &&
+          !localMemo.tags.some((tag) => tag.toLowerCase().includes(searchLower))
+        ) {
+          continue;
+        }
+        memoMap.set(localMemo.id, localMemoToSummary(localMemo));
+      }
+    }
+
     return Array.from(memoMap.values());
-  }, [memosQuery.data?.pages, mobileEditorReturnPreview]);
+  }, [memosQuery.data?.pages, mobileEditorReturnPreview, localMemos, memoView, selectedNotebookId, memoFilterMode, search]);
   const totalMemoCount = memosQuery.data?.pages[0]?.totalCount ?? memos.length;
   const handleLoadMoreMemos = useCallback(() => {
     if (!memosQuery.hasNextPage || memosQuery.isFetchingNextPage) {
@@ -1253,7 +1314,7 @@ export const WorkspaceApp = ({
   const memoQuery = useQuery({
     queryKey: selectedMemoId ? memoDetailQueryKey(selectedMemoId, memoView) : ["memo", selectedMemoId, memoView],
     queryFn: () => api.getMemo(selectedMemoId as string, { includeDeleted: memoView === "trash" }),
-    enabled: Boolean(selectedMemoId),
+    enabled: Boolean(selectedMemoId) && selectedMemoId?.startsWith("local-") !== true,
   });
 
   const createNotebookMutation = useMutation({
@@ -1632,13 +1693,66 @@ export const WorkspaceApp = ({
     setNotebookDeleteConfirmation(notebook);
   };
 
-  const handleCreateMemo = (template?: MemoTemplate) => {
+  const handleCreateMemo = async (template?: MemoTemplate) => {
     if (!defaultMemoNotebookId || memoView === "trash") {
       return;
     }
 
     setTemplatesOpen(false);
     setMobileBottomNavActive("home");
+
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      const localId = `local-${crypto.randomUUID()}`;
+      const now = new Date().toISOString();
+      const localMemo: LocalMemo = {
+        id: localId,
+        notebookId: defaultMemoNotebookId,
+        title: template?.title ?? DEFAULT_MEMO_TITLE,
+        contentMarkdown: template?.contentMarkdown ?? "",
+        tags: template?.tags ?? [],
+        status: "pending",
+        errorMessage: null,
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      await localDb.localMemos.add(localMemo);
+      await queueMemoCreate({
+        localMemoId: localId,
+        notebookId: defaultMemoNotebookId,
+        title: localMemo.title,
+        contentMarkdown: localMemo.contentMarkdown,
+        tags: localMemo.tags,
+        createdAt: now,
+        updatedAt: now,
+      });
+
+      // Pre-populate the editor query so the note can be opened while offline.
+      const localMemoDetail: MemoDetail = {
+        ...localMemoToSummary(localMemo),
+        contentJson: { type: "doc", content: [{ type: "paragraph" }] },
+        contentMarkdown: localMemo.contentMarkdown,
+        contentText: localMemo.contentMarkdown,
+        contentHash: "",
+        sourceMemoIds: [],
+        mergeSourceCount: 0,
+        mergedIntoMemoId: null,
+      };
+      queryClient.setQueryData(memoDetailQueryKey(localId, "notebook"), { memo: localMemoDetail });
+
+      setMemoView("notebook");
+      setSearch("");
+      setSelectedNotebookId(defaultMemoNotebookId);
+      setSelectedMemoId(localId);
+      setRightView("editor");
+      setActivePane("editor");
+
+      if (!isDesktopViewport()) {
+        openStandaloneMobileEditor(localId);
+      }
+      return;
+    }
+
     createMemoMutation.mutate({
       notebookId: defaultMemoNotebookId,
       title: template?.title ?? DEFAULT_MEMO_TITLE,
