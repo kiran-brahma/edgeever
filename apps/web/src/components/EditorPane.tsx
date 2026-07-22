@@ -1360,6 +1360,36 @@ const RichEditorPane = ({
       attributes: {
         class: "prose prose-slate max-w-none focus:outline-none min-h-[300px] px-4 py-3 sm:px-7",
       },
+      handleKeyDown: (view, event) => {
+        if (
+          event.key.toLowerCase() !== "f" ||
+          (!event.ctrlKey && !event.metaKey) ||
+          event.altKey ||
+          event.shiftKey
+        ) {
+          return false;
+        }
+
+        const { from, to } = view.state.selection;
+        if (from === to) {
+          return false;
+        }
+
+        const selectedText = view.state.doc.textBetween(from, to, "\n").trim();
+        if (!selectedText) {
+          return false;
+        }
+
+        event.preventDefault();
+        setNoteSearchQuery(selectedText);
+        setNoteSearchOpen(true);
+        setNoteSearchReplaceOpen(false);
+        window.requestAnimationFrame(() => {
+          noteSearchInputRef.current?.focus();
+          noteSearchInputRef.current?.select();
+        });
+        return true;
+      },
       handlePaste: (_view, event) => {
         const files = getImageFilesFromDataTransfer(event.clipboardData);
 
