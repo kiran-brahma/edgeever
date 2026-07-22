@@ -1,17 +1,17 @@
-# EdgeEver
+# Kiran Brahma Notes
 
-[简体中文](README.zh-CN.md) | English
+English
 
-> **EdgeEver: A serverless, 100% free, open-source, and AI-native self-hosted Evernote alternative on Cloudflare.**
+> **Kiran Brahma Notes: A serverless, 100% free, open-source, and AI-native self-hosted Evernote alternative on Cloudflare.**
 
-EdgeEver is an open-source, self-hosted, Cloudflare-native notes workspace. It keeps the classic Evernote-style three-pane experience while providing a clear data model, REST API, OpenAPI schema, Remote MCP endpoint, and native AI Agent integration.
+Kiran Brahma Notes is an open-source, self-hosted, Cloudflare-native notes workspace. It keeps the classic Evernote-style three-pane experience while providing a clear data model, REST API, OpenAPI schema, Remote MCP endpoint, and native AI Agent integration.
 
 > 💡 **Serverless & 100% Free Forever**
-> EdgeEver uses a pure Serverless architecture. **No server purchase or VPS rental is required**, and there is no need to configure Docker or SSL certificates. By running within Cloudflare's free quotas, personal use is **100% free with zero maintenance**.
+> Kiran Brahma Notes uses a pure Serverless architecture. **No server purchase or VPS rental is required**, and there is no need to configure Docker or SSL certificates. By running within Cloudflare's free quotas, personal use is **100% free with zero maintenance**.
 
-> ⭐ If EdgeEver is useful to you, consider giving it a Star. Your support helps more people discover the project.
+> ⭐ If Kiran Brahma Notes is useful to you, consider giving it a Star. Your support helps more people discover the project.
 
-## Why EdgeEver
+## Why Kiran Brahma Notes
 
 Many long-time **Evernote** users only need a **reliable, open, and responsive** personal knowledge base. However, existing mainstream solutions all have their pain points:
 
@@ -19,14 +19,14 @@ Many long-time **Evernote** users only need a **reliable, open, and responsive**
 * **Obsidian**: Although open and customizable, it is too heavy for quick, on-the-go captures (especially on mobile). Official sync costs $5/month, while third-party sync solutions require significant setup effort.
 * **Memos & lightweight notes**: Though open and simple, their stream-based layouts differ significantly from the classic Evernote-style three-pane workflow.
 
-**EdgeEver is designed to fill this gap**: it retains the familiar classic three-pane note-taking experience, while providing fully open data models, REST API, native MCP support, and zero-cost self-hosted deployment.
+**Kiran Brahma Notes is designed to fill this gap**: it retains the familiar classic three-pane note-taking experience, while providing fully open data models, REST API, native MCP support, and zero-cost self-hosted deployment.
 
 > 💡 **My current best practice:**
-> Use **EdgeEver** to quickly capture ideas and reminders as a raw "material library." When content needs structured organization, use **MCP** to let AI automatically organize and sync it into **Obsidian**, **Notion Database**, or **Feishu Bitable**.
+> Use **Kiran Brahma Notes** to quickly capture ideas and reminders as a raw "material library." When content needs structured organization, use **MCP** to let AI automatically organize and sync it into **Obsidian**, **Notion Database**, or **Feishu Bitable**.
 
 ## Online Demo
 
-- Demo: [https://demo.edgeever.org](https://demo.edgeever.org)
+- Demo: [https://demo.notes.kiranbrahma.com](https://demo.notes.kiranbrahma.com)
 
 The public demo resets every Monday at 1:00 AM (China Standard Time) and restores sample notes. Do not store private content there.
 
@@ -34,7 +34,7 @@ The public demo resets every Monday at 1:00 AM (China Standard Time) and restore
 
 - Serverless, 100% free, and zero maintenance: Built on Cloudflare's Serverless architecture, running entirely within free tiers. Store up to 150k notes and 50k images without any hosting fees, while enjoying near-instant response times globally.
 - Open data: notes are stored in Cloudflare D1, based on standard SQLite, and can be read and managed through REST API, MCP, and CLI without locking your data to a single notes product.
-- EdgeEver ZIP import and export: one archive combines human-readable Markdown, Front Matter, nested notebook structure, and relative-path attachments with versioned structured data and revision history for complete recovery between EdgeEver instances.
+- Kiran Brahma Notes ZIP import and export: one archive combines human-readable Markdown, Front Matter, nested notebook structure, and relative-path attachments with versioned structured data and revision history for complete recovery between Kiran Brahma Notes instances.
 - AI Agent friendly: built-in MCP support lets tools such as Codex, Claude Code, and Antigravity read, organize, and maintain notes, while enabling integrations with Notion databases and Feishu Bitable.
 - Uncapped multi-device sync: self-hosted API means no restrictive commercial limits on the number of active login devices, supporting seamless synchronization across PC, tablet, and mobile (via PWA or browser).
 - Three-pane layout: notebook tree, note list, and main editor, with a desktop focus mode that expands the selected note across the workspace.
@@ -57,9 +57,9 @@ Choose any one of the following three options to complete deployment.
 
 ### Option A: Deploy to Cloudflare (Recommended)
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/tianma-if/edgeever)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/kiran-brahma/edgeever)
 
-One-click deployment creates a dedicated GitHub repository and the required Cloudflare resources, then automatically redeploys after the repository's daily upstream sync; see [Deploy EdgeEver with Cloudflare](docs/deploy-cloudflare-button.md) for setup and troubleshooting.
+One-click deployment creates a dedicated GitHub repository and the required Cloudflare resources, then automatically redeploys after the repository's daily upstream sync; see [Deploy Kiran Brahma Notes with Cloudflare](docs/deploy-cloudflare-button.md) for setup and troubleshooting.
 
 ### Option B: Deploy with an AI Agent
 
@@ -71,7 +71,7 @@ Copy this prompt into your AI coding assistant, such as Claude Code, Codex, Open
 
 ```text
 Please follow these steps:
-1. Create a GitHub repository from https://github.com/tianma-if/edgeever and clone it locally.
+1. Create a GitHub repository from https://github.com/kiran-brahma/edgeever and clone it locally.
 2. Follow docs/agent-deploy-cloudflare.md to create Cloudflare resources and run `bun run deploy:manual`.
 3. Run `bun run deploy:builds:setup` to connect the deployed Worker to the repository's `main` branch through Cloudflare Workers Builds. If setup needs a token, use a User API Token, not an Account API Token.
 4. Verify the first automatic build and the daily upstream-update workflow.
@@ -101,7 +101,7 @@ The instance administrator can create, disable, or reset member accounts in **Pr
 
 ## PWA Installation
 
-EdgeEver can be installed as a PWA on desktop or mobile home screens. On desktop, open the site in Chrome or Edge and use the install icon in the address bar. On Android, open it in Chrome, use the three-dot menu, and choose **Add to Home screen** or **Install**. Avoid installing from embedded browsers such as WeChat.
+Kiran Brahma Notes can be installed as a PWA on desktop or mobile home screens. On desktop, open the site in Chrome or Edge and use the install icon in the address bar. On Android, open it in Chrome, use the three-dot menu, and choose **Add to Home screen** or **Install**. Avoid installing from embedded browsers such as WeChat.
 
 > Common pitfall: When installing the PWA on mobile, Chrome or Edge is recommended. Other mobile browsers may encounter compatibility issues or unexpected errors during installation.
 
@@ -178,7 +178,7 @@ wrangler.toml     Cloudflare Workers, Assets, D1, R2 configuration
 
 ## Content Formats
 
-EdgeEver stores note content in three forms:
+Kiran Brahma Notes stores note content in three forms:
 
 ```text
 content_json      TipTap/ProseMirror document, the editor source of truth
@@ -186,7 +186,7 @@ content_markdown  API, Agent, import, and export format
 content_text      Search, summary, and indexing text
 ```
 
-Open **Profile** -> **Import and export** to export or import an EdgeEver ZIP. Its `notes/` directory is directly readable and portable as Markdown, while its structured data supports complete recovery between EdgeEver instances. Import preserves unrelated target data and overwrites records with matching EdgeEver IDs.
+Open **Profile** -> **Import and export** to export or import an Kiran Brahma Notes ZIP. Its `notes/` directory is directly readable and portable as Markdown, while its structured data supports complete recovery between Kiran Brahma Notes instances. Import preserves unrelated target data and overwrites records with matching Kiran Brahma Notes IDs.
 
 ## API
 
@@ -202,17 +202,17 @@ Repository file: [docs/openapi.json](docs/openapi.json).
 
 Create an API token in **Profile** -> **MCP settings**, then copy either the token or full MCP configuration into your AI Agent so it can install the MCP server and read or organize notes with permission.
 
-With MCP, EdgeEver can also connect to tools such as Notion databases and Feishu Bitable, turning scattered ideas, information, and materials from everyday notes into structured data that is easier to organize, search, and manage.
+With MCP, Kiran Brahma Notes can also connect to tools such as Notion databases and Feishu Bitable, turning scattered ideas, information, and materials from everyday notes into structured data that is easier to organize, search, and manage.
 
 ## Image Compression
 
 Image compression happens in the Web client before upload and is controlled by the **Compress note images** setting. When enabled, PNG, JPEG, WebP, and AVIF files are converted to WebP when beneficial, with the longest edge limited to `2560px`. If compression does not reduce size, the original file is kept.
 
-EdgeEver avoids Worker-side image processing to reduce compute and image-processing quota usage. REST API and MCP upload paths store the file content provided by the client without additional server-side compression.
+Kiran Brahma Notes avoids Worker-side image processing to reduce compute and image-processing quota usage. REST API and MCP upload paths store the file content provided by the client without additional server-side compression.
 
 ## Migration
 
-If you want to migrate notes from other platforms to EdgeEver, please refer to the following simple migration guides:
+If you want to migrate notes from other platforms to Kiran Brahma Notes, please refer to the following simple migration guides:
 
 - **Evernote Migration**: Please refer to [docs/evernote-migration-guide.md](docs/evernote-migration-guide.md)
 - **Memos Migration**: Please refer to [docs/memos-migration-guide.md](docs/memos-migration-guide.md)
@@ -220,7 +220,7 @@ If you want to migrate notes from other platforms to EdgeEver, please refer to t
 
 ## Community and Feedback
 
-- Bugs, feature requests, and deployment issues: [GitHub Issues](https://github.com/tianma-if/edgeever/issues)
+- Bugs, feature requests, and deployment issues: [GitHub Issues](https://github.com/kiran-brahma/edgeever/issues)
 
 ## Docker Deployment Roadmap
 
@@ -228,4 +228,4 @@ If you want to migrate notes from other platforms to EdgeEver, please refer to t
 
 ## Disclaimer
 
-EdgeEver is an independent open-source note-taking application developed and maintained by individuals and the community. It is not affiliated with, authorized, sponsored, or endorsed by Evernote Corporation or its affiliates.
+Kiran Brahma Notes is an independent open-source note-taking application developed and maintained by individuals and the community. It is not affiliated with, authorized, sponsored, or endorsed by Evernote Corporation or its affiliates.

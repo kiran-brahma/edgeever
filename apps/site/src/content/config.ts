@@ -12,7 +12,7 @@ const blogCollection = defineCollection({
       alt: z.string(),
     }),
     publishDate: z.string().transform(str => new Date(str)),
-    author: z.string().default('EdgeEver Team'),
+    author: z.string().default('Kiran Brahma Notes Team'),
     category: z.string(),
     tags: z.array(z.string()),
   }),

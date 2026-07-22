@@ -2,7 +2,6 @@ import { useState, type FormEvent } from "react";
 import { LockKeyhole } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { GitHubRepositoryLink } from "@/components/GitHubRepositoryLink";
 import { Input } from "@/components/ui/input";
 
 interface LoginScreenProps {
@@ -43,8 +42,7 @@ export const LoginScreen = ({ configurationError, error, isSubmitting, onSubmit 
     <main className="flex h-[100dvh] items-center justify-center bg-gradient-to-tr from-emerald-50/70 via-emerald-50 to-emerald-100 px-4 py-8 text-slate-950">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgb(var(--brand-green-rgb)/0.06),transparent_45%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgb(var(--brand-green-rgb)/0.04),transparent_55%)] pointer-events-none" />
-      <GitHubRepositoryLink className="absolute right-4 top-[max(1rem,env(safe-area-inset-top))] z-10 h-10 w-10 justify-center rounded-full border border-slate-200 bg-white/85 text-slate-600 shadow-sm backdrop-blur transition hover:bg-white hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70" iconClassName="h-5 w-5" />
-      
+
       <section className="relative w-full max-w-[400px] rounded-2xl border border-emerald-500/15 bg-white/95 p-8 shadow-[0_20px_50px_rgb(var(--brand-green-rgb)/0.08)] backdrop-blur-md transition-all duration-300 hover:shadow-[0_24px_60px_rgb(var(--brand-green-rgb)/0.12)]">
         <div className="mb-8 flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-[0_8px_16px_-4px_rgb(var(--brand-green-rgb)/0.35)]">
@@ -88,11 +86,11 @@ export const LoginScreen = ({ configurationError, error, isSubmitting, onSubmit 
             </div>
           )}
 
-          <Button 
+          <Button
             className="w-full h-11 justify-center rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-semibold transition-all duration-200 shadow-[0_8px_20px_-4px_rgb(var(--brand-green-rgb)/0.25)] hover:shadow-[0_12px_24px_-4px_rgb(var(--brand-green-rgb)/0.35)]"
-            size="md" 
-            type="submit" 
-            variant="solid" 
+            size="md"
+            type="submit"
+            variant="solid"
             disabled={isSubmitting}
           >
             <LockKeyhole className="h-4 w-4 mr-1" />

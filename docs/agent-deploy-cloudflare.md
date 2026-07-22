@@ -1,6 +1,6 @@
 # AI Agent Cloudflare Deployment
 
-Use this contract when deploying EdgeEver from a GitHub repository to Cloudflare.
+Use this contract when deploying Kiran Brahma Notes from a GitHub repository to Cloudflare.
 
 ## Constraints
 
@@ -34,4 +34,4 @@ After the first deployment, run:
 bun run deploy:builds:setup
 ```
 
-Follow [Cloudflare Workers Builds](cloudflare-workers-builds.md) only when the command requests authorization or an API token. Deployment is complete when the verification build succeeds and future pushes to `main` automatically deploy the instance. Confirm that the repository's **Update deployed EdgeEver** workflow is available and enabled; GitHub disables scheduled workflows by default on public forks. Its default `stable` channel checks formal upstream Releases daily.
+Follow [Cloudflare Workers Builds](cloudflare-workers-builds.md) only when the command requests authorization or an API token. Deployment is complete when the verification build succeeds and future pushes to `main` automatically deploy the instance. Confirm that the repository's **Update deployed Kiran Brahma Notes** workflow is available and enabled; GitHub disables scheduled workflows by default on public forks. Its default `stable` channel checks formal upstream Releases daily.

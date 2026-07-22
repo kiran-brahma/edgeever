@@ -20,7 +20,7 @@ type LogEntry = {
 
 let nextLogId = 1;
 
-const nowTime = () => new Date().toLocaleTimeString("zh-CN", { hour12: false });
+const nowTime = () => new Date().toLocaleTimeString("en-US", { hour12: false });
 
 const activeElementLabel = () => {
   const element = document.activeElement;

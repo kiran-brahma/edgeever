@@ -12,7 +12,7 @@ The manual entrypoint adds local configuration checks before that pipeline. Rout
 
 ## Automated CLI Setup
 
-1. Create a GitHub repository from [tianma-if/edgeever](https://github.com/tianma-if/edgeever), then clone it:
+1. Create a GitHub repository from [kiran-brahma/edgeever](https://github.com/kiran-brahma/edgeever), then clone it:
 
    ```sh
    git clone <your repository URL>
@@ -67,11 +67,11 @@ bun run deploy:doctor
 bun run deploy:manual
 ```
 
-`.env.local` is read only by local EdgeEver scripts. Never upload it, commit it, or copy it into a Cloudflare build as a file. The standard `bun run deploy` command is reserved for Cloudflare's one-click non-interactive entrypoint; local and Agent deployments use `bun run deploy:manual`.
+`.env.local` is read only by local Kiran Brahma Notes scripts. Never upload it, commit it, or copy it into a Cloudflare build as a file. The standard `bun run deploy` command is reserved for Cloudflare's one-click non-interactive entrypoint; local and Agent deployments use `bun run deploy:manual`.
 
 The deployment pipeline applies remote D1 migrations without an interactive confirmation, deploys the Worker, and verifies required tables and the authentication Secret. It normalizes migration SQL to LF and runs Wrangler with its supported Node.js runtime for consistent behavior across Windows, macOS, and Linux.
 
-EdgeEver fails closed: a production instance without completed D1 migrations or authentication configuration returns `database_not_ready` or `auth_not_configured` instead of exposing an unauthenticated workspace. The instance is ready only when `/api/health` returns `200` with `"ok": true` and login succeeds.
+Kiran Brahma Notes fails closed: a production instance without completed D1 migrations or authentication configuration returns `database_not_ready` or `auth_not_configured` instead of exposing an unauthenticated workspace. The instance is ready only when `/api/health` returns `200` with `"ok": true` and login succeeds.
 
 ## Recovery
 
@@ -96,4 +96,4 @@ bun run deploy:builds:setup
 
 This connects the Worker to the repository's `main` branch and securely copies the build variables required for future migrations and deployment. Every later push to `main` uses the same common deployment pipeline.
 
-The repository's **Update deployed EdgeEver** workflow checks upstream formal Releases daily on the default `stable` channel. Set the GitHub repository variable `EDGE_EVER_UPDATE_CHANNEL=edge` to follow upstream `main` instead. GitHub disables scheduled workflows by default on public forks, so open **Actions** and enable this workflow after a fork-based installation. Update conflicts or failed local verification leave the deployed branch unchanged.
+The repository's **Update deployed Kiran Brahma Notes** workflow checks upstream formal Releases daily on the default `stable` channel. Set the GitHub repository variable `EDGE_EVER_UPDATE_CHANNEL=edge` to follow upstream `main` instead. GitHub disables scheduled workflows by default on public forks, so open **Actions** and enable this workflow after a fork-based installation. Update conflicts or failed local verification leave the deployed branch unchanged.

@@ -1,8 +1,8 @@
-# Deploy EdgeEver with Cloudflare
+# Deploy Kiran Brahma Notes with Cloudflare
 
 The **Deploy to Cloudflare** button is the recommended first-installation path. It creates a repository in your GitHub account, provisions the Worker, D1 database, and R2 bucket, applies the database migrations, and connects the repository to Cloudflare Workers Builds.
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/tianma-if/edgeever)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/kiran-brahma/edgeever)
 
 ## First Installation
 
@@ -13,17 +13,17 @@ The **Deploy to Cloudflare** button is the recommended first-installation path. 
 5. Save and deploy. Cloudflare runs the repository's common deployment pipeline: build, remote D1 migrations, Worker deployment, and deployment verification.
 6. Open the resulting `*.workers.dev` URL. Confirm `/api/health` returns `200` with `"ok": true`, then sign in as `admin` with the password chosen during setup.
 
-EdgeEver fails closed. If the D1 migrations or authentication Secret are missing, the instance returns `database_not_ready` or `auth_not_configured` instead of exposing an unauthenticated workspace.
+Kiran Brahma Notes fails closed. If the D1 migrations or authentication Secret are missing, the instance returns `database_not_ready` or `auth_not_configured` instead of exposing an unauthenticated workspace.
 
 ## Automatic Updates
 
-The generated repository is connected to Workers Builds, so every push to `main` builds, migrates, verifies, and deploys the instance. It also contains the **Update deployed EdgeEver** workflow, which checks the upstream repository once per day.
+The generated repository is connected to Workers Builds, so every push to `main` builds, migrates, verifies, and deploys the instance. It also contains the **Update deployed Kiran Brahma Notes** workflow, which checks the upstream repository once per day.
 
 The default `stable` channel follows the latest formal GitHub Release. Before publishing an update, the workflow merges it locally and verifies dependency installation, local D1 migrations, automated tests, type checking, and the production web build. A failed merge or check leaves the deployed `main` branch unchanged and attempts to create an Issue with recovery guidance.
 
 To follow the latest upstream `main` instead, create a GitHub repository variable named `EDGE_EVER_UPDATE_CHANNEL` with the value `edge`. You can also run the workflow manually and select either channel for that run.
 
-GitHub may delay scheduled workflows and may disable them for an inactive public repository. If daily updates stop, open the repository's **Actions** tab, enable **Update deployed EdgeEver**, and run it manually once. Do not force-push over update conflicts; resolve them or return to an unmodified deployment repository.
+GitHub may delay scheduled workflows and may disable them for an inactive public repository. If daily updates stop, open the repository's **Actions** tab, enable **Update deployed Kiran Brahma Notes**, and run it manually once. Do not force-push over update conflicts; resolve them or return to an unmodified deployment repository.
 
 ## Alternative Entry Points
 

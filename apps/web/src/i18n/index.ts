@@ -11,7 +11,6 @@ import {
   type SupportedLocale,
 } from "./locales";
 import { enUS } from "./resources/en-US";
-import { zhCN } from "./resources/zh-CN";
 
 export {
   defaultLocale,
@@ -23,7 +22,6 @@ export {
 } from "./locales";
 
 export const resources = {
-  "zh-CN": { translation: zhCN },
   "en-US": { translation: enUS },
 } as const;
 

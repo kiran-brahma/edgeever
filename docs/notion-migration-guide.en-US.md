@@ -1,8 +1,8 @@
 # Notion Migration Guide
 
-[简体中文](notion-migration-guide.md) | [English](notion-migration-guide.en-US.md)
 
-Thanks to EdgeEver's native support for AI Agent and Model Context Protocol (MCP), if you want to migrate your Notion workspace to EdgeEver, the most elegant way is to use your AI assistant as a bridge. By mounting both the **Notion MCP** and **EdgeEver MCP** servers, you can achieve fully automatic cloud-to-cloud page migration.
+
+Thanks to Kiran Brahma Notes's native support for AI Agent and Model Context Protocol (MCP), if you want to migrate your Notion workspace to Kiran Brahma Notes, the most elegant way is to use your AI assistant as a bridge. By mounting both the **Notion MCP** and **Kiran Brahma Notes MCP** servers, you can achieve fully automatic cloud-to-cloud page migration.
 
 ---
 
@@ -13,8 +13,8 @@ Thanks to EdgeEver's native support for AI Agent and Model Context Protocol (MCP
 1. **Configure Notion MCP**:
    Set up the Notion MCP server in your AI assistant (e.g., Claude Code, Cursor, Cline). Once configured, the AI assistant will be authorized to read your Notion Pages and Databases.
 
-2. **Configure EdgeEver MCP**:
-   - Log in to your EdgeEver instance, and click **Profile** -> **MCP settings**.
+2. **Configure Kiran Brahma Notes MCP**:
+   - Log in to your Kiran Brahma Notes instance, and click **Profile** -> **MCP settings**.
    - Generate an API Token, click **Copy full MCP configuration**, and set it up in your AI assistant.
 
 Make sure your AI assistant can access and call both MCP servers simultaneously.
@@ -24,14 +24,14 @@ Make sure your AI assistant can access and call both MCP servers simultaneously.
 Copy and send the following prompt to the AI assistant that has access to both MCPs:
 
 ```text
-You are my AI assistant. You are currently connected to both my Notion MCP server and my new EdgeEver MCP server.
-Please help me migrate my Pages and Databases from Notion to EdgeEver:
+You are my AI assistant. You are currently connected to both my Notion MCP server and my new Kiran Brahma Notes MCP server.
+Please help me migrate my Pages and Databases from Notion to Kiran Brahma Notes:
 1. Call the Notion MCP tools to read my Notion page content (including titles, body content, creation time, tags, etc.) in batches.
-2. Call the EdgeEver MCP tools to write them into my new EdgeEver instance.
+2. Call the Kiran Brahma Notes MCP tools to write them into my new Kiran Brahma Notes instance.
 Please report the total number of successfully imported pages and if any page translation failed.
 ```
 
-The AI assistant will automatically parse and convert Notion's Block format and call the EdgeEver write tools to complete the data transfer.
+The AI assistant will automatically parse and convert Notion's Block format and call the Kiran Brahma Notes write tools to complete the data transfer.
 
 #### Step 3: Verify in Web Browser
-Go back to your EdgeEver web client and refresh the page to confirm that all Notion pages have been successfully recorded, and that their formatting and tags are synchronized.
+Go back to your Kiran Brahma Notes web client and refresh the page to confirm that all Notion pages have been successfully recorded, and that their formatting and tags are synchronized.

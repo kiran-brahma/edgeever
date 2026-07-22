@@ -1,18 +1,18 @@
 {
   "extensionName": {
-    "message": "EdgeEver Web Clipper"
+    "message": "Kiran Brahma Notes Web Clipper"
   },
   "extensionDescription": {
-    "message": "Save the current webpage or selected content to your self-hosted EdgeEver instance."
+    "message": "Save the current webpage or selected content to your self-hosted Kiran Brahma Notes instance."
   },
   "actionTitle": {
-    "message": "Save to EdgeEver"
+    "message": "Save to Kiran Brahma Notes"
   },
   "webClipper": {
     "message": "Web Clipper"
   },
   "popupDescription": {
-    "message": "Save the current webpage or selected content to your EdgeEver."
+    "message": "Save the current webpage or selected content to your Kiran Brahma Notes."
   },
   "saveCurrentPage": {
     "message": "Save current page"
@@ -26,20 +26,20 @@
   "completePluginConfiguration": {
     "message": "Please complete the extension setup"
   },
-  "savedToEdgeEver": {
-    "message": "Saved to EdgeEver."
+  "savedToKiran Brahma Notes": {
+    "message": "Saved to Kiran Brahma Notes."
   },
   "saveFailed": {
     "message": "Failed to save."
   },
   "optionsTitle": {
-    "message": "EdgeEver Web Clipper settings"
+    "message": "Kiran Brahma Notes Web Clipper settings"
   },
   "instanceAddress": {
-    "message": "EdgeEver instance URL"
+    "message": "Kiran Brahma Notes instance URL"
   },
   "tokenPlaceholder": {
-    "message": "Create one in EdgeEver settings"
+    "message": "Create one in Kiran Brahma Notes settings"
   },
   "defaultNotebook": {
     "message": "Default notebook"
@@ -80,13 +80,13 @@
     "message": "Failed to save settings."
   },
   "missingSettingsDetails": {
-    "message": "Enter the EdgeEver instance URL and API token in the extension settings first."
+    "message": "Enter the Kiran Brahma Notes instance URL and API token in the extension settings first."
   },
   "instancePermissionRequired": {
-    "message": "Allow the extension to access your EdgeEver instance."
+    "message": "Allow the extension to access your Kiran Brahma Notes instance."
   },
   "requestFailed": {
-    "message": "EdgeEver request failed ($STATUS$).",
+    "message": "Kiran Brahma Notes request failed ($STATUS$).",
     "placeholders": {
       "status": {
         "content": "$1"
@@ -100,7 +100,7 @@
     "message": "Captured at"
   },
   "noAvailableNotebooks": {
-    "message": "No notebooks are available in EdgeEver."
+    "message": "No notebooks are available in Kiran Brahma Notes."
   },
   "currentPageNotFound": {
     "message": "Could not find the current page."

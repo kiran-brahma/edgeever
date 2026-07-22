@@ -62,7 +62,7 @@ type LocalTiptapEditorProps = {
   onReady: (startupMs: number) => Promise<void>;
   onSearchResult?: (count: number, index: number) => Promise<void>;
   ref: Ref<LocalTiptapEditorRef>;
-  locale: "zh-CN" | "en-US";
+  locale: "en-US";
   theme: "light" | "dark";
 };
 
@@ -781,7 +781,7 @@ const loadMermaid = () => {
 };
 
 const createMobileCodeBlockExtension = (
-  locale: "zh-CN" | "en-US",
+  locale: "en-US",
   theme: "light" | "dark"
 ) => CodeBlock.extend({
   addNodeView() {
@@ -907,7 +907,7 @@ const createMobileCodeBlockExtension = (
 });
 
 const createMobileImageSizeControls = (
-  locale: "zh-CN" | "en-US",
+  locale: "en-US",
   updateWidth: (width: number) => void
 ) => {
   const controls = document.createElement("div");
@@ -962,7 +962,7 @@ const createMobileImageSizeControls = (
 
 const createProtectedImageExtension = (
   baseUrl: string,
-  locale: "zh-CN" | "en-US",
+  locale: "en-US",
   loadResource: (source: string) => Promise<string | null>
 ) => Image.extend({
   addAttributes() {

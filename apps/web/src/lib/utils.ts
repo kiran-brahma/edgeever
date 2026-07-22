@@ -39,7 +39,7 @@ export const buildNotebookTree = (notebooks: Notebook[], compareNodes: NotebookN
 };
 
 export const formatDateTime = (value: string) =>
-  new Intl.DateTimeFormat("zh-CN", {
+  new Intl.DateTimeFormat("en-US", {
     month: "2-digit",
     day: "2-digit",
     hour: "2-digit",
@@ -48,6 +48,6 @@ export const formatDateTime = (value: string) =>
 
 export const parseTagsText = (value: string) =>
   value
-    .split(/[,，\s]+/)
+    .split(/[,\s]+/)
     .map((tag) => tag.trim().replace(/^#/, ""))
     .filter(Boolean);

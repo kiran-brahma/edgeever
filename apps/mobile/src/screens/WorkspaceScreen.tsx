@@ -207,8 +207,6 @@ const ADVANCED_PROMPTS_EN = [
   },
 ];
 const MOBILE_LOCALE_OPTIONS: Array<{ label: string; value: MobileLocalePreference }> = [
-  { label: "跟随系统", value: "system" },
-  { label: "简体中文", value: "zh-CN" },
   { label: "English", value: "en-US" },
 ];
 type MobileView = "notes" | "settings";
@@ -5428,7 +5426,7 @@ const flattenNotebooks = (notebooks: Notebook[]) => {
 };
 
 const compareNotebooksManual = (left: Notebook, right: Notebook) =>
-  left.sortOrder - right.sortOrder || left.name.localeCompare(right.name, "zh-CN") || left.id.localeCompare(right.id);
+  left.sortOrder - right.sortOrder || left.name.localeCompare(right.name, "en-US") || left.id.localeCompare(right.id);
 
 const filterNotebookOptions = (options: NotebookOption[], searchText: string) => {
   const query = searchText.trim().toLowerCase();
@@ -5511,7 +5509,7 @@ const isNotebookDescendant = (notebooks: Notebook[], candidateNotebookId: string
 };
 
 const getResolvedMobileLocale = (localePreference: MobileLocaleMode) =>
-  localePreference === "system" ? Intl.DateTimeFormat().resolvedOptions().locale || "zh-CN" : localePreference;
+  localePreference === "system" ? Intl.DateTimeFormat().resolvedOptions().locale || "en-US" : localePreference;
 
 const isEnglishMobileLocale = (localePreference: MobileLocaleMode) => getResolvedMobileLocale(localePreference).startsWith("en");
 

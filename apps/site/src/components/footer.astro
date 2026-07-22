@@ -1,30 +1,8 @@
 ---
-import { getLocalizedPath, getSiteLocale, siteCopy } from "@/i18n";
-
-const locale = getSiteLocale(Astro.url.pathname);
-const copy = siteCopy[locale].nav;
 ---
 
 <footer class="my-20">
   <p class="text-center text-sm text-slate-500">
-    Copyright © {new Date().getFullYear()} EdgeEver. All rights reserved.
-    | 
-    <a href={getLocalizedPath(locale, "/contact")} class="hover:underline">
-      {copy.contact}
-    </a>
-    |
-    <a href={getLocalizedPath(locale, "/privacy")} class="hover:underline">
-      {copy.privacy}
-    </a>
-  </p>
-  <p class="text-center text-xs text-slate-500 mt-1">
-    Open source on <a
-      href="https://github.com/tianma-if/edgeever"
-      target="_blank"
-      rel="noopener"
-      class="hover:underline"
-    >
-      GitHub
-    </a>
+    © {new Date().getFullYear()} Kiran Brahma. All rights reserved.
   </p>
 </footer>

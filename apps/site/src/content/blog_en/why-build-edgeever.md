@@ -1,18 +1,18 @@
 ---
 draft: false
-title: "Why I Built EdgeEver"
-snippet: "A founder-style note on classic Evernote workflows, open data, AI agents, and why EdgeEver exists."
+title: "Why I Built Kiran Brahma Notes"
+snippet: "A founder-style note on classic Evernote workflows, open data, AI agents, and why Kiran Brahma Notes exists."
 image: {
     src: "/opengraph.jpg",
-    alt: "EdgeEver open-source self-hosted notes workspace"
+    alt: "Kiran Brahma Notes open-source self-hosted notes workspace"
 }
 publishDate: "2026-07-05 20:10"
 category: "Story"
-author: "EdgeEver Team"
+author: "Kiran Brahma Notes Team"
 tags: [story, evernote, self-hosted, mcp, open-source]
 ---
 
-I did not build EdgeEver because the world needs yet another notes app.
+I did not build Kiran Brahma Notes because the world needs yet another notes app.
 
 There are already plenty of them: lightweight notes, heavy knowledge bases, Markdown-first tools, collaborative workspaces, whiteboards, databases, and everything in between. But anyone who has used a notes app for years knows that the hard thing to replace is not a single feature. It is the workflow that has already become muscle memory.
 
@@ -70,13 +70,13 @@ Three panes are not nostalgia. They are efficient information density:
 
 This layout works especially well for long-lived personal archives. It does not force me into a complex space first, and it does not ask me to design a whole system before managing content. It feels like a workbench: open it, and everything is within reach.
 
-So EdgeEver is not trying to invent a brand-new paradigm. It is trying to fill a more specific gap: keep the familiar, direct three-pane notes experience while opening up the data model, deployment model, and agent interface.
+So Kiran Brahma Notes is not trying to invent a brand-new paradigm. It is trying to fill a more specific gap: keep the familiar, direct three-pane notes experience while opening up the data model, deployment model, and agent interface.
 
 ---
 
 ### Why Cloudflare-Native Self-Hosting
 
-I want EdgeEver to be a self-hosted product that ordinary individuals can actually keep using.
+I want Kiran Brahma Notes to be a self-hosted product that ordinary individuals can actually keep using.
 
 Traditional self-hosting often means servers, databases, object storage, backups, maintenance, and bills. For many people, that turns "own your data" into something that sounds good but is difficult to sustain.
 
@@ -89,13 +89,13 @@ Cloudflare D1, R2, Workers, and Pages offer a very practical combination for a p
 
 At personal scale, this stack can be close to zero cost. More importantly, users do not need to maintain a server. Fork the repository, configure resources, deploy, then sync upstream updates and redeploy when needed.
 
-That is one of the values EdgeEver is trying to express: self-hosting should not only belong to people who want to operate servers long term.
+That is one of the values Kiran Brahma Notes is trying to express: self-hosting should not only belong to people who want to operate servers long term.
 
 ---
 
 ### Open Data Is The Baseline
 
-EdgeEver keeps its content model explicit:
+Kiran Brahma Notes keeps its content model explicit:
 
 ```text
 content_json      TipTap/ProseMirror document, the editor source of truth
@@ -107,13 +107,13 @@ This is not about making the system look technically fancy. It is about not forc
 
 The editor needs a structured document. APIs and migration workflows need Markdown. Search needs plain text. Each representation has a job. The clearer the data model is, the easier backup, migration, automation, and extension become.
 
-I want EdgeEver users to have a simple sense of safety: this content is yours. You can read it through the REST API, let an agent organize it through MCP, or move it elsewhere when needed.
+I want Kiran Brahma Notes users to have a simple sense of safety: this content is yours. You can read it through the REST API, let an agent organize it through MCP, or move it elsewhere when needed.
 
 ---
 
 ### MCP Makes Notes Actionable Again
 
-Being AI-agent-friendly is a core part of EdgeEver.
+Being AI-agent-friendly is a core part of Kiran Brahma Notes.
 
 In the past, notes apps mainly helped us save information. But saving is no longer enough. We also want tools to help us:
 
@@ -123,15 +123,15 @@ In the past, notes apps mainly helped us save information. But saving is no long
 - Generate todos, docs, or plans from existing material
 - Clean up hierarchy and formatting during migration
 
-If all of this depends on copy and paste, it gets clumsy fast. MCP matters because users can explicitly authorize an AI agent to access their EdgeEver instance, so it can read and organize notes within clear boundaries.
+If all of this depends on copy and paste, it gets clumsy fast. MCP matters because users can explicitly authorize an AI agent to access their Kiran Brahma Notes instance, so it can read and organize notes within clear boundaries.
 
-That is another reason I wanted to build EdgeEver: notes should not be a sleeping archive. They should be callable, organizable, and reusable knowledge.
+That is another reason I wanted to build Kiran Brahma Notes: notes should not be a sleeping archive. They should be callable, organizable, and reusable knowledge.
 
 ---
 
-### What EdgeEver Wants To Be
+### What Kiran Brahma Notes Wants To Be
 
-EdgeEver is not trying to become an all-in-one super app.
+Kiran Brahma Notes is not trying to become an all-in-one super app.
 
 It is meant to be an open, lightweight, long-lived personal notes foundation:
 
@@ -142,8 +142,8 @@ It is meant to be an open, lightweight, long-lived personal notes foundation:
 - Low cost for individual users
 - Friendly to AI agents
 
-If you miss the direct, dependable workbench feeling of earlier Evernote, but want a modern notes system that is open, self-hosted, and ready for AI agents, EdgeEver is built for that intersection.
+If you miss the direct, dependable workbench feeling of earlier Evernote, but want a modern notes system that is open, self-hosted, and ready for AI agents, Kiran Brahma Notes is built for that intersection.
 
 I built it because I wanted a tool that feels familiar without being closed, lightweight without being shallow, personally owned while still ready for future automation workflows.
 
-That is where EdgeEver begins.
+That is where Kiran Brahma Notes begins.

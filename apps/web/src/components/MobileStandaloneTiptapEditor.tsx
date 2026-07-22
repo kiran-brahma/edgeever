@@ -178,7 +178,7 @@ export const MobileStandaloneTiptapEditor = ({
         table: { renderWrapper: true },
       }),
       Placeholder.configure({
-        placeholder: getMobileEditorPlaceholder("zh-CN"),
+        placeholder: getMobileEditorPlaceholder("en-US"),
       }),
     ],
     content: emptyDoc(),

@@ -54,15 +54,15 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeManifestIcons: false,
       manifest: {
-        name: "EdgeEver",
-        short_name: "EdgeEver",
-        description: "EdgeEver：基于 Cloudflare 全家桶自托管的开源印象笔记。",
+        name: "Kiran Brahma Notes",
+        short_name: "Kiran Notes",
+        description: "A private, serverless notes workspace by Kiran Brahma.",
         start_url: "/",
         scope: "/",
         display: "standalone",
-        background_color: "#0f172a",
-        theme_color: "#0f172a",
-        lang: "zh-CN",
+        background_color: "#f8fafc",
+        theme_color: "#10b981",
+        lang: "en-US",
         categories: ["productivity", "utilities"],
         icons: [
           {

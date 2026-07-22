@@ -1,43 +1,22 @@
 ---
 import Container from "@/components/container.astro";
-import Features from "@/components/features.astro";
-import Guides from "@/components/guides.astro";
 import Hero from "@/components/hero.astro";
-import Logos from "@/components/logos.astro";
 import Layout from "@/layouts/Layout.astro";
 
 const siteUrl = new URL(Astro.url.pathname, Astro.site).toString();
 
-const homeJsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "EdgeEver",
-    url: siteUrl,
-    inLanguage: "zh-CN",
-    description:
-      "EdgeEver 是一个开源、自托管、Cloudflare-native 的现代笔记工作区。",
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: "EdgeEver",
-    url: siteUrl,
-    codeRepository: "https://github.com/tianma-if/edgeever",
-    applicationCategory: "ProductivityApplication",
-    operatingSystem: "Web",
-    isAccessibleForFree: true,
-    description:
-      "EdgeEver 是一个开源、自托管、Cloudflare-native 的现代笔记工作区，保留经典印象笔记三栏体验，并提供 REST API、OpenAPI schema 和 MCP endpoint。",
-  },
-];
+const homeJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Kiran Brahma Notes",
+  url: siteUrl,
+  inLanguage: "en-US",
+  description: "A private, serverless notes workspace by Kiran Brahma.",
+};
 ---
 
 <Layout title="" jsonLd={homeJsonLd}>
   <Container>
     <Hero />
-    <Features />
-    <Guides />
-    <Logos />
   </Container>
 </Layout>

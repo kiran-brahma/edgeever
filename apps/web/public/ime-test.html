@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en-US">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -162,7 +162,7 @@
 
       const writeLog = (eventName, event) => {
         const target = event?.target;
-        const time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+        const time = new Date().toLocaleTimeString("en-US", { hour12: false });
         const inputType = event && "inputType" in event ? ` type=${event.inputType}` : "";
         const data = event && "data" in event && event.data ? ` data=${JSON.stringify(event.data)}` : "";
         const key = event && "key" in event ? ` key=${event.key}` : "";

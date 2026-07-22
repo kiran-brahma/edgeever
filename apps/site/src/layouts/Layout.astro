@@ -2,7 +2,7 @@
 import { SEO } from "astro-seo";
 import Footer from "@/components/footer.astro";
 import Navbar from "@/components/navbar/navbar.astro";
-import { getLocalizedPath, getSiteLocale, siteCopy, siteLocaleDataAttribute, siteLocaleStorageKey } from "@/i18n";
+import { siteCopy } from "@/i18n";
 import "@fontsource-variable/inter/index.css";
 import "@fontsource-variable/bricolage-grotesque";
 import "../styles/global.css";
@@ -24,11 +24,7 @@ export interface Props {
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
-const locale = getSiteLocale(Astro.url.pathname);
-const copy = siteCopy[locale].layout;
-const zhAlternateURL = new URL(getLocalizedPath("zh-CN", Astro.url.pathname), Astro.site).toString();
-const enAlternateURL = new URL(getLocalizedPath("en-US", Astro.url.pathname), Astro.site).toString();
-
+const copy = siteCopy["en-US"].layout;
 const defaultDescription = copy.defaultDescription;
 
 const {
@@ -44,112 +40,17 @@ const {
   articleTags,
   jsonLd,
   noindex = false,
-  localeRedirect = true,
 } = Astro.props;
 
 const resolvedImageWithDomain = new URL(image, Astro.site).toString();
 
-const makeTitle = title
-  ? title + " | " + "EdgeEver"
-  : copy.defaultTitle;
+const makeTitle = title ? title + " | " + "Kiran Brahma Notes" : copy.defaultTitle;
 
 const faviconVersion = "edgeever-brand-20260703";
-const localeRedirectScript = `(() => {
-  const storageKey = ${JSON.stringify(siteLocaleStorageKey)};
-  const localeAttribute = ${JSON.stringify(siteLocaleDataAttribute)};
-  const supportedLocales = ["zh-CN", "en-US"];
-  const normalizeLocale = (locale) => {
-    if (!locale) return null;
-    const normalized = String(locale).toLowerCase();
-
-    if (normalized === "zh" || normalized.startsWith("zh-")) {
-      return "zh-CN";
-    }
-
-    if (normalized === "en" || normalized === "en-us" || normalized.startsWith("en-")) {
-      return "en-US";
-    }
-
-    return null;
-  };
-  const getStoredLocale = () => {
-    try {
-      return normalizeLocale(window.localStorage.getItem(storageKey));
-    } catch {
-      return null;
-    }
-  };
-  const writeStoredLocale = (locale) => {
-    if (!supportedLocales.includes(locale)) return;
-
-    try {
-      window.localStorage.setItem(storageKey, locale);
-    } catch {
-      // Local storage can be unavailable in private or restricted browser contexts.
-    }
-  };
-  const getBrowserLocale = () => {
-    const browserLocales = navigator.languages?.length ? navigator.languages : [navigator.language];
-
-    for (const locale of browserLocales) {
-      const supported = normalizeLocale(locale);
-
-      if (supported) {
-        return supported;
-      }
-    }
-
-    return null;
-  };
-  const getCurrentLocale = (pathname) => pathname === "/en" || pathname.startsWith("/en/") ? "en-US" : "zh-CN";
-  const isExplicitLocalePath = (pathname) => pathname === "/en" || pathname.startsWith("/en/");
-  const getLocalizedPath = (locale, pathname) => {
-    const normalizedPath = pathname.startsWith("/") ? pathname : "/" + pathname;
-
-    if (locale === "zh-CN") {
-      return normalizedPath === "/en" ? "/" : normalizedPath.replace(/^\\/en(?=\\/|$)/, "") || "/";
-    }
-
-    if (normalizedPath === "/") {
-      return "/en/";
-    }
-
-    return normalizedPath.startsWith("/en/") ? normalizedPath : "/en" + normalizedPath;
-  };
-  const getDesiredLocale = (pathname) => {
-    if (isExplicitLocalePath(pathname)) {
-      return null;
-    }
-
-    const browserLocale = getBrowserLocale();
-    const storedLocale = getStoredLocale();
-
-    if (browserLocale === "zh-CN" || storedLocale === "zh-CN") {
-      return "zh-CN";
-    }
-
-    return storedLocale ?? browserLocale;
-  };
-  const desiredLocale = getDesiredLocale(window.location.pathname);
-
-  if (desiredLocale && desiredLocale !== getCurrentLocale(window.location.pathname)) {
-    const nextPath = getLocalizedPath(desiredLocale, window.location.pathname);
-    window.location.replace(nextPath + window.location.search + window.location.hash);
-  }
-
-  document.addEventListener("click", (event) => {
-    const target = event.target instanceof Element ? event.target.closest("[" + localeAttribute + "]") : null;
-    const locale = target?.getAttribute(localeAttribute);
-
-    if (locale) {
-      writeStoredLocale(locale);
-    }
-  }, { capture: true });
-})();`;
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang="en-US">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -157,22 +58,17 @@ const localeRedirectScript = `(() => {
     <link rel="icon" type="image/svg+xml" href={`/favicon.svg?v=${faviconVersion}`} />
     <link rel="icon" type="image/png" sizes="192x192" href={`/icon-192.png?v=${faviconVersion}`} />
     <link rel="apple-touch-icon" href={`/apple-touch-icon.png?v=${faviconVersion}`} />
-    <link rel="alternate" hreflang="zh-CN" href={zhAlternateURL} />
-    <link rel="alternate" hreflang="en-US" href={enAlternateURL} />
-    <link rel="alternate" hreflang="x-default" href={zhAlternateURL} />
     <meta name="theme-color" content="#f8fafc" />
     <meta name="generator" content={Astro.generator} />
-    {localeRedirect && <script is:inline set:html={localeRedirectScript} />}
 
-    <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
     <SEO
       title={makeTitle}
       description={description}
       canonical={canonicalURL}
       noindex={noindex}
       twitter={{
-        creator: "@msh01",
-        site: "@edgeever",
+        creator: "@kiranbrahma",
+        site: "@kiranbrahma",
         card: "summary_large_image",
         title: makeTitle,
         description,
@@ -189,7 +85,7 @@ const localeRedirectScript = `(() => {
         optional: {
           description,
           locale: copy.ogLocale,
-          siteName: "EdgeEver",
+          siteName: "Kiran Brahma Notes",
         },
         image: {
           alt: imageAlt,

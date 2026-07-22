@@ -8,7 +8,7 @@ import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://edgeever.org",
+  site: "https://notes.kiranbrahma.com",
   server: {
     port: 4321,
     host: "127.0.0.1"

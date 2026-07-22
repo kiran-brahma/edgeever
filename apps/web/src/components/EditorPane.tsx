@@ -29,7 +29,6 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { GitHubRepositoryLink } from "@/components/GitHubRepositoryLink";
 import { Input } from "@/components/ui/input";
 import {
   Command,
@@ -1685,7 +1684,7 @@ const RichEditorPane = ({
           isComposing: typeof inputEvent?.isComposing === "boolean" ? inputEvent.isComposing : undefined,
           key: typeof keyboardEvent?.key === "string" ? keyboardEvent.key : undefined,
           valueLength: getMobilePlainTextElementValue(plainTextElement).length,
-          time: new Date().toLocaleTimeString("zh-CN", { hour12: false }),
+          time: new Date().toLocaleTimeString("en-US", { hour12: false }),
         },
         ...current,
       ].slice(0, 20)
@@ -2600,7 +2599,15 @@ const RichEditorPane = ({
             <Button className="hidden h-8 w-8 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:ring-2 focus-visible:ring-slate-300 sm:inline-flex" size="icon" variant="ghost" title="版本历史" aria-label="版本历史" onClick={() => setHistoryOpen(true)}>
               <History className="h-5 w-5" strokeWidth={2.25} />
             </Button>
-            <GitHubRepositoryLink className="hidden h-8 w-8 justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 lg:inline-flex" iconClassName="h-5 w-5" />
+            <a
+              href="mailto:ak.brahma@gmail.com"
+              className="hidden h-8 w-8 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/70 lg:inline-flex"
+              aria-label="Contact support"
+            >
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+            </a>
             <ThemeToggle />
             {!readOnly && (
               <Button

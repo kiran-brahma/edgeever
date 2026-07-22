@@ -1,6 +1,6 @@
 import type { ImageWidthPresetId } from "./image-display";
 
-export type MobileEditorLocale = "zh-CN" | "en-US";
+export type MobileEditorLocale = "en-US";
 
 export type MobileEditorToolbarActionId =
   | "image"
@@ -54,36 +54,6 @@ export const isMobileEditorActionDisabledInTableHeader = (
 ): boolean => action === "deleteTableRow";
 
 const MOBILE_EDITOR_COPY = {
-  "zh-CN": {
-    placeholder: "开始记录...",
-    toolbar: "编辑器工具栏",
-    tableMenu: {
-      title: "表格操作",
-      close: "关闭",
-    },
-    actions: {
-      image: "上传图片",
-      mermaid: "插入 Mermaid 图表",
-      bold: "加粗",
-      bulletList: "无序列表",
-      blockquote: "引用",
-      horizontalRule: "分割线",
-      insertTable: "插入表格",
-      addTableRow: "在下方添加行",
-      deleteTableRow: "删除当前行",
-      addTableColumn: "在右侧添加列",
-      deleteTableColumn: "删除当前列",
-      toggleTableHeader: "切换表头行",
-      deleteTable: "删除表格",
-    },
-    imageScale: "图片显示尺寸",
-    imageSizes: {
-      small: "较小",
-      medium: "适中",
-      large: "较大",
-      full: "铺满",
-    },
-  },
   "en-US": {
     placeholder: "Start writing...",
     toolbar: "Editor toolbar",

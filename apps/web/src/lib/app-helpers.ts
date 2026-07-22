@@ -445,7 +445,7 @@ export const compareDateDesc = (first: string, second: string) => {
 };
 
 const compareNotebookNameAsc = (first: Notebook, second: Notebook) =>
-  first.name.localeCompare(second.name, "zh-CN", { numeric: true, sensitivity: "base" });
+  first.name.localeCompare(second.name, "en-US", { numeric: true, sensitivity: "base" });
 
 const compareNotebookUpdatedDesc = (first: Notebook, second: Notebook) => {
   const dateCompare = compareDateDesc(first.lastMemoUpdatedAt ?? first.updatedAt, second.lastMemoUpdatedAt ?? second.updatedAt);
@@ -471,7 +471,7 @@ export const sortMemos = (memos: MemoSummary[], sortMode: MemoSortMode, prioriti
     }
 
     if (sortMode === "title-asc") {
-      const titleCompare = getMemoTitle(first.title).localeCompare(getMemoTitle(second.title), "zh-CN", {
+      const titleCompare = getMemoTitle(first.title).localeCompare(getMemoTitle(second.title), "en-US", {
         numeric: true,
         sensitivity: "base",
       });

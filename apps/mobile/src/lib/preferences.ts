@@ -7,7 +7,7 @@ const RESOURCE_LAYOUT_KEY = "edgeever.mobile.resourceLayout";
 const THEME_PREFERENCE_KEY = "edgeever.mobile.themePreference";
 
 export type MobileMemoListDensity = "preview" | "compact";
-export type MobileLocalePreference = "system" | "zh-CN" | "en-US";
+export type MobileLocalePreference = "en-US";
 export type MobileResourceLayoutPreference = "grid" | "list";
 export type MobileThemePreference = "system" | "light" | "dark";
 
@@ -27,7 +27,7 @@ export const writeMobileImageCompressionEnabled = (enabled: boolean) => AsyncSto
 
 export const readMobileLocalePreference = async (): Promise<MobileLocalePreference> => {
   const value = await AsyncStorage.getItem(LOCALE_PREFERENCE_KEY);
-  return isMobileLocalePreference(value) ? value : "system";
+  return isMobileLocalePreference(value) ? value : "en-US";
 };
 
 export const writeMobileLocalePreference = (locale: MobileLocalePreference) => AsyncStorage.setItem(LOCALE_PREFERENCE_KEY, locale);
@@ -46,4 +46,4 @@ export const readMobileThemePreference = async (): Promise<MobileThemePreference
 
 export const writeMobileThemePreference = (theme: MobileThemePreference) => AsyncStorage.setItem(THEME_PREFERENCE_KEY, theme);
 
-const isMobileLocalePreference = (value: unknown): value is MobileLocalePreference => value === "system" || value === "zh-CN" || value === "en-US";
+const isMobileLocalePreference = (value: unknown): value is MobileLocalePreference => value === "en-US";

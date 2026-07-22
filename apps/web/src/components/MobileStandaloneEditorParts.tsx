@@ -67,7 +67,7 @@ export const MobileEditorToolbar = ({
   onTableAction: (action: MobileEditorTableActionId) => void;
 }) => {
   const [tableMenuOpen, setTableMenuOpen] = useState(false);
-  const tableMenuCopy = getMobileEditorTableMenuCopy("zh-CN");
+  const tableMenuCopy = getMobileEditorTableMenuCopy("en-US");
   const icons: Record<MobileEditorToolbarActionId, ReactNode> = {
     image: <ImagePlus aria-hidden="true" size={18} strokeWidth={2} />,
     mermaid: <Workflow aria-hidden="true" size={18} strokeWidth={2} />,
@@ -117,7 +117,7 @@ export const MobileEditorToolbar = ({
         {MOBILE_EDITOR_TOOLBAR_ACTIONS
           .filter(({ id, requiresTable }) => !requiresTable && (!tableActive || id !== "insertTable"))
           .map(({ id }) => {
-            const label = getMobileEditorToolbarActionLabel(id, "zh-CN");
+            const label = getMobileEditorToolbarActionLabel(id, "en-US");
 
             return (
               <button
@@ -166,7 +166,7 @@ export const MobileEditorToolbar = ({
             </div>
             <div className="mobile-editor-table-action-list">
               {MOBILE_EDITOR_TOOLBAR_ACTIONS.filter(({ requiresTable }) => requiresTable).map(({ id }) => {
-                const label = getMobileEditorToolbarActionLabel(id, "zh-CN");
+                const label = getMobileEditorToolbarActionLabel(id, "en-US");
                 return (
                   <button
                     key={id}

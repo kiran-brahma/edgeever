@@ -1,20 +1,14 @@
-import { enUS, zhCN } from "@edgeever/shared/i18n";
+import { enUS } from "@edgeever/shared/i18n";
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import {
-  readMobileLocalePreference,
-  writeMobileLocalePreference,
-  type MobileLocalePreference,
-} from "./preferences";
+import { readMobileLocalePreference, writeMobileLocalePreference } from "./preferences";
 
-type SupportedMobileLocale = "zh-CN" | "en-US";
+type SupportedMobileLocale = "en-US";
 type MobileLocaleContextValue = {
-  preference: MobileLocalePreference;
+  preference: SupportedMobileLocale;
   resolvedLocale: SupportedMobileLocale;
-  setPreference: (preference: MobileLocalePreference) => void;
+  setPreference: (preference: SupportedMobileLocale) => void;
   translate: (value: string) => string;
 };
-
-type TranslationPair = { source: string; target: string; pattern?: RegExp; placeholders?: string[] };
 
 const mobileOnlyTranslations = new Map<string, string>([
   ["返回", "Back"],
@@ -93,62 +87,35 @@ const flattenStrings = (value: unknown, prefix = "", output = new Map<string, st
   return output;
 };
 
-const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const zhStrings = flattenStrings(zhCN);
 const enStrings = flattenStrings(enUS);
-const translationPairs: TranslationPair[] = Array.from(zhStrings.entries())
-  .flatMap(([key, source]) => {
-    const target = enStrings.get(key);
-    if (!target || source === target) {
-      return [];
-    }
-    const placeholders: string[] = [];
-    const patternSource = escapeRegExp(source).replace(/\\\{\\\{(\w+)\\\}\\\}/g, (_match, placeholder: string) => {
-      placeholders.push(placeholder);
-      return "(.+?)";
-    });
-    return [{ source, target, pattern: placeholders.length > 0 ? new RegExp(`^${patternSource}$`) : undefined, placeholders }];
-  })
-  .sort((left, right) => right.source.length - left.source.length);
-const exactTranslations = new Map(translationPairs.filter((pair) => !pair.pattern).map((pair) => [pair.source, pair.target]));
-const templateTranslations = translationPairs.filter((pair) => pair.pattern);
+const exactTranslations = new Map<string, string>(
+  Array.from(mobileOnlyTranslations.entries()).filter(([source, target]) => source !== target)
+);
+for (const [key, target] of enStrings.entries()) {
+  exactTranslations.set(key, target);
+}
 
-const resolveSystemLocale = (): SupportedMobileLocale =>
-  (Intl.DateTimeFormat().resolvedOptions().locale || "zh-CN").toLowerCase().startsWith("en") ? "en-US" : "zh-CN";
+const resolveSystemLocale = (): SupportedMobileLocale => "en-US";
 
 export const translateMobileText = (value: string, locale: SupportedMobileLocale) => {
   if (locale !== "en-US" || !/[\u3400-\u9fff]/.test(value)) {
     return value;
   }
-  const exact = mobileOnlyTranslations.get(value) ?? exactTranslations.get(value);
-  if (exact) {
-    return exact;
-  }
-  for (const pair of templateTranslations) {
-    const match = pair.pattern?.exec(value);
-    if (!match) {
-      continue;
-    }
-    return (pair.placeholders ?? []).reduce(
-      (translated, placeholder, index) => translated.replace(`{{${placeholder}}}`, match[index + 1] ?? ""),
-      pair.target
-    );
-  }
-  return value;
+  return mobileOnlyTranslations.get(value) ?? exactTranslations.get(value) ?? value;
 };
 
 let currentResolvedMobileLocale: SupportedMobileLocale = resolveSystemLocale();
 export const translateCurrentMobileText = (value: string) => translateMobileText(value, currentResolvedMobileLocale);
 
 const MobileLocaleContext = createContext<MobileLocaleContextValue>({
-  preference: "system",
+  preference: "en-US",
   resolvedLocale: resolveSystemLocale(),
   setPreference: () => undefined,
   translate: (value) => value,
 });
 
 export const MobileLocaleProvider = ({ children }: { children: ReactNode }) => {
-  const [preference, setPreferenceState] = useState<MobileLocalePreference>("system");
+  const [preference, setPreferenceState] = useState<SupportedMobileLocale>("en-US");
 
   useEffect(() => {
     let active = true;
@@ -162,7 +129,7 @@ export const MobileLocaleProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const resolvedLocale = preference === "system" ? resolveSystemLocale() : preference;
+  const resolvedLocale = "en-US";
   currentResolvedMobileLocale = resolvedLocale;
   const value = useMemo<MobileLocaleContextValue>(
     () => ({
