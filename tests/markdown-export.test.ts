@@ -25,9 +25,9 @@ const notebook = (input: Partial<Notebook> & Pick<Notebook, "id" | "name">): Not
 const memo = (input: Partial<MemoDetail> = {}): MemoDetail => ({
   id: "memo_1",
   notebookId: "nb_child",
-  title: "项目笔记",
+  title: "Project notes",
   excerpt: "",
-  tags: ["工作", "重要"],
+  tags: ["Work", "Important"],
   isPinned: true,
   isArchived: false,
   isDeleted: false,
@@ -51,7 +51,7 @@ const resource: Resource = {
   originalMemoId: null,
   kind: "image",
   mimeType: "image/png",
-  filename: "设计 图.png",
+  filename: "design diagram.png",
   byteSize: 3,
   sha256: null,
   width: null,
@@ -70,13 +70,13 @@ describe("Markdown export", () => {
 
   test("preserves notebook hierarchy and disambiguates sibling names", () => {
     const paths = buildNotebookExportPaths([
-      notebook({ id: "nb_root", name: "工作" }),
-      notebook({ id: "nb_child", name: "项目", parentId: "nb_root" }),
-      notebook({ id: "nb_child_2", name: "项目", parentId: "nb_root" }),
+      notebook({ id: "nb_root", name: "Work" }),
+      notebook({ id: "nb_child", name: "Project", parentId: "nb_root" }),
+      notebook({ id: "nb_child_2", name: "Project", parentId: "nb_root" }),
     ]);
 
-    expect(paths.get("nb_child")).toBe("工作/项目");
-    expect(paths.get("nb_child_2")).toBe("工作/项目 (2)");
+    expect(paths.get("nb_child")).toBe("Work/Project");
+    expect(paths.get("nb_child_2")).toBe("Work/Project (2)");
   });
 
   test("writes front matter, Markdown, and relative assets into the ZIP", async () => {
@@ -84,22 +84,22 @@ describe("Markdown export", () => {
     const blob = await createMarkdownExport({
       listNotebooks: async () => ({
         notebooks: [
-          notebook({ id: "nb_root", name: "工作" }),
-          notebook({ id: "nb_child", name: "项目", parentId: "nb_root" }),
+          notebook({ id: "nb_root", name: "Work" }),
+          notebook({ id: "nb_child", name: "Project", parentId: "nb_root" }),
         ],
       }),
       getPage: async () => ({ memos: notes, resources: [resource], totalCount: 1, nextOffset: null }),
       getResourceBlob: async () => new Blob([new Uint8Array([1, 2, 3])]),
     });
     const files = unzipSync(new Uint8Array(await blob.arrayBuffer()));
-    const markdownPath = "工作/项目/项目笔记.md";
-    const assetPath = "工作/项目/项目笔记.assets/设计 图.png";
+    const markdownPath = "Work/Project/project-notes.md";
+    const assetPath = "Work/Project/project-notes.assets/design diagram.png";
 
     expect(Object.keys(files).sort()).toEqual([assetPath, markdownPath].sort());
     expect(Array.from(files[assetPath])).toEqual([1, 2, 3]);
 
     const markdown = strFromU8(files[markdownPath]);
-    expect(markdown).toStartWith(buildMarkdownFrontMatter(notes[0], "工作/项目"));
+    expect(markdown).toStartWith(buildMarkdownFrontMatter(notes[0], "Work/Project"));
     expect(markdown).toContain(
       "![diagram](%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0.assets/%E8%AE%BE%E8%AE%A1%20%E5%9B%BE.png)"
     );

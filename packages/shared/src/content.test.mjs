@@ -3,7 +3,7 @@ import { countMemoCharacters, docToMarkdown, markdownToDoc, resolveMemoContentDo
 
 describe("memo character count", () => {
   test("counts punctuation while excluding whitespace and formatting", () => {
-    const doc = markdownToDoc("你好， **EdgeEver**!\n\n下一行");
+    const doc = markdownToDoc("Hello, **Kiran Brahma Notes**!\n\nNext line");
 
     expect(countMemoCharacters(doc)).toBe(15);
   });
@@ -13,7 +13,7 @@ describe("memo character count", () => {
       type: "doc",
       content: [
         { type: "paragraph", content: [{ type: "text", text: "e\u0301 👨‍👩‍👧‍👦" }] },
-        { type: "image", attrs: { alt: "不计入" } },
+        { type: "image", attrs: { alt: "Not counted" } },
       ],
     };
 

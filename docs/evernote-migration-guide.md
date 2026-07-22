@@ -1,48 +1,32 @@
-# 印象笔记（Evernote）极简迁移指引
+# Evernote migration guide
 
+We recommend using an AI coding assistant (e.g., Claude Code, Cursor) to automate the migration. The migration script handles local image compression and empty-text preprocessing, and preserves creation/modification times and nested notebook stacks.
 
+## Step 1: Configure the Kiran Brahma Notes MCP service
 
-我们强烈推荐使用 AI 编程助手（如 Antigravity、Claude Code、Cursor 等）自动执行迁移。该方案已完成内存流式优化与空文本预处理，能安全应对数 GB 级别超大笔记库，完整保留创建/修改时间与嵌套笔记本目录层级。
+1. In the web app, go to **Settings → API & MCP**.
+2. Generate a token and click **Copy full MCP config**.
+3. Paste the JSON into your AI assistant and ask it to install the MCP service:
 
----
+   ```
+   This is my Kiran Brahma Notes MCP config. Please install it in my editor/client (Claude Code, Cursor, Cline, etc.).
+   ```
 
-### 步骤 1：配置并安装 Kiran Brahma Notes MCP 服务
+## Step 2: Import from Evernote
 
-1. 点击网页端左下角的 **设置（Settings）** 图标。
-2. 在 **API & MCP 授权** 卡片生成 Token 后，点击 **复制完整 MCP 配置** 按钮。
-3. 把复制的 JSON 配置直接粘贴发送给你的 AI 编程助手（如 Antigravity, Claude Code, Cursor 等），让它帮你自动在当前的 AI 客户端中安装配置好该 MCP 服务：
+Once the MCP service is configured, send the AI assistant this prompt:
 
-```sh
-你是 AI 编程助手。这是我的 Kiran Brahma Notes MCP 服务配置 JSON。请帮我把这个 MCP 服务直接配置到我当前使用的 AI 编辑器/客户端（如 Claude Code, Cursor, Cline 等）的 MCP 服务器配置文件中：
-
-<在此处粘贴刚才复制 of JSON 配置内容>
+```
+Migrate my local Evernote library into my Kiran Brahma Notes instance:
+1. Install `pipx install evernote-backup`.
+2. Prompt me for Evernote credentials, initialize the database, and sync to `./evernote-export`.
+3. Download the migration script from `https://raw.githubusercontent.com/kiran-brahma/edgeever/main/scripts/import-evernote-enex-via-mcp.mjs`.
+4. Install `sharp` and `fast-xml-parser`.
+5. Run the script with my URL and token (it converts images to WebP automatically).
 ```
 
----
+## Step 3: Verify in the web app
 
-### 步骤 2：让 AI 助手自动导入和迁移笔记
-
-当 AI 助手配置好 MCP 之后，请复制以下 Prompt 发送给它，让它全自动拉取印象笔记数据并导入：
-
-```sh
-你是 AI 编程助手。请帮我把本地的印象笔记全量迁移到我当前部署的 Kiran Brahma Notes 实例中：
-1. 检查并使用 `pipx install evernote-backup` 自动安装备份工具。
-2. 提示我输入印象笔记的用户名和密码并初始化数据库（指定 china 后端），随后同步数据并导出到 `./evernote-export` 目录。
-3. 从 GitHub 下载最新版迁移脚本：`https://raw.githubusercontent.com/tianma-if/edgeever/main/scripts/import-evernote-enex-via-mcp.mjs` 到本地。
-4. 安装脚本所需的本地图片压缩库 `sharp` 和 `fast-xml-parser` 依赖。
-5. 使用先前配置的 URL 和 Token 运行该脚本完成迁移（脚本会自动进行 WebP 图片转换）：
-   - 全量迁移：`bun import-evernote-enex-via-mcp.mjs --input "./evernote-export" --yes`
-   - 指定迁移某些笔记本：追加 `--include "笔记本A,笔记本B"` 参数。
-
-请告诉我你需要什么信息（如账号密码），收到后直接并发自动执行上述步骤。
-```
-
-> 💡 **手动模式备用**：如果您不使用 AI 助手，也可以手动前往 GitHub 仓库 [Kiran Brahma Notes GitHub](https://github.com/tianma-if/edgeever) 下载 \`scripts/import-evernote-enex-via-mcp.mjs\` 脚本并按其头部注释执行。
-
----
-
-### 步骤 3：在网页端验证结果
-
-1. 导入完成后，回到 Kiran Brahma Notes 网页端刷新页面。
-2. 检查左侧栏，确认印象笔记原有的「笔记本组（堆叠）」层级结构已完美还原。
-3. 打开几篇包含多张图片的笔记，验证其中的图片是否已成功在编辑器中加载并能清晰显示。
+1. Refresh Kiran Brahma Notes.
+2. Check the left sidebar for the original notebook stack structure.
+3. Open a few image-heavy notes to confirm images load correctly.

@@ -38,15 +38,15 @@ describe("mobile editor contract", () => {
   });
 
   test("provides the same localized copy to both mobile clients", () => {
-    expect(getMobileEditorPlaceholder("zh-CN")).toBe("开始记录...");
+    expect(getMobileEditorPlaceholder("zh-CN")).toBe("Start writing...");
     expect(getMobileEditorPlaceholder("en-US")).toBe("Start writing...");
-    expect(getMobileEditorToolbarLabel("zh-CN")).toBe("编辑器工具栏");
-    expect(getMobileEditorTableMenuCopy("zh-CN")).toEqual({ title: "表格操作", close: "关闭" });
+    expect(getMobileEditorToolbarLabel("zh-CN")).toBe("Editor toolbar");
+    expect(getMobileEditorTableMenuCopy("zh-CN")).toEqual({ title: "Table actions", close: "Close" });
     expect(getMobileEditorTableMenuCopy("en-US")).toEqual({ title: "Table actions", close: "Close" });
     expect(getMobileEditorToolbarActionLabel("bulletList", "en-US")).toBe("Bullet list");
-    expect(getMobileEditorToolbarActionLabel("mermaid", "zh-CN")).toBe("插入 Mermaid 图表");
-    expect(getMobileEditorToolbarActionLabel("insertTable", "zh-CN")).toBe("插入表格");
-    expect(getMobileEditorImageScaleLabel("zh-CN")).toBe("图片显示尺寸");
+    expect(getMobileEditorToolbarActionLabel("mermaid", "zh-CN")).toBe("Insert Mermaid diagram");
+    expect(getMobileEditorToolbarActionLabel("insertTable", "zh-CN")).toBe("Insert table");
+    expect(getMobileEditorImageScaleLabel("zh-CN")).toBe("Image display size");
     expect(getMobileEditorImageWidthPresetLabel("medium", "en-US")).toBe("Medium");
   });
 

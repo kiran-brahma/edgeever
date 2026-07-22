@@ -1,10 +1,10 @@
-# Agent 规则与约束 (AGENTS.md)
+# Agent rules and constraints for `apps/site`
 
-当 AI Agent（如 Antigravity、Claude Code、Cursor 等）在本仓库中进行协作与开发时，请务必严格遵守以下规则和约束：
+When AI agents (Antigravity, Claude Code, Cursor, etc.) collaborate on this directory, follow these rules.
 
-## 官网内容更新准则
+## Site content rules
 
-- **一切以 monorepo 根目录为准**：本官网（`apps/site`）所展示的所有功能介绍、安装部署指南、数据迁移指引以及版本日志，**必须完全基于当前 EdgeEver 仓库根目录的实际代码和文档内容**（如根目录 `README.md`、`docs/*`、以及组件/API 实际实现）进行提取和自动生成。
-- **同步更新检查**：在对本官网的内容、博客或特性列表进行任何修改前，AI Agent 必须优先读取和检查仓库根目录中的最新代码和文档更新情况，防止官网内容与项目实际版本脱节。
-- **拒绝虚假/占位信息**：严禁编写任何与 `edgeever` 项目无关或不符合其实际现状的虚构内容（包括通用的模版占位符），确保呈现给用户的所有技术细节都真实可靠。
-- **文档一致性**：若根目录中有关 Cloudflare 部署协议（`docs/agent-deploy-cloudflare.md`）或迁移指南（`docs/evernote-migration-guide.md`）发生变更，官网对应的博客及文档页面也必须同步更新，保持严格的一致性。
+- **Source of truth is the monorepo root**: all feature descriptions, deployment guides, migration guides, and release notes shown on the site must be derived from the actual code and docs in the repository root (`README.md`, `docs/*`, component/API implementations).
+- **Check before editing**: before modifying site content, blogs, or feature lists, read the latest root-level docs and code to avoid drift.
+- **No fictional or placeholder content**: do not write generic placeholder text or anything unrelated to the actual `edgeever` project. All technical details must be verifiable.
+- **Keep docs in sync**: if root-level docs such as `docs/agent-deploy-cloudflare.md` or `docs/evernote-migration-guide.md` change, update the corresponding site pages and blog posts.

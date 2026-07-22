@@ -30,15 +30,15 @@ describe("mobile UI contract", () => {
 
   test("keeps notebook hierarchy context while searching", () => {
     const notebooks = [
-      { id: "projects", name: "工作项目", parentId: null },
+      { id: "projects", name: "Work Projects", parentId: null },
       { id: "edgeever", name: "EdgeEver", parentId: "projects" },
-      { id: "demo", name: "功能演示", parentId: "projects" },
-      { id: "personal", name: "生活个人", parentId: null },
+      { id: "demo", name: "Feature Demos", parentId: "projects" },
+      { id: "personal", name: "Personal Life", parentId: null },
     ];
 
     expect(Array.from(getMobileNotebookSearchVisibleIds(notebooks, "edge"))).toEqual(["edgeever", "projects"]);
-    expect(Array.from(getMobileNotebookSearchVisibleIds(notebooks, "工作"))).toEqual(["projects", "edgeever", "demo"]);
-    expect(Array.from(getMobileNotebookSearchVisibleIds(notebooks, "没有"))).toEqual([]);
+    expect(Array.from(getMobileNotebookSearchVisibleIds(notebooks, "Work"))).toEqual(["projects", "edgeever", "demo"]);
+    expect(Array.from(getMobileNotebookSearchVisibleIds(notebooks, "None"))).toEqual([]);
     expect(Array.from(getMobileNotebookSearchVisibleIds(notebooks, ""))).toEqual(["projects", "edgeever", "demo", "personal"]);
   });
 });

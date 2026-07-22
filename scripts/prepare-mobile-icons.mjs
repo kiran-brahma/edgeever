@@ -17,4 +17,4 @@ await sharp(adaptiveIconSourcePath, { density: 384 })
   .png()
   .toFile(adaptiveIconPath);
 
-console.log("已同步 Android 图标资源");
+console.log("Android icon resources synced");

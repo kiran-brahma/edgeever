@@ -1,37 +1,22 @@
-# Notion 笔记极简迁移指引
+# Notion migration guide
 
+Because Kiran Brahma Notes supports AI agents and Model Context Protocol (MCP), the cleanest way to move a Notion workspace is to let an AI assistant with access to both services do the work.
 
+## Steps
 
-得益于 Kiran Brahma Notes 对 AI Agent 和 Model Context Protocol (MCP) 的原生支持，如果你想将 Notion 笔记库搬迁到 Kiran Brahma Notes，最优雅的方式是利用 AI 助手作为数据桥梁，同时挂载 **Notion MCP** 和 **Kiran Brahma Notes MCP** 服务，实现全自动的云对云笔记导入。
+1. **Install both MCP services in your AI assistant**
+   - Configure the Notion MCP service so the assistant can read pages and databases.
+   - In Kiran Brahma Notes, go to **Settings → MCP**, generate an API token, and copy the full MCP config into your AI assistant.
 
----
+2. **Send the AI assistant a migration prompt**
 
-### 迁移步骤
+   ```
+   You are connected to my Notion MCP service and my Kiran Brahma Notes MCP service.
+   Please migrate my Notion pages and databases into Kiran Brahma Notes:
+   1. Read Notion pages in batches (title, content, created time, tags).
+   2. Import them into Kiran Brahma Notes via its MCP write API.
+   3. Report the total number of pages imported and any pages that failed to convert.
+   ```
 
-#### 步骤 1：在 AI 助手中安装并启用两个 MCP 服务
-
-1. **配置 Notion MCP 服务**：
-   在你的 AI 助手（如 Claude Code/Cursor/Cline 等）中配置好 Notion MCP 服务。配置成功后，AI 助手将获得直接读取你 Notion 页面（Pages）和数据库（Databases）的授权。
-   
-2. **配置 Kiran Brahma Notes MCP 服务**：
-   - 登录你的 Kiran Brahma Notes 实例，点击左下角的 **个人中心** -> **MCP 设置**。
-   - 生成 API Token 并点击 **复制完整 MCP 配置**，安装到你的 AI 助手中。
-
-确保你的 AI 助手在运行中能够同时调用这两个 MCP 服务。
-
-#### 步骤 2：对 AI 助手下达迁移指令
-
-复制以下 Prompt 发送给已经挂载好两个 MCP 的 AI 助手：
-
-```text
-你是我的 AI 助手。现在你同时连接了我的 Notion MCP 服务和新 Kiran Brahma Notes MCP 服务。
-请帮我把旧 Notion 里的笔记和数据库页面迁移到新 Kiran Brahma Notes 中：
-1. 首先调用 Notion MCP 的读取接口，分批次读出我的 Notion 页面内容（包括标题、正文、创建时间、标签等）。
-2. 然后调用 Kiran Brahma Notes MCP 的写入接口，将这些读取到的页面批量导入到我的 Kiran Brahma Notes 实例中。
-请在全量迁移完成后，告诉我总共成功同步导入了多少篇笔记，以及是否有格式转换失败的页面。
-```
-
-AI 助手将自动解析并转换 Notion 的 Block 格式，并调用 Kiran Brahma Notes 接口完成无痛数据写入。
-
-#### 步骤 3：在网页端验证
-回到 Kiran Brahma Notes 网页端刷新，确认所有的 Notion 页面已成功转入，笔记内容和排版也都已完美同步。
+3. **Verify in the web app**
+   Refresh Kiran Brahma Notes and confirm all Notion pages were imported with content and layout intact.

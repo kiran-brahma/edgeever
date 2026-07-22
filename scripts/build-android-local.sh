@@ -8,7 +8,7 @@ ANDROID_DIR="$MOBILE_DIR/android"
 MODE="${1:-fast}"
 
 if [[ "$MODE" != "fast" && "$MODE" != "apk" && "$MODE" != "play" ]]; then
-  echo "用法: $0 [fast|apk|play]" >&2
+  echo "Usage: $0 [fast|apk|play]" >&2
   exit 2
 fi
 
@@ -21,7 +21,7 @@ if [[ -n "${JAVA_HOME:-}" ]]; then
 fi
 
 if ! command -v java >/dev/null 2>&1; then
-  echo "未找到 Java 17。请先执行: brew install openjdk@17" >&2
+  echo "Java 17 not found. Please run: brew install openjdk@17" >&2
   exit 1
 fi
 
@@ -32,7 +32,7 @@ export ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-}}"
 export NODE_ENV="${NODE_ENV:-production}"
 
 if [[ -z "$ANDROID_SDK_ROOT" ]]; then
-  echo "未找到 Android SDK，请设置 ANDROID_HOME 或 ANDROID_SDK_ROOT。" >&2
+  echo "Android SDK not found. Set ANDROID_HOME or ANDROID_SDK_ROOT." >&2
   exit 1
 fi
 
@@ -51,7 +51,7 @@ PREBUILD_STAMP="$ANDROID_DIR/.edgeever-prebuild-fingerprint"
 PREVIOUS_FINGERPRINT="$(test -f "$PREBUILD_STAMP" && cat "$PREBUILD_STAMP" || true)"
 
 if [[ ! -x "$ANDROID_DIR/gradlew" || "$PREBUILD_FINGERPRINT" != "$PREVIOUS_FINGERPRINT" ]]; then
-  echo "更新 Android 原生工程（保留已有编译缓存）..."
+  echo "Updating Android native project (preserving existing build cache)..."
   cd "$MOBILE_DIR"
   bunx expo prebuild --platform android
   printf '%s' "$PREBUILD_FINGERPRINT" > "$PREBUILD_STAMP"
@@ -66,7 +66,7 @@ COMMON_ARGS=(
 )
 
 if [[ "$MODE" == "fast" ]]; then
-  echo "构建 arm64 真机测试 Release APK..."
+  echo "Building arm64 release test APK..."
   ./gradlew assembleRelease \
     "${COMMON_ARGS[@]}" \
     -PreactNativeArchitectures=arm64-v8a \
@@ -74,21 +74,21 @@ if [[ "$MODE" == "fast" ]]; then
     -Pandroid.injected.signing.store.password=android \
     -Pandroid.injected.signing.key.alias=androiddebugkey \
     -Pandroid.injected.signing.key.password=android
-  echo "完成: $ANDROID_DIR/app/build/outputs/apk/release/app-release.apk"
+  echo "Done: $ANDROID_DIR/app/build/outputs/apk/release/app-release.apk"
   exit 0
 fi
 
-: "${ANDROID_KEYSTORE_FILE:?请设置 ANDROID_KEYSTORE_FILE（本地上传密钥路径）}"
-: "${ANDROID_KEYSTORE_PASSWORD:?请设置 ANDROID_KEYSTORE_PASSWORD}"
-: "${ANDROID_KEY_ALIAS:?请设置 ANDROID_KEY_ALIAS}"
-: "${ANDROID_KEY_PASSWORD:?请设置 ANDROID_KEY_PASSWORD}"
+: "${ANDROID_KEYSTORE_FILE:?Set ANDROID_KEYSTORE_FILE (local upload keystore path)}"
+: "${ANDROID_KEYSTORE_PASSWORD:?Set ANDROID_KEYSTORE_PASSWORD}"
+: "${ANDROID_KEY_ALIAS:?Set ANDROID_KEY_ALIAS}"
+: "${ANDROID_KEY_PASSWORD:?Set ANDROID_KEY_PASSWORD}"
 
 PLAY_ARCHS="${EDGE_EVER_ANDROID_ARCHS:-armeabi-v7a,arm64-v8a,x86,x86_64}"
 APK_ARCHS="${EDGE_EVER_ANDROID_APK_ARCHS:-arm64-v8a}"
 KEYSTORE_FILE="$(cd "$(dirname "$ANDROID_KEYSTORE_FILE")" && pwd)/$(basename "$ANDROID_KEYSTORE_FILE")"
 
 if [[ "$MODE" == "apk" ]]; then
-  echo "构建生产签名 APK（${APK_ARCHS}）..."
+  echo "Building production-signed APK（${APK_ARCHS}）..."
   ./gradlew assembleRelease \
     "${COMMON_ARGS[@]}" \
     -PreactNativeArchitectures="$APK_ARCHS" \
@@ -106,11 +106,11 @@ if [[ "$MODE" == "apk" ]]; then
   "$APKSIGNER_PATH" verify --verbose "$APK_PATH"
   "$AAPT2_PATH" dump badging "$APK_PATH" | sed -n '1p'
   shasum -a 256 "$APK_PATH"
-  echo "完成: $APK_PATH"
+  echo "Done: $APK_PATH"
   exit 0
 fi
 
-echo "构建 Play 签名 AAB（${PLAY_ARCHS}）..."
+echo "Building Play-signed AAB（${PLAY_ARCHS}）..."
 ./gradlew bundleRelease \
   "${COMMON_ARGS[@]}" \
   -PreactNativeArchitectures="$PLAY_ARCHS" \
@@ -122,5 +122,5 @@ echo "构建 Play 签名 AAB（${PLAY_ARCHS}）..."
 
 jarsigner -verify app/build/outputs/bundle/release/app-release.aab >/dev/null
 test -s app/build/outputs/mapping/release/mapping.txt
-echo "完成: $ANDROID_DIR/app/build/outputs/bundle/release/app-release.aab"
-echo "反混淆文件: $ANDROID_DIR/app/build/outputs/mapping/release/mapping.txt"
+echo "Done: $ANDROID_DIR/app/build/outputs/bundle/release/app-release.aab"
+echo "Obfuscation mapping file: $ANDROID_DIR/app/build/outputs/mapping/release/mapping.txt"
