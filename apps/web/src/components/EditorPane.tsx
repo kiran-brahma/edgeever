@@ -475,6 +475,7 @@ type EditorPaneProps = {
   isTrashView: boolean;
   notebooks: Notebook[];
   isLoading: boolean;
+  contentSearchQuery?: string;
   imageCompressionEnabled: boolean;
   hasNextMemo: boolean;
   hasPreviousMemo: boolean;
@@ -1092,6 +1093,7 @@ const RichEditorPane = ({
   isTrashView,
   notebooks,
   isLoading,
+  contentSearchQuery = "",
   imageCompressionEnabled,
   hasNextMemo,
   hasPreviousMemo,
@@ -1446,10 +1448,14 @@ const RichEditorPane = ({
     () => getEditorSearchMatches(editor, noteSearchQuery),
     [dirtyVersion, editor, memo?.id, noteSearchQuery]
   );
+  const contentSearchMatches = useMemo(
+    () => getEditorSearchMatches(editor, contentSearchQuery),
+    [contentSearchQuery, dirtyVersion, editor, memo?.id]
+  );
 
   const selectNoteSearchMatch = useCallback(
-    (index: number) => {
-      const match = noteSearchMatches[index];
+    (index: number, matches = noteSearchMatches) => {
+      const match = matches[index];
 
       if (!isEditorReady(editor) || !match) {
         return;
@@ -1499,7 +1505,8 @@ const RichEditorPane = ({
       key: NOTE_SEARCH_HIGHLIGHT_PLUGIN_KEY,
       props: {
         decorations: (state) => {
-          const currentMatches = noteSearchOpen ? getSearchMatchesFromDocument(state.doc, noteSearchQuery) : [];
+          const currentQuery = noteSearchOpen ? noteSearchQuery : contentSearchQuery;
+          const currentMatches = getSearchMatchesFromDocument(state.doc, currentQuery);
 
           if (currentMatches.length === 0) {
             return DecorationSet.empty;
@@ -1509,7 +1516,9 @@ const RichEditorPane = ({
             state.doc,
             currentMatches.map((match, index) =>
               Decoration.inline(match.from, match.to, {
-                class: index === noteSearchIndex ? "edgeever-search-match edgeever-search-match-active" : "edgeever-search-match",
+                class: index === (noteSearchOpen ? noteSearchIndex : 0)
+                  ? "edgeever-search-match edgeever-search-match-active"
+                  : "edgeever-search-match",
               })
             )
           );
@@ -1524,7 +1533,7 @@ const RichEditorPane = ({
         editor.unregisterPlugin(NOTE_SEARCH_HIGHLIGHT_PLUGIN_KEY);
       }
     };
-  }, [editor, noteSearchIndex, noteSearchMatches, noteSearchOpen]);
+  }, [contentSearchQuery, editor, noteSearchIndex, noteSearchMatches, noteSearchOpen, noteSearchQuery]);
 
   const focusNoteSearchInput = useCallback(() => {
     window.requestAnimationFrame(() => {
@@ -1608,9 +1617,11 @@ const RichEditorPane = ({
     setNoteSearchIndex(0);
 
     if (noteSearchOpen && noteSearchMatches[0]) {
-      selectNoteSearchMatch(0);
+      selectNoteSearchMatch(0, noteSearchMatches);
+    } else if (!noteSearchOpen && contentSearchMatches[0]) {
+      selectNoteSearchMatch(0, contentSearchMatches);
     }
-  }, [noteSearchMatches, noteSearchOpen, selectNoteSearchMatch]);
+  }, [contentSearchMatches, noteSearchMatches, noteSearchOpen, selectNoteSearchMatch]);
 
   const replaceAllNoteSearchMatches = useCallback(() => {
     if (!isEditorReady(editor) || effectiveReadOnly || noteSearchMatches.length === 0) {
