@@ -1,3 +1,4 @@
+@import "./theme.css";
 @import "highlight.js/styles/github.css";
 
 @tailwind base;
@@ -5,131 +6,12 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 80 11% 96%;
-    --foreground: 224 71% 4%;
-    --brand-green: #00a82d;
-    --brand-green-hover: #008f26;
-    --brand-green-muted: #e6f6ea;
-    --brand-green-soft: #f0fbf3;
-    --brand-green-border: #99dcab;
-    --brand-green-text: #00751f;
-    --brand-green-rgb: 0 168 45;
-    --brand-green-hover-rgb: 0 143 38;
-    --brand-green-50-rgb: 230 246 234;
-    --brand-green-100-rgb: 204 237 213;
-    --brand-green-200-rgb: 153 220 171;
-    --brand-green-300-rgb: 102 202 128;
-    --brand-green-400-rgb: 51 185 86;
-    --brand-green-500-rgb: 0 168 45;
-    --brand-green-600-rgb: 0 143 38;
-    --brand-green-700-rgb: 0 117 31;
-    --brand-green-800-rgb: 0 92 25;
-    --brand-green-900-rgb: 0 67 18;
-    --brand-green-950-rgb: 0 43 11;
-    --slate-50-rgb: 248 250 252;
-    --slate-100-rgb: 241 245 249;
-    --slate-200-rgb: 226 232 240;
-    --slate-300-rgb: 203 213 225;
-    --slate-400-rgb: 148 163 184;
-    --slate-500-rgb: 100 116 139;
-    --slate-600-rgb: 71 85 105;
-    --slate-700-rgb: 51 65 85;
-    --slate-800-rgb: 30 41 59;
-    --slate-900-rgb: 15 23 42;
-    --dark-surface-rgb: 255 255 255;
-    --editor-body-font-size: 0.9375rem;
-    --editor-body-line-height: 1.6;
-    --editor-paragraph-spacing: 0.45rem;
-
-    --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
-
-    --primary: 136 100% 33%;
-    --primary-foreground: 80 11% 96%;
-
-    --secondary: 136 55% 94%;
-    --secondary-foreground: 136 100% 25%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 136 55% 94%;
-    --accent-foreground: 136 100% 25%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 136 100% 33%;
-
-    --radius: 0.5rem;
+  * {
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-}
-
-:root {
-  color-scheme: light;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-:root.dark {
-  color-scheme: dark;
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
-  --card: 217 33% 17%;
-  --card-foreground: 210 40% 98%;
-  --popover: 217 33% 17%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 142 71% 45%;
-  --primary-foreground: 222 47% 11%;
-  --secondary: 217 33% 24%;
-  --secondary-foreground: 142 71% 75%;
-  --muted: 217 33% 24%;
-  --muted-foreground: 215 20% 65%;
-  --accent: 217 33% 24%;
-  --accent-foreground: 142 71% 75%;
-  --destructive: 0 72% 51%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 215 28% 28%;
-  --input: 215 28% 28%;
-  --ring: 142 71% 45%;
-  --slate-50-rgb: 15 23 42;
-  --slate-100-rgb: 30 41 59;
-  --slate-200-rgb: 51 65 85;
-  --slate-300-rgb: 71 85 105;
-  --slate-400-rgb: 100 116 139;
-  --slate-500-rgb: 148 163 184;
-  --slate-600-rgb: 203 213 225;
-  --slate-700-rgb: 226 232 240;
-  --slate-800-rgb: 241 245 249;
-  --slate-900-rgb: 248 250 252;
-  --dark-surface-rgb: 30 41 59;
-  --brand-green: #4ade80;
-  --brand-green-hover: #22c55e;
-  --brand-green-muted: #14532d;
-  --brand-green-soft: #052e16;
-  --brand-green-border: #166534;
-  --brand-green-text: #86efac;
-  --brand-green-rgb: 74 222 128;
-  --brand-green-hover-rgb: 34 197 94;
-  --brand-green-50-rgb: 20 83 45;
-  --brand-green-100-rgb: 22 101 52;
-  --brand-green-200-rgb: 34 133 67;
-  --brand-green-300-rgb: 74 222 128;
-  --brand-green-400-rgb: 134 239 172;
-  --brand-green-500-rgb: 74 222 128;
-  --brand-green-600-rgb: 34 197 94;
-  --brand-green-700-rgb: 134 239 172;
-  --brand-green-800-rgb: 187 247 208;
-  --brand-green-900-rgb: 220 252 231;
-  --brand-green-950-rgb: 240 253 244;
 }
 
 html,
@@ -149,20 +31,11 @@ html.edgeever-mobile-native-editing #root {
 body {
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.98)),
-    #f8fafc;
-  color: #0f172a;
+    linear-gradient(180deg, hsl(var(--background) / 0.98), hsl(var(--background) / 0.98)),
+    hsl(var(--background));
+  color: hsl(var(--foreground));
   overscroll-behavior-x: none;
   overscroll-behavior-y: auto;
-}
-
-:root.dark body {
-  background: #0f172a;
-  color: #f8fafc;
-}
-
-:root.dark .ProseMirror {
-  color: #f8fafc;
 }
 
 button,
@@ -172,7 +45,7 @@ textarea {
 }
 
 .ProseMirror {
-  color: #000;
+  color: hsl(var(--editor-fg));
   font-size: var(--editor-body-font-size);
   line-height: var(--editor-body-line-height);
   min-height: 100%;
@@ -182,13 +55,13 @@ textarea {
 
 .ProseMirror .edgeever-search-match {
   border-radius: 0.2rem;
-  background-color: rgb(254 240 138 / 0.8);
-  box-shadow: 0 0 0 1px rgb(234 179 8 / 0.25);
+  background-color: hsl(var(--editor-search-match-bg));
+  box-shadow: 0 0 0 1px hsl(var(--editor-search-match-border));
 }
 
 .ProseMirror .edgeever-search-match-active {
-  background-color: rgb(251 191 36 / 0.9);
-  box-shadow: 0 0 0 2px rgb(217 119 6 / 0.45);
+  background-color: hsl(var(--editor-search-match-active-bg));
+  box-shadow: 0 0 0 2px hsl(var(--editor-search-match-active-border));
 }
 
 @media (max-width: 1023px) {
@@ -242,29 +115,29 @@ textarea {
 
 .ProseMirror blockquote {
   margin: 0 0 1rem;
-  border-left: 3px solid var(--brand-green);
+  border-left: 3px solid hsl(var(--editor-blockquote-border));
   padding: 0.1rem 0 0.1rem 1rem;
-  color: #1e293b;
-  background: var(--brand-green-soft);
+  color: hsl(var(--editor-blockquote-fg));
+  background: hsl(var(--editor-blockquote-bg));
 }
 
 .ProseMirror code {
-  border: 1px solid #d9eadf;
+  border: 1px solid hsl(var(--editor-code-border));
   border-radius: 5px;
-  background: #f6fbf7;
+  background: hsl(var(--editor-code-bg));
   padding: 0.08rem 0.28rem;
   font-size: 0.9em;
-  color: #1e293b;
+  color: hsl(var(--editor-code-fg));
 }
 
 .ProseMirror pre {
   margin: 0 0 1rem;
   overflow-x: auto;
-  border: 1px solid #d9eadf;
+  border: 1px solid hsl(var(--editor-code-border));
   border-radius: 8px;
-  background: #f7fbf8;
+  background: hsl(var(--editor-code-bg));
   padding: 0.9rem 1rem;
-  color: #1e293b;
+  color: hsl(var(--editor-code-fg));
 }
 
 .ProseMirror pre code {
@@ -281,11 +154,11 @@ textarea {
 
 .ProseMirror .edgeever-code-source {
   overflow-x: auto;
-  border: 1px solid #d9eadf;
+  border: 1px solid hsl(var(--editor-code-border));
   border-radius: 8px;
-  background: #f7fbf8;
+  background: hsl(var(--editor-code-bg));
   padding: 0.9rem 1rem;
-  color: #1e293b;
+  color: hsl(var(--editor-code-fg));
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.875em;
   white-space: pre;
@@ -311,11 +184,11 @@ textarea {
 .ProseMirror .edgeever-mermaid-error {
   margin: 0;
   font-size: 0.82rem;
-  color: #64748b;
+  color: hsl(var(--editor-placeholder));
 }
 
 .ProseMirror .edgeever-mermaid-error {
-  color: #be123c;
+  color: hsl(var(--destructive));
 }
 
 .ProseMirror .edgeever-mermaid-svg {
@@ -343,7 +216,7 @@ textarea {
 
 /* lowlight emits Highlight.js token classes inside a div-based Tiptap node view. */
 .ProseMirror .edgeever-code-block {
-  color: #24292e;
+  color: hsl(var(--editor-code-fg));
 }
 
 .ProseMirror hr {
@@ -397,9 +270,9 @@ textarea {
   gap: 0.35rem;
   border: 1px solid rgba(var(--brand-green-200-rgb), 0.95);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.94);
+  background: hsl(var(--card) / 0.94);
   padding: 0.3rem;
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 10px 28px rgb(15 23 42 / 0.16);
   line-height: 1;
 }
 
@@ -418,25 +291,25 @@ textarea {
   justify-content: center;
   gap: 0.15rem;
   border-radius: 6px;
-  color: #475569;
+  color: hsl(var(--editor-muted));
   font-size: 0.75rem;
   font-weight: 700;
 }
 
 .ProseMirror .edgeever-image-preset-percent {
-  color: #94a3b8;
+  color: hsl(var(--editor-placeholder));
   font-size: 0.625rem;
   font-weight: 600;
 }
 
 .ProseMirror .edgeever-image-preset:hover,
 .ProseMirror .edgeever-image-preset.is-active {
-  background: var(--brand-green-muted);
-  color: var(--brand-green-text);
+  background: hsl(var(--editor-surface));
+  color: hsl(var(--primary));
 }
 
 .ProseMirror .edgeever-image-preset.is-active .edgeever-image-preset-percent {
-  color: var(--brand-green-text);
+  color: hsl(var(--primary));
 }
 
 .ProseMirror .edgeever-image-resize-handle {
@@ -450,11 +323,11 @@ textarea {
 }
 
 .ProseMirror .edgeever-image-resize-handle:hover {
-  background-color: var(--brand-green-muted);
+  background-color: hsl(var(--editor-surface));
 }
 
 .ProseMirror p.is-editor-empty:first-child::before {
-  color: #94a3b8;
+  color: hsl(var(--editor-placeholder));
   content: attr(data-placeholder);
   float: left;
   height: 0;
@@ -485,28 +358,28 @@ textarea {
 /* Standard Markdown Content Rendering Styles */
 .markdown-content {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #1e293b;
+  color: hsl(var(--editor-fg));
   line-height: 1.7;
 }
 .markdown-content h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #020617;
+  color: hsl(var(--editor-fg));
   margin-top: 1.75rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid hsl(var(--editor-border));
 }
 .markdown-content h2, .markdown-content h3 {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #020617;
+  color: hsl(var(--editor-fg));
   margin-top: 1.75rem;
   margin-bottom: 0.75rem;
 }
 .markdown-content h2 {
   font-size: 1.2rem;
-  border-left: 4px solid var(--brand-green);
+  border-left: 4px solid hsl(var(--editor-blockquote-border));
   padding-left: 0.75rem;
 }
 .markdown-content p {
@@ -516,13 +389,13 @@ textarea {
 .markdown-content hr {
   margin: 2rem 0;
   border: 0;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid hsl(var(--editor-border));
 }
 .markdown-content blockquote {
-  border-left: 4px solid var(--brand-green);
+  border-left: 4px solid hsl(var(--editor-blockquote-border));
   padding: 0.5rem 0 0.5rem 1rem;
-  background-color: var(--brand-green-soft);
-  color: var(--brand-green-text);
+  background-color: hsl(var(--editor-blockquote-bg));
+  color: hsl(var(--editor-blockquote-fg));
   font-weight: 500;
   border-radius: 0 4px 4px 0;
   margin: 1.25rem auto;
@@ -542,9 +415,9 @@ textarea {
   font-size: 0.875rem;
 }
 .markdown-content pre {
-  background-color: #f7fbf8;
-  color: #1e293b;
-  border: 1px solid #d9eadf;
+  background-color: hsl(var(--editor-code-bg));
+  color: hsl(var(--editor-code-fg));
+  border: 1px solid hsl(var(--editor-code-border));
   padding: 1rem;
   border-radius: 6px;
   overflow-x: auto;
@@ -555,9 +428,9 @@ textarea {
 }
 .markdown-content code {
   font-family: monospace;
-  background-color: #f6fbf7;
-  color: #1e293b;
-  border: 1px solid #d9eadf;
+  background-color: hsl(var(--editor-code-bg));
+  color: hsl(var(--editor-code-fg));
+  border: 1px solid hsl(var(--editor-code-border));
   padding: 0.125rem 0.35rem;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -573,12 +446,13 @@ textarea {
   font-size: inherit;
 }
 .markdown-content a {
-  color: var(--brand-green-text);
+  color: hsl(var(--primary));
   text-decoration: underline;
   font-weight: 500;
 }
 .markdown-content a:hover {
-  color: var(--brand-green);
+  color: hsl(var(--primary));
+  filter: brightness(1.15);
 }
 
 .ProseMirror .tableWrapper,
@@ -590,11 +464,11 @@ textarea {
   margin-right: auto;
   margin-bottom: 1.25rem;
   margin-left: 0;
-  border: 1px solid #d8d8d8;
+  border: 1px solid hsl(var(--editor-table-border));
   border-radius: 2px;
-  background: #fff;
+  background: hsl(var(--editor-bg));
   overscroll-behavior-inline: contain;
-  scrollbar-color: rgb(100 116 139 / 0.28) transparent;
+  scrollbar-color: rgb(var(--slate-400-rgb) / 0.28) transparent;
 }
 
 .ProseMirror table,
@@ -619,8 +493,8 @@ textarea {
   width: 14rem;
   min-width: 14rem;
   border: 0;
-  border-right: 1px solid #dedede;
-  border-bottom: 1px solid #dedede;
+  border-right: 1px solid hsl(var(--editor-table-border));
+  border-bottom: 1px solid hsl(var(--editor-table-border));
   padding: 0.42rem 0.75rem;
   text-align: left;
   vertical-align: top;
@@ -631,8 +505,8 @@ textarea {
 
 .ProseMirror th,
 .markdown-content th {
-  background: #f0f0f0;
-  color: #111827;
+  background: hsl(var(--editor-table-header-bg));
+  color: hsl(var(--editor-table-header-fg));
   font-size: 0.875rem;
   font-weight: 700;
 }
@@ -651,12 +525,12 @@ textarea {
 
 .ProseMirror tbody tr:nth-child(even) td,
 .markdown-content tbody tr:nth-child(even) td {
-  background: #f8f8f8;
+  background: hsl(var(--editor-table-row-alt-bg));
 }
 
 .ProseMirror tbody tr:hover td,
 .markdown-content tbody tr:hover td {
-  background: #f3f4f6;
+  background: hsl(var(--editor-table-row-hover-bg));
 }
 
 @media (max-width: 767px) {
@@ -700,36 +574,9 @@ textarea {
   background: rgb(16 185 129 / 0.14);
 }
 
-:root.dark .ProseMirror th,
-:root.dark .markdown-content th {
-  background: #27303f;
-  color: #f8fafc;
-}
-
-:root.dark .ProseMirror .tableWrapper,
-:root.dark .markdown-content .tableWrapper {
-  border-color: #334155;
-  background: #0f172a;
-}
-
-:root.dark .ProseMirror th,
-:root.dark .ProseMirror td,
-:root.dark .markdown-content th,
-:root.dark .markdown-content td {
-  border-color: #334155;
-}
-
-:root.dark .ProseMirror tbody tr:nth-child(even) td,
-:root.dark .markdown-content tbody tr:nth-child(even) td {
-  background: #182235;
-}
-
-:root.dark .ProseMirror tbody tr:hover td,
-:root.dark .markdown-content tbody tr:hover td {
-  background: #202b3d;
-}
-
-/* Theme-aware surfaces for legacy white utilities and fixed semantic colors. */
+/* Theme-aware surfaces for legacy white utilities and fixed semantic colors.
+   New components should use the semantic tokens in theme.css instead of these
+   utility classes so they do not need !important overrides. */
 :root.dark [class~="bg-white"] {
   background-color: rgb(var(--dark-surface-rgb)) !important;
 }
@@ -840,55 +687,11 @@ textarea {
   border-color: #881337 !important;
 }
 
-:root.dark .ProseMirror blockquote {
-  color: #cbd5e1;
-  background: var(--brand-green-soft);
-}
-
-:root.dark .ProseMirror code,
-:root.dark .ProseMirror pre {
-  border-color: #166534;
-  background: #13261a;
-  color: #cbd5e1;
-}
-
-:root.dark .ProseMirror .edgeever-mermaid-code-block {
+/* Keep mermaid blocks transparent in both themes (they are rendered over the
+   editor background and may contain diagrams with their own colors). */
+.ProseMirror .edgeever-mermaid-code-block,
+.ProseMirror .edgeever-mermaid-preview {
   background: transparent;
 }
 
-:root.dark .ProseMirror .edgeever-code-source {
-  border-color: #166534;
-  background: #13261a;
-  color: #cbd5e1;
-}
-
-:root.dark .ProseMirror .edgeever-mermaid-preview {
-  background: transparent;
-}
-
-:root.dark .markdown-content {
-  color: #cbd5e1;
-}
-
-:root.dark .markdown-content h1,
-:root.dark .markdown-content h2,
-:root.dark .markdown-content h3 {
-  color: #f8fafc;
-}
-
-:root.dark .markdown-content h1,
-:root.dark .markdown-content hr {
-  border-color: #334155;
-}
-
-:root.dark .markdown-content pre {
-  background-color: #13261a;
-  border-color: #166534;
-  color: #cbd5e1;
-}
-
-:root.dark .markdown-content code {
-  background-color: #13261a;
-  border-color: #166534;
-  color: #cbd5e1;
-}
+/* Editor search match colors are defined once via theme variables above. */

@@ -1,0 +1,199 @@
+/**
+ * Shared semantic color tokens for Kiran Brahma Notes.
+ *
+ * Both the main web app (globals.css) and the standalone mobile editor
+ * (mobile-markdown-editor.css) import this file so they use the same theme
+ * surface/text tokens. Each token declares a light value and a dark value
+ * next to its :root.dark sibling, which keeps contrast logic in one place
+ * instead of scattered across component CSS.
+ *
+ * Convention:
+ *   --token: H S L;              // used as hsl(var(--token))
+ *   --token-rgb: R G B;           // used as rgb(var(--token-rgb) / <alpha>)
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Primitive HSL palette. Tailwind semantic colors below reference these. */
+  --background: 80 11% 96%;
+  --foreground: 224 71% 4%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 224 71% 4%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 71% 4%;
+
+  --primary: 136 100% 33%;
+  --primary-foreground: 80 11% 96%;
+
+  --secondary: 136 55% 94%;
+  --secondary-foreground: 136 100% 25%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --accent: 136 55% 94%;
+  --accent-foreground: 136 100% 25%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 136 100% 33%;
+
+  --radius: 0.5rem;
+
+  /* Editor-specific semantic tokens. Use these for ProseMirror/Tiptap chrome
+     so the same rules work in both light and dark mode. */
+  --editor-bg: 0 0% 100%;
+  --editor-fg: 222 47% 11%;
+  --editor-muted: 215 16% 47%;
+  --editor-placeholder: 215 20% 65%;
+  --editor-border: 140 20% 88%;
+  --editor-surface: 140 33% 97%;
+  --editor-surface-hover: 140 30% 94%;
+  --editor-code-bg: 140 33% 97%;
+  --editor-code-fg: 222 47% 11%;
+  --editor-code-border: 140 20% 88%;
+  --editor-blockquote-border: 136 100% 33%;
+  --editor-blockquote-bg: 136 55% 94%;
+  --editor-blockquote-fg: 136 100% 25%;
+  --editor-table-header-bg: 0 0% 94%;
+  --editor-table-header-fg: 220 14% 10%;
+  --editor-table-border: 0 0% 87%;
+  --editor-table-row-alt-bg: 0 0% 97%;
+  --editor-table-row-hover-bg: 220 14% 96%;
+  --editor-search-match-bg: 54 93% 70% / 0.8;
+  --editor-search-match-active-bg: 38 92% 63% / 0.9;
+  --editor-search-match-border: 38 92% 50% / 0.25;
+  --editor-search-match-active-border: 30 92% 40% / 0.45;
+
+  /* Brand green RGB scale (used with alpha). Dark mode flips these below. */
+  --brand-green: #00a82d;
+  --brand-green-hover: #008f26;
+  --brand-green-muted: #e6f6ea;
+  --brand-green-soft: #f0fbf3;
+  --brand-green-border: #99dcab;
+  --brand-green-text: #00751f;
+  --brand-green-rgb: 0 168 45;
+  --brand-green-hover-rgb: 0 143 38;
+  --brand-green-50-rgb: 230 246 234;
+  --brand-green-100-rgb: 204 237 213;
+  --brand-green-200-rgb: 153 220 171;
+  --brand-green-300-rgb: 102 202 128;
+  --brand-green-400-rgb: 51 185 86;
+  --brand-green-500-rgb: 0 168 45;
+  --brand-green-600-rgb: 0 143 38;
+  --brand-green-700-rgb: 0 117 31;
+  --brand-green-800-rgb: 0 92 25;
+  --brand-green-900-rgb: 0 67 18;
+  --brand-green-950-rgb: 0 43 11;
+
+  /* Slate RGB scale (used with alpha). Dark mode flips these below. */
+  --slate-50-rgb: 248 250 252;
+  --slate-100-rgb: 241 245 249;
+  --slate-200-rgb: 226 232 240;
+  --slate-300-rgb: 203 213 225;
+  --slate-400-rgb: 148 163 184;
+  --slate-500-rgb: 100 116 139;
+  --slate-600-rgb: 71 85 105;
+  --slate-700-rgb: 51 65 85;
+  --slate-800-rgb: 30 41 59;
+  --slate-900-rgb: 15 23 42;
+  --dark-surface-rgb: 255 255 255;
+
+  /* Typography / layout constants used by the editor. */
+  --editor-body-font-size: 0.9375rem;
+  --editor-body-line-height: 1.6;
+  --editor-paragraph-spacing: 0.45rem;
+}
+
+:root.dark {
+  color-scheme: dark;
+
+  /* Primitive HSL palette - dark. */
+  --background: 222 47% 11%;
+  --foreground: 210 40% 98%;
+
+  --card: 217 33% 17%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 217 33% 17%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 142 71% 45%;
+  --primary-foreground: 222 47% 11%;
+
+  --secondary: 217 33% 24%;
+  --secondary-foreground: 142 71% 75%;
+
+  --muted: 217 33% 24%;
+  --muted-foreground: 215 20% 65%;
+
+  --accent: 217 33% 24%;
+  --accent-foreground: 142 71% 75%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 215 28% 28%;
+  --input: 215 28% 28%;
+  --ring: 142 71% 45%;
+
+  /* Editor-specific semantic tokens - dark. */
+  --editor-bg: 222 47% 11%;
+  --editor-fg: 210 40% 98%;
+  --editor-muted: 215 20% 65%;
+  --editor-placeholder: 215 16% 47%;
+  --editor-border: 217 33% 24%;
+  --editor-surface: 217 33% 24%;
+  --editor-surface-hover: 222 47% 17%;
+  --editor-code-bg: 145 50% 10%;
+  --editor-code-fg: 215 20% 65%;
+  --editor-code-border: 145 50% 20%;
+  --editor-blockquote-border: 142 71% 45%;
+  --editor-blockquote-bg: 145 60% 10%;
+  --editor-blockquote-fg: 142 71% 75%;
+  --editor-table-header-bg: 217 33% 20%;
+  --editor-table-header-fg: 210 40% 98%;
+  --editor-table-border: 217 33% 24%;
+  --editor-table-row-alt-bg: 222 47% 13%;
+  --editor-table-row-hover-bg: 217 33% 20%;
+
+  /* Brand green - dark. */
+  --brand-green: #4ade80;
+  --brand-green-hover: #22c55e;
+  --brand-green-muted: #14532d;
+  --brand-green-soft: #052e16;
+  --brand-green-border: #166534;
+  --brand-green-text: #86efac;
+  --brand-green-rgb: 74 222 128;
+  --brand-green-hover-rgb: 34 197 94;
+  --brand-green-50-rgb: 20 83 45;
+  --brand-green-100-rgb: 22 101 52;
+  --brand-green-200-rgb: 34 133 67;
+  --brand-green-300-rgb: 74 222 128;
+  --brand-green-400-rgb: 134 239 172;
+  --brand-green-500-rgb: 74 222 128;
+  --brand-green-600-rgb: 34 197 94;
+  --brand-green-700-rgb: 134 239 172;
+  --brand-green-800-rgb: 187 247 208;
+  --brand-green-900-rgb: 220 252 231;
+  --brand-green-950-rgb: 240 253 244;
+
+  /* Slate RGB scale - dark (inverted). */
+  --slate-50-rgb: 15 23 42;
+  --slate-100-rgb: 30 41 59;
+  --slate-200-rgb: 51 65 85;
+  --slate-300-rgb: 71 85 105;
+  --slate-400-rgb: 100 116 139;
+  --slate-500-rgb: 148 163 184;
+  --slate-600-rgb: 203 213 225;
+  --slate-700-rgb: 226 232 240;
+  --slate-800-rgb: 241 245 249;
+  --slate-900-rgb: 248 250 252;
+  --dark-surface-rgb: 30 41 59;
+}

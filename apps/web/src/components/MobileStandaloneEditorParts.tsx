@@ -1,4 +1,4 @@
-import { Bold, Check, ChevronDown, ImagePlus, List, Minus, Quote, Table2, Workflow } from "lucide-react";
+import { Bold, Check, ChevronDown, ImagePlus, List, Minus, MoonStar, Quote, SunMedium, Table2, Workflow } from "lucide-react";
 import {
   MOBILE_EDITOR_TOOLBAR_ACTIONS,
   getMobileEditorTableMenuCopy,
@@ -10,6 +10,7 @@ import {
 import { useEffect, useState, type ReactNode } from "react";
 import type { NotebookMoveOption } from "@/lib/app-helpers";
 import type { MobileEditorSaveState } from "@/lib/mobile-editor-standalone";
+import { useTheme } from "./ThemeProvider";
 
 export const MobileEditorHeader = ({
   saveLabel,
@@ -21,19 +22,34 @@ export const MobileEditorHeader = ({
   statusClassName: string;
   saveState: MobileEditorSaveState;
   onLeave: () => void;
-}) => (
-  <header className="mobile-editor-header">
-    <button className="mobile-editor-back" type="button" aria-label="Back" onClick={onLeave}>
-      ‹
-    </button>
-    <div className="mobile-editor-actions">
-      <span className={`mobile-editor-status ${statusClassName}`}>{saveLabel}</span>
-      <button className="mobile-editor-done" type="button" disabled={saveState === "loading"} onClick={onLeave}>
-        Done
+}) => {
+  const { resolvedTheme, setPreference } = useTheme();
+  const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
+  const label = nextTheme === "dark" ? "Switch to dark" : "Switch to light";
+
+  return (
+    <header className="mobile-editor-header">
+      <button className="mobile-editor-back" type="button" aria-label="Back" onClick={onLeave}>
+        ‹
       </button>
-    </div>
-  </header>
-);
+      <div className="mobile-editor-actions">
+        <button
+          className="mobile-editor-theme-toggle"
+          type="button"
+          title={label}
+          aria-label={label}
+          onClick={() => setPreference(nextTheme)}
+        >
+          {resolvedTheme === "dark" ? <SunMedium aria-hidden="true" /> : <MoonStar aria-hidden="true" />}
+        </button>
+        <span className={`mobile-editor-status ${statusClassName}`}>{saveLabel}</span>
+        <button className="mobile-editor-done" type="button" disabled={saveState === "loading"} onClick={onLeave}>
+          Done
+        </button>
+      </div>
+    </header>
+  );
+};
 
 export const MobileEditorToolbar = ({
   disabled,

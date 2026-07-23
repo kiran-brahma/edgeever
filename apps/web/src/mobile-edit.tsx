@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { MobileStandaloneTiptapEditor } from "@/components/MobileStandaloneTiptapEditor";
-import { initializeTheme } from "@/components/ThemeProvider";
+import { initializeTheme, ThemeProvider } from "@/components/ThemeProvider";
 import "./i18n";
 import "./styles/mobile-markdown-editor.css";
 
@@ -15,6 +15,8 @@ initializeTheme();
 
 createRoot(root).render(
   <React.StrictMode>
-    <MobileStandaloneTiptapEditor />
+    <ThemeProvider>
+      <MobileStandaloneTiptapEditor />
+    </ThemeProvider>
   </React.StrictMode>
 );
