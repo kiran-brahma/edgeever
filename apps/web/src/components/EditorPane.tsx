@@ -61,7 +61,9 @@ import { consumeStandaloneMobileEditorReturn, openStandaloneMobileEditor } from 
 import { cn, formatDateTime, parseTagsText } from "@/lib/utils";
 import {
   countMemoCharacters,
+  createExcerpt,
   docToMarkdown,
+  docToText,
   markdownToDoc,
   resolveMemoContentDoc,
   type Notebook,
@@ -78,7 +80,7 @@ import {
 import { codeBlockLowlight, EdgeEverCodeBlock } from "@/lib/code-block";
 import { compressImageForUpload } from "@/lib/image-compression";
 import { localDb, type MemoUpdateSyncPayload } from "@/lib/local-db";
-import { getMemoUpdateQueueId, isMemoUpdateAlreadyApplied, queueMemoUpdate, shouldQueueMemoSaveError } from "@/lib/sync-queue";
+import { getMemoUpdateQueueId, isLocalOnlyMemoId, isMemoUpdateAlreadyApplied, queueMemoUpdate, saveLocalMemoChanges, shouldQueueMemoSaveError } from "@/lib/sync-queue";
 import {
   getNotebookMoveOptions,
   DEFAULT_MEMO_TITLE,
@@ -735,7 +737,7 @@ const MobileNativeEditorPane = ({
         : await Promise.all([
             localDb.drafts.get(memo.id),
             localDb.syncQueue.get(getMemoUpdateQueueId(memo.id)),
-            api.createMemoEditSession(memo.id),
+            memo.isLocalOnly ? Promise.resolve(null) : api.createMemoEditSession(memo.id),
           ]);
 
       if (cancelled) {
@@ -1832,7 +1834,7 @@ const RichEditorPane = ({
         : await Promise.all([
             localDb.drafts.get(memo.id),
             localDb.syncQueue.get(getMemoUpdateQueueId(memo.id)),
-            api.createMemoEditSession(memo.id),
+            memo.isLocalOnly ? Promise.resolve(null) : api.createMemoEditSession(memo.id),
           ]);
 
       if (cancelled) {
@@ -1984,9 +1986,8 @@ const RichEditorPane = ({
     mutationFn: async () => {
       const currentMemo = memoRef.current;
       const contentJson = getCurrentContentJson();
-      const editSession = editSessionRef.current;
 
-      if (!currentMemo || !contentJson || !editSession || hydratedMemoIdRef.current !== currentMemo.id) {
+      if (!currentMemo || !contentJson || hydratedMemoIdRef.current !== currentMemo.id) {
         throw new Error("No memo selected");
       }
 
@@ -1997,6 +1998,38 @@ const RichEditorPane = ({
       const snapshot = currentSnapshot();
       if (!snapshot) {
         throw new Error("Editor is not ready");
+      }
+
+      if (currentMemo.isLocalOnly) {
+        const contentMarkdown = useMarkdownSourceEditor ? markdownSource : docToMarkdown(contentJson);
+        const tags = parseTagsText(tagsText);
+        const updatedAt = new Date().toISOString();
+
+        await saveLocalMemoChanges(currentMemo.id, {
+          title,
+          contentMarkdown,
+          tags,
+          updatedAt,
+        });
+
+        const updatedMemo: MemoDetail = {
+          ...currentMemo,
+          title,
+          tags,
+          contentJson,
+          contentMarkdown,
+          contentText: docToText(contentJson),
+          contentHash: "",
+          excerpt: createExcerpt(docToText(contentJson) || contentMarkdown),
+          updatedAt,
+        };
+
+        return { memo: updatedMemo, snapshot };
+      }
+
+      const editSession = editSessionRef.current;
+      if (!editSession || editSession.memoId !== currentMemo.id) {
+        throw new Error("Edit session is not ready");
       }
 
       const payload: MemoUpdateSyncPayload = {
@@ -2077,6 +2110,11 @@ const RichEditorPane = ({
       }
 
       if (error instanceof MemoSaveRequestError && shouldQueueMemoSaveError(sourceError)) {
+        if (isLocalOnlyMemoId(error.payload.memoId)) {
+          setSaveState("error");
+          return;
+        }
+
         await queueMemoUpdate(error.payload);
         await localDb.drafts.put({
           memoId: error.payload.memoId,
@@ -2361,7 +2399,7 @@ const RichEditorPane = ({
     }
   };
 
-  const updateMemoNotebook = (notebookId: string, sourceMemo: MemoDetail = memoRef.current ?? memo) => {
+  const updateMemoNotebook = async (notebookId: string, sourceMemo: MemoDetail = memoRef.current ?? memo) => {
     if (effectiveReadOnly || notebookId === sourceMemo.notebookId || notebookUpdatePending) {
       setMobileNotebookSheetOpen(false);
       return;
@@ -2369,6 +2407,24 @@ const RichEditorPane = ({
 
     setNotebookUpdatePending(true);
     setSaveState("saving");
+
+    if (sourceMemo.isLocalOnly) {
+      try {
+        const updatedAt = new Date().toISOString();
+        await saveLocalMemoChanges(sourceMemo.id, { notebookId, updatedAt });
+        const updatedMemo = { ...sourceMemo, notebookId, updatedAt };
+        memoRef.current = updatedMemo;
+        await onSaved(updatedMemo);
+        setSaveState("saved");
+        window.setTimeout(() => setSaveState("idle"), 1200);
+      } catch {
+        setSaveState("error");
+      } finally {
+        setNotebookUpdatePending(false);
+        setMobileNotebookSheetOpen(false);
+      }
+      return;
+    }
 
     void api
       .updateMemo(sourceMemo.id, {

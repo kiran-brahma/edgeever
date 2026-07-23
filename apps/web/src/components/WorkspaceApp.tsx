@@ -40,7 +40,7 @@ import {
   type MobileEditorReturnPreview,
 } from "@/lib/mobile-editor";
 import { cn } from "@/lib/utils";
-import { createExcerpt, docToText, getNotebookDescendantIds, type Notebook, type AuthUser, type MemoSummary, type MemoDetail } from "@edgeever/shared";
+import { createExcerpt, docToText, getNotebookDescendantIds, resolveMemoContentDoc, type Notebook, type AuthUser, type MemoSummary, type MemoDetail } from "@edgeever/shared";
 import { toggleMobileMemoSelection } from "@edgeever/shared/mobile-ui";
 import type {
   Pane,
@@ -1728,11 +1728,12 @@ export const WorkspaceApp = ({
       });
 
       // Pre-populate the editor query so the note can be opened while offline.
+      const localMemoContentJson = resolveMemoContentDoc(undefined, localMemo.contentMarkdown);
       const localMemoDetail: MemoDetail = {
         ...localMemoToSummary(localMemo),
-        contentJson: { type: "doc", content: [{ type: "paragraph" }] },
+        contentJson: localMemoContentJson,
         contentMarkdown: localMemo.contentMarkdown,
-        contentText: localMemo.contentMarkdown,
+        contentText: docToText(localMemoContentJson),
         contentHash: "",
         sourceMemoIds: [],
         mergeSourceCount: 0,

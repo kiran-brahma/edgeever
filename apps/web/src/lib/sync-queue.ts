@@ -29,6 +29,69 @@ export const emptySyncQueueSummary = (): SyncQueueSummary => ({
 export const getMemoUpdateQueueId = (memoId: string) => `memo.update:${memoId}`;
 export const getMemoCreateQueueId = (localMemoId: string) => `memo.create:${localMemoId}`;
 
+export const isLocalOnlyMemoId = (memoId: string) => memoId.startsWith("local-");
+
+export const isLocalOnlyMemo = (
+  memo: { id: string; isLocalOnly?: boolean } | null | undefined
+): memo is { id: string; isLocalOnly: true } =>
+  Boolean(memo && (memo.isLocalOnly || isLocalOnlyMemoId(memo.id)));
+
+export type LocalMemoEditPayload = {
+  title?: string;
+  contentMarkdown?: string;
+  tags?: string[];
+  notebookId?: string;
+  updatedAt?: string;
+};
+
+/**
+ * Persist edits to a local-only memo by updating both the local mirror and the
+ * queued `memo.create` item. Because the create payload is what the server will
+ * eventually receive, coalescing edits into it means the note is created with the
+ * latest offline content on reconnect.
+ */
+export const saveLocalMemoChanges = async (localMemoId: string, payload: LocalMemoEditPayload): Promise<void> => {
+  const queueId = getMemoCreateQueueId(localMemoId);
+  const now = payload.updatedAt ?? new Date().toISOString();
+
+  await localDb.transaction("rw", localDb.localMemos, localDb.syncQueue, async () => {
+    const localMemo = await localDb.localMemos.get(localMemoId);
+    if (!localMemo) {
+      throw new Error(`Local memo ${localMemoId} not found`);
+    }
+
+    const queuedCreate = await localDb.syncQueue.get(queueId);
+    if (!queuedCreate || queuedCreate.kind !== "memo.create") {
+      throw new Error(`Create sync queue item for local memo ${localMemoId} not found`);
+    }
+
+    const createPayload = queuedCreate.payload as MemoCreateSyncPayload;
+
+    const nextPayload: MemoCreateSyncPayload = {
+      ...createPayload,
+      title: payload.title ?? createPayload.title,
+      contentMarkdown: payload.contentMarkdown ?? createPayload.contentMarkdown,
+      tags: payload.tags ?? createPayload.tags,
+      notebookId: payload.notebookId ?? createPayload.notebookId,
+      updatedAt: now,
+    };
+
+    await localDb.localMemos.update(localMemoId, {
+      title: nextPayload.title,
+      contentMarkdown: nextPayload.contentMarkdown,
+      tags: nextPayload.tags,
+      notebookId: nextPayload.notebookId,
+      updatedAt: now,
+    });
+
+    await localDb.syncQueue.put({
+      ...queuedCreate,
+      payload: nextPayload,
+      updatedAt: now,
+    });
+  });
+};
+
 export const queueMemoUpdate = async (payload: MemoUpdateSyncPayload) => {
   const id = getMemoUpdateQueueId(payload.memoId);
   const now = new Date().toISOString();

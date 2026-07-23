@@ -4,7 +4,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
-import { createExcerpt, docToMarkdown, docToText, emptyDoc, type MemoDetail, type MemoEditSession, type Notebook, type TiptapDoc } from "@edgeever/shared";
+import { createExcerpt, docToMarkdown, docToText, emptyDoc, resolveMemoContentDoc, type MemoDetail, type MemoEditSession, type Notebook, type TiptapDoc } from "@edgeever/shared";
 import { getMobileEditorInputAttributes, getMobileEditorPlaceholder, type MobileEditorTableActionId } from "@edgeever/shared/mobile-editor";
 import {
   MobileEditorFallback,
@@ -38,7 +38,7 @@ import {
   type MobileEditorMemoResponse,
   type MobileEditorSaveState,
 } from "@/lib/mobile-editor-standalone";
-import { getMemoUpdateQueueId, isMemoUpdateAlreadyApplied, queueMemoUpdate, shouldQueueMemoSaveError } from "@/lib/sync-queue";
+import { getMemoUpdateQueueId, isLocalOnlyMemoId, isMemoUpdateAlreadyApplied, queueMemoUpdate, saveLocalMemoChanges, shouldQueueMemoSaveError } from "@/lib/sync-queue";
 import { EdgeEverCodeBlock, codeBlockLowlight } from "@/lib/code-block";
 
 type ListNotebooksResponse = {
@@ -301,6 +301,10 @@ export const MobileStandaloneTiptapEditor = ({
       return false;
     }
 
+    if (currentMemo.isLocalOnly) {
+      return false;
+    }
+
     const path = `/api/v1/memos/${encodeURIComponent(currentMemo.id)}/save`;
     const payload = buildSavePayload(currentMemo);
     const body = JSON.stringify(payload);
@@ -397,6 +401,30 @@ export const MobileStandaloneTiptapEditor = ({
       setSaveStateStable("saving");
       setError(null);
 
+      if (currentMemo.isLocalOnly) {
+        const title = titleRef.current;
+        const tags = parseMobileEditorTags(tagsTextRef.current);
+        const contentMarkdown = docToMarkdown(contentJsonRef.current);
+        const updatedAt = new Date().toISOString();
+
+        await saveLocalMemoChanges(currentMemo.id, { title, contentMarkdown, tags, updatedAt });
+
+        const updatedMemo: MemoDetail = {
+          ...currentMemo,
+          title,
+          tags,
+          contentJson: contentJsonRef.current,
+          contentMarkdown,
+          contentText: docToText(contentJsonRef.current),
+          contentHash: "",
+          excerpt: createExcerpt(docToText(contentJsonRef.current)),
+          updatedAt,
+        };
+
+        await applySavedMemo(updatedMemo, snapshot);
+        return true;
+      }
+
       let payload: ReturnType<typeof buildSavePayload> | null = null;
 
       try {
@@ -431,7 +459,7 @@ export const MobileStandaloneTiptapEditor = ({
         currentSavePromiseRef.current = null;
       }
     },
-    [applySavedMemo, buildSavePayload, currentSnapshot, persistLocalDraft, setSaveStateStable]
+    [applySavedMemo, buildSavePayload, currentSnapshot, persistLocalDraft, saveLocalMemoChanges, setSaveStateStable]
   );
 
   useEffect(() => {
@@ -535,6 +563,21 @@ export const MobileStandaloneTiptapEditor = ({
 
       const sourceMemo = memoRef.current;
       if (!sourceMemo || nextNotebookId === sourceMemo.notebookId) {
+        return;
+      }
+
+      if (sourceMemo.isLocalOnly) {
+        const updatedAt = new Date().toISOString();
+        await saveLocalMemoChanges(sourceMemo.id, { notebookId: nextNotebookId, updatedAt });
+        const updatedMemo = { ...sourceMemo, notebookId: nextNotebookId, updatedAt };
+        memoRef.current = updatedMemo;
+        setMemo(updatedMemo);
+        setSaveStateStable("saved");
+        window.setTimeout(() => {
+          if (!dirtyRef.current && !savingRef.current && !leavingRef.current) {
+            setSaveStateStable("idle");
+          }
+        }, 1200);
         return;
       }
 
@@ -649,34 +692,71 @@ export const MobileStandaloneTiptapEditor = ({
 
     void (async () => {
       try {
-        const [data, sessionData] = await Promise.all([
-          requestMobileEditorJson<MobileEditorMemoResponse>(`/api/v1/memos/${encodeURIComponent(memoId)}`),
-          requestMobileEditorJson<{ editSession: MemoEditSession }>(`/api/v1/memos/${encodeURIComponent(memoId)}/edit-sessions`, {
-            method: "POST",
-            body: JSON.stringify({}),
-          }),
-        ]);
+        let data: MobileEditorMemoResponse;
+        let sessionData: { editSession: MemoEditSession } | null = null;
+
+        if (isLocalOnlyMemoId(memoId)) {
+          const localMemo = await localDb.localMemos.get(memoId);
+          if (!localMemo) {
+            throw new Error("Local note not found");
+          }
+
+          const contentJson = resolveMemoContentDoc(undefined, localMemo.contentMarkdown);
+          data = {
+            memo: {
+              ...localMemo,
+              isPinned: false,
+              isArchived: false,
+              isDeleted: false,
+              deletedAt: null,
+              revision: 0,
+              contentJson,
+              contentMarkdown: localMemo.contentMarkdown,
+              contentText: docToText(contentJson),
+              contentHash: "",
+              excerpt: createExcerpt(docToText(contentJson) || localMemo.contentMarkdown),
+              sourceMemoIds: [],
+              mergeSourceCount: 0,
+              mergedIntoMemoId: null,
+              isLocalOnly: true,
+            },
+          };
+        } else {
+          [data, sessionData] = await Promise.all([
+            requestMobileEditorJson<MobileEditorMemoResponse>(`/api/v1/memos/${encodeURIComponent(memoId)}`),
+            requestMobileEditorJson<{ editSession: MemoEditSession }>(`/api/v1/memos/${encodeURIComponent(memoId)}/edit-sessions`, {
+              method: "POST",
+              body: JSON.stringify({}),
+            }),
+          ]);
+        }
         if (cancelled) {
           return;
         }
 
-        editSessionRef.current = sessionData.editSession;
+        if (sessionData) {
+          editSessionRef.current = sessionData.editSession;
+        }
 
         const nextTitle = data.memo.title || "";
         const nextTagsText = Array.isArray(data.memo.tags) ? data.memo.tags.join(", ") : "";
         const nextContentJson = normalizeMobileEditorDoc(data.memo);
-        let draft = await readBestLocalDraft();
-        let queuedUpdate = await localDb.syncQueue.get(getMemoUpdateQueueId(data.memo.id));
-        if (queuedUpdate && isMemoUpdateAlreadyApplied(data.memo, queuedUpdate)) {
-          await Promise.all([
-            localDb.syncQueue.delete(queuedUpdate.id),
-            localDb.drafts.delete(data.memo.id),
-          ]);
-          if (draftKey) {
-            localStorage.removeItem(draftKey);
+        let draft = null;
+        let queuedUpdate = undefined;
+        if (!data.memo.isLocalOnly) {
+          draft = await readBestLocalDraft();
+          queuedUpdate = await localDb.syncQueue.get(getMemoUpdateQueueId(data.memo.id));
+          if (queuedUpdate && isMemoUpdateAlreadyApplied(data.memo, queuedUpdate)) {
+            await Promise.all([
+              localDb.syncQueue.delete(queuedUpdate.id),
+              localDb.drafts.delete(data.memo.id),
+            ]);
+            if (draftKey) {
+              localStorage.removeItem(draftKey);
+            }
+            draft = null;
+            queuedUpdate = undefined;
           }
-          draft = null;
-          queuedUpdate = undefined;
         }
         const useDraft = Boolean(draft && (queuedUpdate || Date.parse(draft.updatedAt || "") >= Date.parse(data.memo.updatedAt || "")));
 
